@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homeownership Path Finder™ | The Handy Lender™</title>
+<meta name="description" content="Discover which Colorado down payment assistance programs you qualify for — and how little cash you may actually need to buy your first home.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:#f5f1eb;color:#1c1c2a;}
+:root{
+  --navy:#0d2137;--navy-mid:#163354;
+  --brass:#a08055;--brass-light:#bfa070;--brass-pale:#f0e5d0;
+  --teal:#0f6e56;--teal-light:#e1f5ee;
+  --purple:#3c3489;--purple-light:#eeedfe;
+  --blue:#185fa5;--blue-light:#e6f1fb;
+  --green:#3b6d11;--green-light:#eaf3de;
+  --cream:#f5f1eb;--warm-white:#faf8f5;--stone:#ede8df;
+  --text:#1c1c2a;--text-muted:#72737e;--text-faint:#a0a1ab;
+  --border:rgba(13,33,55,0.08);--border-mid:rgba(13,33,55,0.13);
+  --white:#ffffff;
+}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(13,33,55,0.97);backdrop-filter:blur(16px);padding:0 2.5rem;height:62px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);}
+.nav-logo img{height:28px;width:auto;display:block;opacity:0.92;}
+.nav-right{display:flex;align-items:center;gap:2rem;}
+.nav-right a{color:rgba(255,255,255,0.55);text-decoration:none;font-size:12.5px;}
+.nav-right a:hover{color:rgba(255,255,255,0.85);}
+.nav-back{border-bottom:1px solid rgba(255,255,255,0.18);padding-bottom:1px;}
+
+/* ── INTAKE SCREEN ── */
+#intake-screen{position:fixed;inset:0;z-index:150;background:var(--cream);display:flex;flex-direction:column;padding-top:62px;overflow-y:auto;}
+.intake-inner{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem;}
+.intake-card{background:var(--white);border-radius:20px;padding:2.75rem;max-width:660px;width:100%;box-shadow:0 24px 64px rgba(13,33,55,0.1);}
+.intake-eyebrow{font-size:10px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--brass);display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;}
+.intake-eyebrow::before{content:'';width:24px;height:1px;background:var(--brass);}
+.intake-headline{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3vw,2.5rem);font-weight:400;line-height:1.15;color:var(--navy);margin-bottom:0.75rem;letter-spacing:-0.01em;}
+.intake-headline em{font-style:italic;color:var(--brass);font-weight:300;}
+.intake-sub{font-size:14.5px;font-weight:300;color:var(--text-muted);line-height:1.75;margin-bottom:0.5rem;}
+.intake-reassure{font-size:13.5px;font-weight:400;color:var(--teal);background:var(--teal-light);border-radius:8px;padding:10px 14px;margin-bottom:1.75rem;line-height:1.6;}
+.intake-reassure::before{content:'💡 ';}
+.intake-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.intake-field label{display:block;font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);margin-bottom:5px;}
+.intake-field select,.intake-field input{width:100%;padding:10px 12px;border:1.5px solid var(--border-mid);border-radius:8px;font-size:14px;color:var(--text);background:var(--warm-white);font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.2s;}
+.intake-field select:focus,.intake-field input:focus{border-color:var(--brass);background:var(--white);}
+.intake-error{display:none;background:#fff5f5;border:1px solid #fed7d7;border-radius:8px;padding:9px 13px;font-size:12.5px;color:#c53030;margin-bottom:1rem;}
+.intake-submit{width:100%;background:var(--navy);color:white;border:none;padding:14px;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;margin-top:4px;}
+.intake-submit:hover{background:var(--navy-mid);}
+.intake-trust{text-align:center;font-size:11.5px;color:var(--text-faint);margin-top:1rem;line-height:1.6;}
+.intake-trust a{color:var(--navy);}
+
+/* ── RESULTS SCREEN ── */
+#results-screen{display:none;padding-top:62px;}
+
+/* Journey progress bar */
+.journey-bar{background:var(--navy);padding:1.25rem 2.5rem;display:flex;align-items:center;gap:0;}
+.journey-step{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.4);white-space:nowrap;}
+.journey-step.active{color:var(--brass-light);}
+.journey-step.done{color:rgba(255,255,255,0.55);}
+.journey-dot{width:24px;height:24px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;transition:all 0.3s;}
+.journey-step.active .journey-dot{background:var(--brass);border-color:var(--brass);color:var(--navy);font-weight:700;}
+.journey-step.done .journey-dot{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);}
+.journey-line{flex:1;height:1px;background:rgba(255,255,255,0.1);margin:0 8px;min-width:20px;}
+
+/* Personalized header */
+.results-header{background:var(--navy);padding:2.5rem 2.5rem 2rem;border-top:1px solid rgba(255,255,255,0.06);}
+.results-inner{max-width:1080px;margin:0 auto;}
+.dean-voice{display:flex;align-items:flex-start;gap:14px;margin-bottom:1.75rem;}
+.dean-avatar{width:44px;height:44px;border-radius:50%;background:var(--brass);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--navy);}
+.dean-bubble{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:0 12px 12px 12px;padding:1rem 1.25rem;flex:1;}
+.dean-bubble p{font-size:14px;font-weight:300;color:rgba(255,255,255,0.8);line-height:1.7;}
+.dean-bubble p strong{color:var(--brass-light);font-weight:500;}
+.dean-name{font-size:11px;color:rgba(255,255,255,0.35);margin-top:5px;letter-spacing:0.04em;}
+
+/* BIG HERO NUMBER — cash needed */
+.cash-hero{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(255,255,255,0.07);border-radius:12px;overflow:hidden;margin-bottom:0;}
+.cash-cell{background:rgba(255,255,255,0.04);padding:1.25rem 1.5rem;}
+.cash-cell-label{font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:6px;}
+.cash-cell-num{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:500;color:var(--white);line-height:1;margin-bottom:3px;}
+.cash-cell-num.highlight{color:var(--brass-light);}
+.cash-cell-sub{font-size:11px;color:rgba(255,255,255,0.35);line-height:1.4;}
+
+/* Main content */
+.results-body{padding:0 2.5rem 4rem;max-width:1080px;margin:0 auto;}
+
+/* Winner banner */
+.winner-banner{background:var(--navy);border-radius:12px;padding:1.25rem 1.5rem;margin:1.75rem 0 1.25rem;display:flex;align-items:flex-start;gap:14px;}
+.winner-star{width:36px;height:36px;border-radius:50%;background:var(--brass);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;}
+.winner-text strong{color:white;font-size:14px;font-weight:500;display:block;margin-bottom:2px;}
+.winner-text span{color:rgba(255,255,255,0.55);font-size:12.5px;line-height:1.5;}
+
+/* View toggle */
+.view-toggle{display:flex;gap:6px;margin-bottom:1.25rem;}
+.vtab{padding:6px 16px;border-radius:6px;border:1px solid var(--border-mid);font-size:12.5px;font-weight:500;cursor:pointer;background:var(--warm-white);color:var(--text-muted);font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.vtab.active{background:var(--navy);color:white;border-color:var(--navy);}
+
+/* Cards */
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.5rem;}
+@media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr);}}
+.card{background:var(--white);border:1px solid var(--border-mid);border-radius:12px;overflow:hidden;transition:box-shadow 0.2s;}
+.card.winner{border:2px solid var(--teal);}
+.card:hover{box-shadow:0 6px 24px rgba(13,33,55,0.08);}
+.card-header{padding:14px 16px 12px;border-bottom:1px solid var(--border);}
+.badge{font-size:10px;font-weight:500;padding:3px 8px;border-radius:4px;display:inline-block;margin-bottom:8px;letter-spacing:0.04em;text-transform:uppercase;}
+.badge-purple{background:var(--purple-light);color:var(--purple);}
+.badge-teal{background:var(--teal-light);color:var(--teal);}
+.badge-blue{background:var(--blue-light);color:var(--blue);}
+.badge-green{background:var(--green-light);color:var(--green);}
+.badge-winner{background:var(--teal);color:white;font-size:10px;padding:3px 8px;border-radius:4px;margin-left:4px;}
+.card-header h3{font-size:13px;font-weight:500;color:var(--text);line-height:1.35;}
+.card-header .rate-line{font-size:11px;color:var(--text-muted);margin-top:2px;}
+.card-body{padding:14px 16px;}
+.dr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;}
+.dl{font-size:11px;color:var(--text-muted);}
+.dv{font-size:12px;font-weight:500;color:var(--text);}
+.dv.pos{color:var(--teal);}.dv.neg{color:#993c1d;}.dv.muted{font-weight:400;color:var(--text-muted);}
+.cdiv{border:none;border-top:1px solid var(--border);margin:8px 0;}
+
+/* HERO TOTAL */
+.total-hero{margin-top:8px;background:var(--stone);border-radius:8px;padding:12px 14px;}
+.th-label{font-size:10px;color:var(--text-muted);margin-bottom:2px;text-transform:uppercase;letter-spacing:0.06em;font-weight:500;}
+.th-num{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:500;line-height:1;}
+.th-num.pos{color:var(--teal);}
+.th-num.neg{color:#993c1d;}
+.th-sub{font-size:10.5px;color:var(--text-faint);margin-top:3px;line-height:1.4;}
+
+/* Advanced toggle */
+.adv-toggle{font-size:12px;color:var(--text-faint);cursor:pointer;text-decoration:underline;margin-top:8px;display:inline-block;}
+.adv-details{display:none;margin-top:8px;}
+.adv-details.open{display:block;}
+
+/* Exit cards */
+.exit-view{display:none;}
+.exit-view.active{display:block;}
+.explain-view{display:none;}
+.explain-view.active{display:block;}
+.explain-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:700px){.explain-grid{grid-template-columns:1fr;}}
+.explain-card{background:var(--white);border:1px solid var(--border-mid);border-radius:12px;padding:20px;}
+.explain-card.winner{border:2px solid var(--teal);}
+.explain-card h3{font-size:14px;font-weight:500;margin-bottom:4px;}
+.explain-card .tagline{font-size:12px;color:var(--text-muted);margin-bottom:12px;}
+.explain-item{display:flex;gap:8px;margin-bottom:8px;align-items:flex-start;}
+.edot{width:6px;height:6px;border-radius:50%;margin-top:6px;flex-shrink:0;}
+.edot.pos{background:var(--teal);}
+.edot.neg{background:#993c1d;}
+.explain-item p{font-size:12px;color:#4a5568;line-height:1.6;}
+
+/* DEAN'S GUIDANCE LAYER */
+.guidance-section{background:var(--warm-white);border:1px solid var(--border-mid);border-radius:14px;padding:2rem;margin:1.5rem 0;}
+.guidance-header{display:flex;align-items:center;gap:12px;margin-bottom:1.25rem;}
+.guidance-avatar{width:40px;height:40px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:500;color:var(--brass-light);flex-shrink:0;}
+.guidance-header-text .g-label{font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--brass);margin-bottom:2px;}
+.guidance-header-text .g-title{font-size:15px;font-weight:500;color:var(--navy);}
+.guidance-items{display:flex;flex-direction:column;gap:10px;}
+.guidance-item{display:flex;gap:12px;align-items:flex-start;padding:1rem;background:var(--white);border-radius:10px;border:1px solid var(--border);}
+.g-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;}
+.guidance-item p{font-size:13.5px;color:var(--text-muted);line-height:1.65;}
+.guidance-item p strong{color:var(--navy);font-weight:500;}
+
+/* NEXT MOVE */
+.next-move{background:var(--navy);border-radius:14px;padding:2rem;margin-top:1.5rem;}
+.nm-eyebrow{font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:rgba(191,160,112,0.6);margin-bottom:0.75rem;}
+.nm-headline{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;color:white;margin-bottom:1.25rem;line-height:1.2;}
+.nm-steps{display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;}
+.nm-step{display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,0.05);border-radius:10px;padding:1rem 1.25rem;}
+.nm-num{width:24px;height:24px;border-radius:50%;background:var(--brass);color:var(--navy);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.nm-step p{font-size:13.5px;color:rgba(255,255,255,0.7);line-height:1.6;}
+.nm-step p strong{color:white;font-weight:500;}
+.nm-cta{display:flex;gap:10px;flex-wrap:wrap;}
+.btn-brass{background:var(--brass);color:var(--navy);border:none;padding:12px 22px;border-radius:8px;font-size:13.5px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:7px;transition:background 0.2s;}
+.btn-brass:hover{background:var(--brass-light);}
+.btn-ghost-light{background:transparent;color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.2);padding:12px 22px;border-radius:8px;font-size:13.5px;font-weight:400;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:7px;transition:all 0.2s;}
+.btn-ghost-light:hover{color:white;border-color:rgba(255,255,255,0.4);}
+
+/* Controls */
+.controls-section{background:var(--white);border-bottom:1px solid var(--border-mid);padding:1.25rem 2.5rem;}
+.ctrl-inner{max-width:1080px;margin:0 auto;}
+.ctrl-label{font-size:10.5px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);margin-bottom:12px;}
+.ctrl-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;}
+.ctrl-item label{display:block;font-size:11px;color:var(--text-muted);margin-bottom:5px;font-weight:400;}
+.ctrl-item input[type=range]{width:100%;accent-color:var(--navy);}
+.ctrl-item .val{font-size:14px;font-weight:500;color:var(--navy);margin-top:3px;}
+.tab-ctrl label{display:block;font-size:11px;color:var(--text-muted);margin-bottom:5px;font-weight:400;}
+.tab-row{display:flex;gap:5px;}
+.tab{padding:4px 12px;border-radius:6px;border:1px solid var(--border-mid);font-size:12px;font-weight:500;cursor:pointer;background:var(--warm-white);color:var(--text-muted);font-family:'DM Sans',sans-serif;}
+.tab.active{background:var(--navy);color:white;border-color:var(--navy);}
+
+/* Assumptions */
+.assumptions{background:var(--white);border:1px solid var(--border-mid);border-radius:12px;padding:1.5rem;margin-top:1.5rem;}
+.assumptions h3{font-size:11px;font-weight:500;color:var(--text-faint);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:12px;}
+.assume-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.assume-item{font-size:11.5px;color:#4a5568;line-height:1.6;}
+.assume-item strong{display:block;color:var(--text);font-weight:500;margin-bottom:1px;}
+
+/* Disclosure */
+.disclosure{background:var(--navy);border-radius:10px;padding:14px 18px;margin-top:1rem;}
+.disclosure p{font-size:10px;color:rgba(255,255,255,0.35);line-height:1.9;}
+
+/* Footer */
+.site-footer{background:var(--navy);border-top:1px solid rgba(255,255,255,0.06);padding:14px 2.5rem;display:flex;align-items:center;justify-content:space-between;margin-top:2rem;}
+.site-footer img{height:24px;opacity:0.7;}
+.footer-right{font-size:10px;color:rgba(255,255,255,0.3);text-align:right;line-height:1.7;}
+
+@media(max-width:768px){
+  .ctrl-grid{grid-template-columns:repeat(2,1fr);}
+  .intake-grid{grid-template-columns:1fr;}
+  .cash-hero{grid-template-columns:1fr;}
+  .journey-bar{overflow-x:auto;padding:1rem 1.25rem;gap:0;}
+  .journey-line{min-width:12px;}
+  nav{padding:0 1.25rem;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/"><img src="HL_Logo_Horizontal_White.png" alt="The Handy Lender" style="height:28px;width:auto;display:block;opacity:0.9;"></a>
+  <div class="nav-right">
+    <a href="/#tools">Tools</a>
+    <a href="/#about">About</a>
+    <a href="/#contact">Contact</a>
+    <a href="/" class="nav-back">← Home</a>
+  </div>
+</nav>
+
+<!-- ══ INTAKE SCREEN ══ -->
+<div id="intake-screen">
+  <div class="intake-inner">
+    <div class="intake-card">
+      <div class="intake-eyebrow">The Handy Lender™ · Homeownership Path Finder™</div>
+      <h1 class="intake-headline">You may need <em>far less cash</em><br>than you think.</h1>
+      <p class="intake-sub">Tell me a little about your situation and I'll show you which Colorado down payment assistance programs you may qualify for — and exactly how much you'd need to close.</p>
+      <div class="intake-reassure">Most first-time buyers are surprised by how many options are actually available to them.</div>
+
+      <div class="intake-grid">
+        <div class="intake-field">
+          <label>Estimated credit score</label>
+          <select id="q-credit">
+            <option value="">Select range...</option>
+            <option value="760">760 or above</option>
+            <option value="720">720 – 759</option>
+            <option value="680">680 – 719</option>
+            <option value="640">640 – 679</option>
+            <option value="below640">Below 640</option>
+          </select>
+        </div>
+        <div class="intake-field">
+          <label>First-time homebuyer?</label>
+          <select id="q-ftb">
+            <option value="">Select...</option>
+            <option value="yes">Yes — first-time buyer</option>
+            <option value="no">I've owned before</option>
+          </select>
+        </div>
+        <div class="intake-field">
+          <label>Target purchase price</label>
+          <select id="q-price">
+            <option value="">Select range...</option>
+            <option value="250000">Under $300k</option>
+            <option value="350000">$300k – $400k</option>
+            <option value="450000">$400k – $500k</option>
+            <option value="550000">$500k – $600k</option>
+            <option value="650000">$600k – $700k</option>
+            <option value="700000">Over $700k</option>
+          </select>
+        </div>
+        <div class="intake-field">
+          <label>Annual household income</label>
+          <select id="q-income">
+            <option value="">Select range...</option>
+            <option value="50000">Under $60k</option>
+            <option value="70000">$60k – $80k</option>
+            <option value="90000">$80k – $100k</option>
+            <option value="110000">$100k – $120k</option>
+            <option value="130000">$120k – $140k</option>
+            <option value="160000">Over $140k</option>
+          </select>
+        </div>
+      </div>
+      <div class="intake-field" style="margin-bottom:1.25rem;">
+        <label>Colorado county</label>
+        <select id="q-county">
+          <option value="">Select county...</option>
+          <option value="metro">Metro Denver area</option>
+          <option value="boulder">Boulder County</option>
+          <option value="el-paso">El Paso County (Colorado Springs)</option>
+          <option value="larimer">Larimer County (Fort Collins)</option>
+          <option value="weld">Weld County</option>
+          <option value="arapahoe">Arapahoe County</option>
+          <option value="jefferson">Jefferson County</option>
+          <option value="adams">Adams County</option>
+          <option value="douglas">Douglas County</option>
+          <option value="other">Other Colorado county</option>
+        </select>
+      </div>
+
+      <div id="intake-error" class="intake-error">Please answer all questions to continue.</div>
+      <button class="intake-submit" onclick="submitIntake()">Show My Path to Homeownership →</button>
+      <p class="intake-trust">No personal information required. This tool is for educational purposes only.<br>For a personalized assessment, <a href="/#contact">talk to Dean directly</a>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ RESULTS SCREEN ══ -->
+<div id="results-screen">
+
+  <!-- Journey progress -->
+  <div class="journey-bar">
+    <div class="journey-step done">
+      <div class="journey-dot">✓</div>
+      <span>Your situation</span>
+    </div>
+    <div class="journey-line"></div>
+    <div class="journey-step active">
+      <div class="journey-dot">2</div>
+      <span>Your options</span>
+    </div>
+    <div class="journey-line"></div>
+    <div class="journey-step">
+      <div class="journey-dot">3</div>
+      <span>Get into the home</span>
+    </div>
+    <div class="journey-line"></div>
+    <div class="journey-step">
+      <div class="journey-dot">4</div>
+      <span>Stabilize & build equity</span>
+    </div>
+    <div class="journey-line"></div>
+    <div class="journey-step">
+      <div class="journey-dot">5</div>
+      <span>Remove barriers</span>
+    </div>
+  </div>
+
+  <!-- Personalized header -->
+  <div class="results-header">
+    <div class="results-inner">
+      <div class="dean-voice">
+        <div class="dean-avatar">D</div>
+        <div>
+          <div class="dean-bubble">
+            <p id="dean-message">Based on what you shared, here's what I'd focus on...</p>
+            <div class="dean-name">— Dean Reiber, The Handy Lender™</div>
+          </div>
+        </div>
+      </div>
+      <div class="cash-hero" id="cash-hero"></div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls-section">
+    <div class="ctrl-inner">
+      <div class="ctrl-label">Adjust your scenario</div>
+      <div class="ctrl-grid">
+        <div class="ctrl-item"><label>Purchase price</label><input type="range" id="price" min="150000" max="700000" step="5000" value="400000"><div class="val" id="price-out">$400,000</div></div>
+        <div class="ctrl-item"><label>Annual appreciation</label><input type="range" id="appr" min="0" max="8" step="0.25" value="3"><div class="val" id="appr-out">3.00%/yr</div></div>
+        <div class="ctrl-item"><label>metroDPA first rate</label><input type="range" id="metro-rate" min="5.5" max="9.0" step="0.125" value="7.0"><div class="val" id="metro-rate-out">7.000%</div></div>
+        <div class="ctrl-item"><label>Selling costs at exit</label><input type="range" id="sell-cost" min="4" max="9" step="0.25" value="6"><div class="val" id="sell-cost-out">6.00%</div></div>
+        <div class="tab-ctrl"><label>How long do you plan to stay?</label><div class="tab-row"><button class="tab active" onclick="setYr(3,this)">3 yrs</button><button class="tab" onclick="setYr(4,this)">4 yrs</button><button class="tab" onclick="setYr(5,this)">5 yrs</button></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results body -->
+  <div style="padding:0 2.5rem;max-width:1080px;margin:0 auto;">
+
+    <div class="winner-banner" id="winner-banner">
+      <div class="winner-star">★</div>
+      <div class="winner-text"><strong id="winner-main"></strong><span id="winner-sub"></span></div>
+    </div>
+
+    <div class="view-toggle">
+      <button class="vtab active" onclick="setView('numbers',this)">Monthly payments</button>
+      <button class="vtab" onclick="setView('exit',this)">Exit analysis</button>
+      <button class="vtab" onclick="setView('explain',this)">Plain English guide</button>
+    </div>
+
+    <!-- Numbers view -->
+    <div id="view-numbers">
+      <div class="cards" id="cards-numbers"></div>
+    </div>
+
+    <!-- Exit view -->
+    <div class="exit-view" id="view-exit">
+      <div class="cards" id="cards-exit"></div>
+    </div>
+
+    <!-- Explain view -->
+    <div class="explain-view" id="view-explain">
+      <div class="explain-grid" id="explain-grid"></div>
+    </div>
+
+    <!-- Dean's guidance -->
+    <div class="guidance-section">
+      <div class="guidance-header">
+        <div class="guidance-avatar">D</div>
+        <div class="guidance-header-text">
+          <div class="g-label">Dean's interpretation</div>
+          <div class="g-title" id="guidance-title">Here's what I'd pay attention to...</div>
+        </div>
+      </div>
+      <div class="guidance-items" id="guidance-items"></div>
+    </div>
+
+    <!-- Next best move -->
+    <div class="next-move">
+      <div class="nm-eyebrow">Your next best move</div>
+      <h3 class="nm-headline" id="nm-headline">Here's how I'd approach this.</h3>
+      <div class="nm-steps" id="nm-steps"></div>
+      <div class="nm-cta">
+        <a href="/#contact" class="btn-brass">Talk to Dean about your options →</a>
+        <a href="/maintenance-guide" class="btn-ghost-light">Explore homeowner tools</a>
+      </div>
+    </div>
+
+    <!-- Assumptions -->
+    <div class="assumptions">
+      <h3>How these numbers are calculated</h3>
+      <div class="assume-grid">
+        <div class="assume-item"><strong>FHA upfront MIP (1.75%)</strong>Financed into your first mortgage — not paid at closing, so it doesn't affect cash needed upfront.</div>
+        <div class="assume-item"><strong>FHA monthly mortgage insurance</strong>0.55% of the loan balance per year, split across 12 monthly payments.</div>
+        <div class="assume-item"><strong>Down payment covered by DPA</strong>All four programs cover your 3.5% FHA down payment. Closing costs vary and may require additional funds.</div>
+        <div class="assume-item"><strong>Arrive Home rates</strong>Repayable: 6.25% first / 8.25% second (10-yr amortizing). Forgivable: 6.625% first / 0% (forgiven after 36 on-time payments).</div>
+        <div class="assume-item"><strong>metroDPA silent second</strong>0% interest, deferred — no monthly payment. The full DPA balance is due when you sell or refinance. Never forgiven.</div>
+        <div class="assume-item"><strong>Cash needed estimate</strong>Reflects estimated closing costs (~2–3% of purchase price) minus DPA. Your actual figure will vary — get a Loan Estimate for precision.</div>
+      </div>
+    </div>
+
+    <div class="disclosure"><p><strong>Important:</strong> This tool is for educational purposes only. It does not constitute a loan commitment, rate lock, or guarantee of financing. All rates, program terms, and assistance amounts are subject to change. Actual payments vary based on credit profile, property taxes, insurance, and other factors. FHA MIP reflects current standard rates. Arrive Home Forgivable forgiveness requires 36 consecutive on-time payments and other program conditions. metroDPA balance is due upon sale, refinance, or when the property is no longer your primary residence. Equal Housing Lender. Dean Reiber NMLS #2463805 · Cornerstone First Mortgage NMLS #173855.</p></div>
+  </div>
+
+  <div class="site-footer">
+    <img src="HL_Logo_Horizontal_White.png" alt="The Handy Lender">
+    <div class="footer-right">Dean Reiber · Loan Officer · NMLS #2463805<br>Cornerstone First Mortgage · Company NMLS #173855 · Equal Housing Lender</div>
+  </div>
+</div>
+
+<script>
+var exitYears=3,currentView='numbers';
+var userProfile={credit:'',ftb:'',price:400000,income:0,county:''};
+
+function fmt(v){return '$'+Math.round(v).toLocaleString();}
+function fmtD(v){return '$'+v.toFixed(2);}
+
+function submitIntake(){
+  var credit=document.getElementById('q-credit').value;
+  var ftb=document.getElementById('q-ftb').value;
+  var price=document.getElementById('q-price').value;
+  var income=document.getElementById('q-income').value;
+  var county=document.getElementById('q-county').value;
+  if(!credit||!ftb||!price||!income||!county){
+    document.getElementById('intake-error').style.display='block';return;
+  }
+  document.getElementById('intake-error').style.display='none';
+  userProfile={credit:credit,ftb:ftb,price:parseInt(price),income:parseInt(income),county:county};
+  document.getElementById('price').value=userProfile.price;
+  document.getElementById('intake-screen').style.display='none';
+  document.getElementById('results-screen').style.display='block';
+  buildDeanMessage();
+  buildGuidance();
+  buildNextMove();
+  calc();
+}
+
+function buildDeanMessage(){
+  var p=userProfile;
+  var creditLabel={'760':'760+','720':'720–759','680':'680–719','640':'640–679','below640':'below 640'}[p.credit]||p.credit;
+  var ftbLabel=p.ftb==='yes'?'first-time buyer':'previous homeowner';
+  var msg='';
+  if(p.credit==='760'||p.credit==='720'){
+    msg='Based on what you shared, <strong>your credit profile is strong</strong> — that opens up the best program terms available. The forgivable assistance option likely makes the most sense for your situation. Here\'s a side-by-side comparison so you can see exactly what each path looks like.';
+  } else if(p.credit==='680'){
+    msg='Your credit score puts you <strong>in a solid qualifying range</strong> for all four programs. The biggest question is whether you plan to stay long enough for the forgivable program to fully vest. Let\'s look at the numbers side by side.';
+  } else if(p.credit==='640'){
+    msg='You\'re in a qualifying range, though <strong>your rate options will be slightly different</strong> than buyers with higher scores. The good news: the DPA programs still fully apply. Here\'s what each path looks like for you.';
+  } else {
+    msg='I want to be honest with you — <strong>a score below 640 may limit some program options</strong>. But there may still be paths available, and sometimes a few months of focused credit work can open significantly better terms. Let\'s look at what\'s possible.';
+  }
+  document.getElementById('dean-message').innerHTML=msg;
+}
+
+function buildGuidance(){
+  var p=userProfile;
+  var items=[];
+  if(p.ftb==='yes'){
+    items.push({icon:'🏡',text:'<strong>As a first-time buyer, you have access to every program shown here.</strong> That\'s a meaningful advantage — many of these programs reserve their best terms specifically for buyers who haven\'t owned before.'});
+  } else {
+    items.push({icon:'📋',text:'<strong>Since you\'ve owned before, income and property limits may apply to some programs.</strong> The core programs still apply, but it\'s worth a quick conversation to confirm eligibility based on your specific situation.'});
+  }
+  if(parseInt(p.price)<=500000){
+    items.push({icon:'💡',text:'<strong>Your target price range gives you strong program flexibility.</strong> Both the Arrive Home and metroDPA programs work well at this price point, and the assistance amounts are meaningful relative to your down payment requirement.'});
+  } else {
+    items.push({icon:'⚠️',text:'<strong>At higher price points, the DPA as a percentage of your purchase is smaller</strong> — but still significant in dollar terms. Make sure you\'re factoring in closing costs, which are separate from the down payment.'});
+  }
+  items.push({icon:'📅',text:'<strong>How long you plan to stay matters enormously here.</strong> If you\'re staying 3+ years, the forgivable program becomes increasingly attractive. If there\'s any chance you\'ll sell before 36 payments, the repayable or metroDPA options deserve serious consideration.'});
+
+  var html=items.map(i=>'<div class="guidance-item"><div class="g-icon">'+i.icon+'</div><p>'+i.text+'</p></div>').join('');
+  document.getElementById('guidance-items').innerHTML=html;
+  document.getElementById('guidance-title').textContent=p.ftb==='yes'?'Here\'s what stands out about your situation.':'A few things I\'d want you to know going in.';
+}
+
+function buildNextMove(){
+  var p=userProfile;
+  var steps=[];
+  if(p.credit==='below640'){
+    steps=[
+      {text:'<strong>Get a free credit review.</strong> In many cases, a few targeted actions can move a score meaningfully in 60–90 days. I can point you toward the right resources.'},
+      {text:'<strong>Don\'t stop here.</strong> Even at your current credit profile, some paths may be open. A conversation costs nothing.'},
+      {text:'<strong>Ask about what\'s changing in your life.</strong> If income, employment, or debt is shifting, that affects timing and strategy.'}
+    ];
+    document.getElementById('nm-headline').textContent='Let\'s figure out your real timeline.';
+  } else if(p.ftb==='yes'){
+    steps=[
+      {text:'<strong>Compare the forgivable vs. repayable side by side</strong> using the tool above — your break-even timeline is the key number.'},
+      {text:'<strong>Get a Loan Estimate.</strong> The numbers above are illustrative. A real Loan Estimate gives you the actual figures for your specific situation.'},
+      {text:'<strong>Don\'t forget closing costs.</strong> Down payment assistance covers your down payment — but closing costs are separate and worth planning for.'}
+    ];
+    document.getElementById('nm-headline').textContent='Here\'s how I\'d approach this.';
+  } else {
+    steps=[
+      {text:'<strong>Confirm your eligibility.</strong> Some DPA programs have first-time buyer requirements — let\'s make sure you qualify before you fall in love with a specific path.'},
+      {text:'<strong>Run the exit analysis above</strong> for your most likely timeline. Net proceeds at sale is often the most important number for repeat buyers.'},
+      {text:'<strong>Consider the rate tradeoff.</strong> Some programs come with slightly higher first mortgage rates in exchange for assistance. That math matters over a 5–7 year hold.'}
+    ];
+    document.getElementById('nm-headline').textContent='A few things worth thinking through.';
+  }
+  document.getElementById('nm-steps').innerHTML=steps.map((s,i)=>'<div class="nm-step"><div class="nm-num">'+(i+1)+'</div><p>'+s.text+'</p></div>').join('');
+}
+
+function setYr(y,el){
+  exitYears=y;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');calc();
+}
+
+function setView(v,el){
+  currentView=v;
+  document.querySelectorAll('.vtab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('view-numbers').style.display=v==='numbers'?'block':'none';
+  document.getElementById('view-exit').className='exit-view'+(v==='exit'?' active':'');
+  document.getElementById('view-explain').className='explain-view'+(v==='explain'?' active':'');
+}
+
+function toggleAdv(el){
+  var d=el.nextElementSibling;
+  d.classList.toggle('open');
+  el.textContent=d.classList.contains('open')?'Hide advanced details':'See advanced details';
+}
+
+function pmt(rate,n,pv){if(rate===0)return pv/n;var r=rate/12;return pv*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);}
+function remainBal(rate,n,pv,pmts){if(rate===0)return pv-pmt(0,n,pv)*pmts;var r=rate/12;return pv*Math.pow(1+r,pmts)-pmt(rate,n,pv)*(Math.pow(1+r,pmts)-1)/r;}
+
+function calc(){
+  var purchase=+document.getElementById('price').value;
+  var apprRate=+document.getElementById('appr').value/100;
+  var metroR=+document.getElementById('metro-rate').value;
+  var sellCostP=+document.getElementById('sell-cost').value/100;
+  var yrs=exitYears,mos=yrs*12;
+
+  document.getElementById('price-out').textContent=fmt(purchase);
+  document.getElementById('appr-out').textContent=(+document.getElementById('appr').value).toFixed(2)+'%/yr';
+  document.getElementById('metro-rate-out').textContent=metroR.toFixed(3)+'%';
+  document.getElementById('sell-cost-out').textContent=(+document.getElementById('sell-cost').value).toFixed(2)+'%';
+
+  var dp=purchase*0.035;
+  var baseLoan=purchase-dp;
+  var UFMIP=baseLoan*0.0175;
+  var firstLoan=baseLoan+UFMIP;
+  var mipMo=(baseLoan*0.0055)/12;
+  var salePrice=purchase*Math.pow(1+apprRate,yrs);
+  var sellCosts=salePrice*sellCostP;
+  var estClosing=purchase*0.025;
+
+  var scenarios=[
+    {label:'Arrive Home — Repayable',short:'Repayable',badge:'badge-purple',rate1:6.25,dpaAmt:dp,dpaRate:8.25,dpaTerm:120,forgivable:false,metro:false,
+     explain:'Your down payment is covered by a 10-year second loan at 8.25%. You pay it back monthly, but the balance shrinks every month you own the home.',
+     pros:['Second mortgage balance reduces over time','Highest DPA amount available (up to 5%)','No income limits'],
+     cons:['Highest monthly payment of the four options','Second mortgage adds 10 years of payments','Rate on second is 2% above first']},
+    {label:'Arrive Home — Forgivable',short:'Forgivable',badge:'badge-teal',rate1:6.625,dpaAmt:dp,dpaRate:0,dpaTerm:0,forgivable:true,metro:false,
+     explain:'Your down payment is a gift that disappears after 36 on-time payments (3 years). No monthly payment on the second, and after 3 years you owe nothing.',
+     pros:['Second mortgage completely forgiven after 36 payments','No monthly payment on the DPA amount','Best outcome if you stay 3+ years'],
+     cons:['Slightly higher first rate than repayable','If you sell before 36 payments, DPA balance is due','Requires 36 consecutive on-time payments']},
+    {label:'metroDPA — 3% Assistance',short:'metroDPA 3%',badge:'badge-blue',rate1:metroR,dpaAmt:purchase*0.03,dpaRate:0,dpaTerm:0,forgivable:false,metro:true,
+     explain:'You get 3% of the purchase price as a silent second at 0% interest. No monthly payment — but the full balance is due when you sell.',
+     pros:['No monthly payment on the second','0% interest on DPA balance','Competitive first mortgage rate'],
+     cons:['Full DPA balance due at sale — never forgiven','Less assistance than Arrive Home options','Reduces your net proceeds at sale']},
+    {label:'metroDPA — 4% Assistance',short:'metroDPA 4%',badge:'badge-green',rate1:metroR,dpaAmt:purchase*0.04,dpaRate:0,dpaTerm:0,forgivable:false,metro:true,
+     explain:'Same as metroDPA 3% but with more upfront assistance — 4% of the purchase price. More help now, larger deferred balance later.',
+     pros:['Largest DPA amount of the metroDPA options','No monthly payment on the second','0% interest on DPA balance'],
+     cons:['Largest silent second balance due at sale','Same rate as 3% but larger deferred obligation','Never forgiven']}
+  ];
+
+  var results=scenarios.map(s=>{
+    var p1=pmt(s.rate1/100,360,firstLoan);
+    var dpaPmt=0,remDPA=0;
+    if(s.forgivable){dpaPmt=0;remDPA=mos>=36?0:s.dpaAmt;}
+    else if(s.metro){dpaPmt=0;remDPA=s.dpaAmt;}
+    else{dpaPmt=pmt(s.dpaRate/100,s.dpaTerm,s.dpaAmt);remDPA=remainBal(s.dpaRate/100,s.dpaTerm,s.dpaAmt,mos);}
+    var totalMo=p1+dpaPmt+mipMo;
+    var totalPaid=totalMo*mos;
+    var rem1=remainBal(s.rate1/100,360,firstLoan,mos);
+    var totalOwed=rem1+remDPA;
+    var netProceeds=salePrice-sellCosts-totalOwed;
+    var cashNeeded=Math.max(0,estClosing-s.dpaAmt+Math.max(0,s.dpaAmt-dp));
+    return {s,p1,dpaPmt,mipMo,totalMo,totalPaid,rem1,remDPA,totalOwed,salePrice,sellCosts,netProceeds,cashNeeded,UFMIP,mipMo,firstLoan};
+  });
+
+  var best=results.reduce((a,b)=>b.netProceeds>a.netProceeds?b:a);
+  var sorted=results.map(r=>r.netProceeds).sort((a,b)=>b-a);
+  var margin=sorted[0]-sorted[1];
+  var bestCash=Math.min(...results.map(r=>r.cashNeeded));
+
+  // Cash hero
+  document.getElementById('cash-hero').innerHTML=
+    '<div class="cash-cell"><div class="cash-cell-label">Estimated cash to close</div><div class="cash-cell-num highlight">~'+fmt(bestCash)+'</div><div class="cash-cell-sub">With '+best.s.short+' — closing costs may reduce further with seller concessions</div></div>'+
+    '<div class="cash-cell"><div class="cash-cell-label">Your down payment</div><div class="cash-cell-num">'+fmt(dp)+'</div><div class="cash-cell-sub">Covered entirely by down payment assistance</div></div>'+
+    '<div class="cash-cell"><div class="cash-cell-label">Best monthly payment</div><div class="cash-cell-num">'+fmt(best.totalMo)+'/mo</div><div class="cash-cell-sub">P&I + MIP on '+best.s.short+' — add taxes & insurance</div></div>';
+
+  // Winner banner
+  document.getElementById('winner-main').textContent=best.s.label+' gives you the best outcome at '+yrs+' years — '+fmt(best.netProceeds)+' net proceeds at sale.';
+  document.getElementById('winner-sub').textContent=fmt(margin)+' more in your pocket than the next best option, based on current settings.';
+
+  // Numbers cards
+  var nh='';
+  results.forEach(r=>{
+    var isW=r===best;
+    var dpa2row=r.s.forgivable?'<div class="dr"><span class="dl">DPA monthly payment</span><span class="dv muted">$0 — no payment</span></div>':
+      r.s.metro?'<div class="dr"><span class="dl">DPA monthly payment</span><span class="dv muted">$0 — deferred</span></div>':
+      '<div class="dr"><span class="dl">DPA monthly payment</span><span class="dv">'+fmtD(r.dpaPmt)+'</span></div>';
+    var cashEst=Math.max(0,estClosing-r.s.dpaAmt);
+    nh+='<div class="card'+(isW?' winner':'')+'">'+
+      '<div class="card-header">'+
+      '<span class="badge '+r.s.badge+'">'+r.s.short+'</span>'+(isW?'<span class="badge-winner">Best at '+yrs+'yr</span>':'')+
+      '<h3>'+r.s.label+'</h3>'+
+      '<div class="rate-line">'+r.s.rate1.toFixed(3)+'% first'+(r.s.metro?' · 0% deferred second':r.s.forgivable?' · 0% forgivable second':' · '+r.s.dpaRate+'% second (10yr)')+'</div>'+
+      '</div>'+
+      '<div class="card-body">'+
+      '<div class="total-hero">'+
+      '<div class="th-label">Est. cash to close</div>'+
+      '<div class="th-num '+(cashEst<5000?'pos':'')+'">~'+fmt(cashEst)+'</div>'+
+      '<div class="th-sub">Closing costs minus DPA · Estimate only</div>'+
+      '</div>'+
+      '<div class="cdiv"></div>'+
+      '<div class="dr"><span class="dl">Down payment assistance</span><span class="dv pos">'+fmt(r.s.dpaAmt)+' covered</span></div>'+
+      '<div class="dr"><span class="dl">First mortgage P&I</span><span class="dv">'+fmtD(r.p1)+'</span></div>'+
+      dpa2row+
+      '<div class="dr"><span class="dl">Monthly MIP</span><span class="dv">'+fmtD(r.mipMo)+'</span></div>'+
+      '<div class="cdiv"></div>'+
+      '<div class="dr"><span class="dl" style="font-weight:600;">Total monthly (P&I+MIP)</span><span class="dv" style="font-size:14px;font-weight:600;">'+fmt(r.totalMo)+'</span></div>'+
+      '<span class="adv-toggle" onclick="toggleAdv(this)">See advanced details</span>'+
+      '<div class="adv-details">'+
+      '<div class="dr" style="margin-top:8px;"><span class="dl">First loan (incl. UFMIP)</span><span class="dv">'+fmt(r.firstLoan)+'</span></div>'+
+      '<div class="dr"><span class="dl">Financed UFMIP (1.75%)</span><span class="dv">'+fmt(r.UFMIP)+'</span></div>'+
+      '</div>'+
+      '</div></div>';
+  });
+  document.getElementById('cards-numbers').innerHTML=nh;
+
+  // Exit cards
+  var eh='';
+  results.forEach(r=>{
+    var isW=r===best;
+    var dpaBalRow=r.s.forgivable&&mos>=36?'<div class="dr"><span class="dl">DPA balance at sale</span><span class="dv pos">$0 — forgiven!</span></div>':
+      r.s.forgivable?'<div class="dr"><span class="dl">DPA balance at sale</span><span class="dv neg">'+fmt(r.remDPA)+' (not yet forgiven)</span></div>':
+      r.s.metro?'<div class="dr"><span class="dl">DPA balance at sale</span><span class="dv neg">'+fmt(r.remDPA)+' due at sale</span></div>':
+      '<div class="dr"><span class="dl">DPA balance at sale</span><span class="dv neg">'+fmt(r.remDPA)+'</span></div>';
+    eh+='<div class="card'+(isW?' winner':'')+'">'+
+      '<div class="card-header"><span class="badge '+r.s.badge+'">'+r.s.short+'</span>'+(isW?'<span class="badge-winner">Best at '+yrs+'yr</span>':'')+
+      '<h3>'+r.s.label+'</h3></div>'+
+      '<div class="card-body">'+
+      '<div class="dr"><span class="dl">Projected sale price</span><span class="dv pos">'+fmt(r.salePrice)+'</span></div>'+
+      '<div class="dr"><span class="dl">Selling costs</span><span class="dv neg">−'+fmt(r.sellCosts)+'</span></div>'+
+      '<div class="dr"><span class="dl">First mortgage balance</span><span class="dv neg">−'+fmt(r.rem1)+'</span></div>'+
+      dpaBalRow+
+      '<div class="cdiv"></div>'+
+      '<div class="total-hero">'+
+      '<div class="th-label">Net proceeds at '+yrs+' years</div>'+
+      '<div class="th-num '+(r.netProceeds>=0?'pos':'neg')+'">'+fmt(r.netProceeds)+'</div>'+
+      '<div class="th-sub">What you walk away with after all loans and selling costs</div>'+
+      '</div>'+
+      '</div></div>';
+  });
+  document.getElementById('cards-exit').innerHTML=eh;
+
+  // Explain cards
+  var xh='';
+  results.forEach(r=>{
+    var isW=r===best;
+    xh+='<div class="explain-card'+(isW?' winner':'')+'">'+
+      '<span class="badge '+r.s.badge+'" style="margin-bottom:8px">'+r.s.short+'</span>'+(isW?'<span class="badge-winner" style="margin-left:4px">Best at '+yrs+'yr</span>':'')+
+      '<h3>'+r.s.label+'</h3>'+
+      '<p class="tagline">~'+fmt(r.totalMo)+'/mo · '+fmt(r.s.dpaAmt)+' assistance</p>'+
+      '<p style="font-size:12px;color:#4a5568;line-height:1.7;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #e2e8f0">'+r.s.explain+'</p>'+
+      '<p style="font-size:11px;font-weight:500;color:var(--teal);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em">What works in your favor</p>'+
+      r.s.pros.map(p=>'<div class="explain-item"><div class="edot pos"></div><p>'+p+'</p></div>').join('')+
+      '<p style="font-size:11px;font-weight:500;color:#993c1d;margin-bottom:8px;margin-top:10px;text-transform:uppercase;letter-spacing:0.06em">Things to consider</p>'+
+      r.s.cons.map(c=>'<div class="explain-item"><div class="edot neg"></div><p>'+c+'</p></div>').join('')+
+      '</div>';
+  });
+  document.getElementById('explain-grid').innerHTML=xh;
+}
+
+document.getElementById('price').addEventListener('input',calc);
+document.getElementById('appr').addEventListener('input',calc);
+document.getElementById('metro-rate').addEventListener('input',calc);
+document.getElementById('sell-cost').addEventListener('input',calc);
+</script>
+</body>
+</html>
