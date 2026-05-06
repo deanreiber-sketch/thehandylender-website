@@ -4,847 +4,2514 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Handy Lender™ | Dean Reiber | Cornerstone First Mortgage</title>
-<meta name="description" content="Dean Reiber helps Colorado homeowners build wealth through smart financing and proactive home maintenance. Mortgage expert, home maintenance tools, and more.">
+<meta name="description" content="Thoughtful guidance for every stage of homeownership. Dean Reiber, The Handy Lender — Cornerstone First Mortgage, Colorado.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --navy: #0a2342;
-    --navy-mid: #163660;
-    --navy-light: #1e4d8c;
-    --gold: #c9a84c;
-    --gold-light: #e8c97a;
-    --cream: #f8f5f0;
-    --white: #ffffff;
-    --text: #1a1a2e;
-    --text-muted: #5a6a7e;
-    --border: rgba(10,35,66,0.1);
-  }
+/* ═══ hero-v3.html ═══ */
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:#f5f1eb;overflow-x:hidden;}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+:root{
+  --navy:#0d2137;
+  --navy-mid:#163354;
+  --brass:#a08055;
+  --brass-light:#bfa070;
+  --brass-pale:#efe5d0;
+  --cream:#f5f1eb;
+  --cream-dark:#ece5d8;
+  --white:#ffffff;
+  --text:#1c1c2a;
+  --text-muted:#74788a;
+  --border:rgba(13,33,55,0.07);
+}
 
-  html { scroll-behavior: smooth; }
+/* NAV — more air, lighter */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(245,241,235,0.88);
+  backdrop-filter:blur(24px);
+  border-bottom:1px solid rgba(13,33,55,0.05);
+  padding:0 4rem;height:62px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo img{height:28px;width:auto;display:block;opacity:0.92;}
+.nav-links{display:flex;align-items:center;gap:2.75rem;list-style:none;}
+.nav-links a{
+  color:rgba(116,120,138,0.85);text-decoration:none;
+  font-size:12.5px;font-weight:400;letter-spacing:0.04em;
+  transition:color 0.3s;
+}
+.nav-links a:hover{color:var(--navy);}
+.nav-cta{
+  color:var(--navy)!important;
+  border-bottom:1px solid rgba(13,33,55,0.3)!important;
+  padding-bottom:1px;font-weight:500!important;
+}
+.nav-cta:hover{border-color:var(--navy)!important;}
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    color: var(--text);
-    background: var(--white);
-    overflow-x: hidden;
-  }
+/* HERO SPLIT */
+.hero{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:55% 45%;
+  padding-top:62px;
+}
 
-  /* NAV */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(10,35,66,0.97);
-    backdrop-filter: blur(12px);
-    padding: 0 2rem;
-    height: 68px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
+/* ─── LEFT ─── */
+.hero-left{
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:0 5rem 0 5.5rem;
+  min-height:calc(100vh - 62px);
+  background:var(--cream);
+}
 
-  .nav-logo {
-    display: flex; align-items: center;
-    text-decoration: none;
-  }
-  .nav-logo img {
-    height: 36px;
-    width: auto;
-    display: block;
-  }
+/* Cinematic image atmosphere — warm architectural light */
+.hero-left-img{
+  position:absolute;inset:0;
+  background:
+    url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1200&q=80&auto=format&fit=crop') center/cover no-repeat;
+  opacity:0.11;
+  filter:saturate(0.6) sepia(0.2);
+  pointer-events:none;
+}
 
-  .nav-links {
-    display: flex; align-items: center; gap: 2rem;
-    list-style: none;
-  }
-  .nav-links a {
-    color: rgba(255,255,255,0.75);
-    text-decoration: none;
-    font-size: 14px; font-weight: 400;
-    letter-spacing: 0.02em;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--gold-light); }
+/* Topographic brand motif — recurring signature */
+.topo-overlay{
+  position:absolute;inset:0;pointer-events:none;overflow:hidden;
+}
+.topo-overlay svg{
+  position:absolute;bottom:-40px;right:-40px;
+  width:420px;height:420px;opacity:0.055;
+}
 
-  .nav-cta {
-    background: var(--gold) !important;
-    color: var(--navy) !important;
-    padding: 8px 20px;
-    border-radius: 6px;
-    font-weight: 500 !important;
-    transition: background 0.2s !important;
-  }
-  .nav-cta:hover { background: var(--gold-light) !important; }
+/* Warm atmospheric glow */
+.hero-left::after{
+  content:'';
+  position:absolute;bottom:-100px;left:-60px;
+  width:460px;height:460px;border-radius:50%;
+  background:radial-gradient(circle,var(--brass-pale) 0%,transparent 68%);
+  opacity:0.5;pointer-events:none;
+}
 
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    background: var(--navy);
-    display: flex; align-items: center;
-    padding: 100px 2rem 60px;
-    position: relative;
-    overflow: hidden;
-  }
+.hero-left-inner{
+  position:relative;z-index:2;
+  max-width:500px;
+}
 
-  .hero-bg-pattern {
-    position: absolute; inset: 0;
-    background-image:
-      radial-gradient(circle at 20% 50%, rgba(201,168,76,0.08) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(30,77,140,0.4) 0%, transparent 50%),
-      radial-gradient(circle at 60% 80%, rgba(22,54,96,0.6) 0%, transparent 40%);
-  }
+.hero-kicker{
+  display:flex;align-items:center;gap:10px;
+  font-size:10px;font-weight:500;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--brass);
+  margin-bottom:2.25rem;
+  opacity:0;animation:fadeUp 0.8s 0.1s ease forwards;
+}
+.kicker-line{width:28px;height:1px;background:var(--brass);flex-shrink:0;}
 
-  .hero-grid-lines {
-    position: absolute; inset: 0; opacity: 0.04;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px);
-    background-size: 60px 60px;
-  }
+.hero-headline{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(3rem,4.6vw,4.2rem);
+  font-weight:400;line-height:1.1;
+  color:var(--navy);letter-spacing:-0.015em;
+  margin-bottom:1.75rem;
+  opacity:0;animation:fadeUp 0.9s 0.25s ease forwards;
+}
+.hero-headline em{
+  font-style:italic;color:var(--brass);font-weight:300;
+}
 
-  .hero-inner {
-    max-width: 1200px; margin: 0 auto; width: 100%;
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 4rem; align-items: center;
-    position: relative; z-index: 2;
-  }
+.hero-sub{
+  font-size:15.5px;font-weight:300;line-height:1.85;
+  color:var(--text-muted);
+  max-width:380px;margin-bottom:2.75rem;
+  opacity:0;animation:fadeUp 0.9s 0.42s ease forwards;
+}
 
-  .hero-eyebrow {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(201,168,76,0.15);
-    border: 1px solid rgba(201,168,76,0.3);
-    color: var(--gold-light);
-    font-size: 12px; font-weight: 500;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    padding: 6px 14px; border-radius: 100px;
-    margin-bottom: 1.5rem;
-    animation: fadeUp 0.6s ease both;
-  }
+.hero-cta-group{
+  display:flex;align-items:center;gap:1.75rem;margin-bottom:4rem;
+  opacity:0;animation:fadeUp 0.9s 0.57s ease forwards;
+}
+.btn-primary{
+  background:var(--navy);color:var(--white);
+  padding:12px 24px;border-radius:8px;
+  font-size:13.5px;font-weight:500;
+  text-decoration:none;border:none;cursor:pointer;
+  display:inline-flex;align-items:center;gap:7px;
+  letter-spacing:0.015em;
+  transition:background 0.25s,transform 0.15s;
+  font-family:'DM Sans',sans-serif;
+}
+.btn-primary:hover{background:var(--navy-mid);transform:translateY(-1px);}
+.btn-text{
+  font-size:12.5px;font-weight:400;color:var(--text-muted);
+  text-decoration:none;letter-spacing:0.03em;
+  border-bottom:1px solid rgba(116,120,138,0.25);padding-bottom:1px;
+  transition:color 0.25s,border-color 0.25s;
+}
+.btn-text:hover{color:var(--navy);border-color:rgba(13,33,55,0.4);}
 
-  .hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2.4rem, 4vw, 3.4rem);
-    font-weight: 500; line-height: 1.2;
-    color: var(--white);
-    margin-bottom: 1.25rem;
-    animation: fadeUp 0.6s 0.1s ease both;
-  }
+/* Proof — subtracted to 2, emotionally resonant */
+.hero-proof{
+  display:flex;gap:2.75rem;
+  padding-top:2rem;border-top:1px solid var(--border);
+  opacity:0;animation:fadeUp 0.9s 0.72s ease forwards;
+}
+.proof-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.85rem;font-weight:500;
+  color:var(--navy);line-height:1;margin-bottom:4px;
+}
+.proof-num sup{font-size:0.9rem;font-weight:400;color:var(--brass);}
+.proof-label{font-size:11px;color:var(--text-muted);font-weight:300;line-height:1.55;max-width:130px;}
 
-  .hero h1 em {
-    font-style: italic;
-    color: var(--gold-light);
-  }
+/* ─── RIGHT ─── */
+.hero-right{
+  background:var(--navy);
+  padding:4.5rem 3.75rem;
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;overflow:hidden;
+  min-height:calc(100vh - 62px);
+  transition:background 0.6s ease;
+}
 
-  .hero-sub {
-    font-size: 17px; font-weight: 300; line-height: 1.7;
-    color: rgba(255,255,255,0.7);
-    margin-bottom: 2rem;
-    animation: fadeUp 0.6s 0.2s ease both;
-  }
+/* Topo motif on dark side too */
+.hero-right .topo-dark{
+  position:absolute;top:-60px;right:-60px;
+  width:380px;height:380px;opacity:0.04;pointer-events:none;
+}
 
-  .hero-actions {
-    display: flex; gap: 12px; flex-wrap: wrap;
-    animation: fadeUp 0.6s 0.3s ease both;
-  }
+.hero-right::after{
+  content:'';
+  position:absolute;bottom:-80px;left:-60px;
+  width:320px;height:320px;border-radius:50%;
+  background:radial-gradient(circle,rgba(22,51,84,0.7) 0%,transparent 70%);
+  pointer-events:none;
+}
 
-  .btn-primary {
-    background: var(--gold);
-    color: var(--navy);
-    padding: 13px 28px;
-    border-radius: 8px;
-    font-size: 15px; font-weight: 500;
-    text-decoration: none;
-    border: none; cursor: pointer;
-    transition: background 0.2s, transform 0.15s;
-    display: inline-flex; align-items: center; gap: 8px;
-  }
-  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+/* Dynamic background layer */
+.right-glow{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(160,128,85,0.06) 0%,transparent 65%);
+  pointer-events:none;
+  transition:opacity 0.6s ease;
+}
 
-  .btn-ghost {
-    background: transparent;
-    color: rgba(255,255,255,0.8);
-    padding: 13px 28px;
-    border-radius: 8px;
-    font-size: 15px; font-weight: 400;
-    text-decoration: none;
-    border: 1px solid rgba(255,255,255,0.2);
-    transition: border-color 0.2s, color 0.2s;
-    display: inline-flex; align-items: center; gap: 8px;
-  }
-  .btn-ghost:hover { border-color: rgba(255,255,255,0.5); color: var(--white); }
+.convo-wrap{position:relative;z-index:2;}
 
-  .hero-trust {
-    display: flex; align-items: center; gap: 1.5rem;
-    margin-top: 2rem;
-    animation: fadeUp 0.6s 0.4s ease both;
-  }
-  .trust-item {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 13px; color: rgba(255,255,255,0.5);
-  }
-  .trust-dot { width: 5px; height: 5px; background: var(--gold); border-radius: 50%; }
+.convo-eyebrow{
+  font-size:10px;font-weight:500;letter-spacing:0.14em;
+  text-transform:uppercase;color:rgba(255,255,255,0.28);
+  margin-bottom:1.1rem;
+}
 
-  /* HERO CARD */
-  .hero-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px;
-    padding: 2rem;
-    animation: fadeUp 0.6s 0.2s ease both;
-  }
+/* "I'll" moment — personal voice */
+.convo-dean{
+  font-size:13px;font-weight:300;
+  color:rgba(255,255,255,0.42);
+  font-style:italic;margin-bottom:1.5rem;
+  line-height:1.5;
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px;
+}
 
-  .hero-card-header {
-    display: flex; align-items: center; gap: 10px;
-    margin-bottom: 1.25rem;
-    padding-bottom: 1.25rem;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-  }
-  .hero-card-icon {
-    width: 40px; height: 40px;
-    background: rgba(201,168,76,0.2);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-  }
-  .hero-card-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 16px; font-weight: 500;
-    color: var(--white);
-  }
-  .hero-card-sub { font-size: 12px; color: rgba(255,255,255,0.45); }
+.convo-q{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(1.5rem,2.1vw,1.95rem);
+  font-weight:300;font-style:italic;
+  color:rgba(255,255,255,0.9);
+  line-height:1.4;margin-bottom:2rem;
+  min-height:68px;
+  transition:opacity 0.35s ease,transform 0.35s ease;
+}
+.convo-q.fading{opacity:0;transform:translateY(-5px);}
 
-  .season-pills {
-    display: flex; gap: 6px; flex-wrap: wrap;
-    margin-bottom: 1.25rem;
-  }
-  .season-pill {
-    padding: 5px 12px;
-    border-radius: 100px;
-    font-size: 12px; font-weight: 500;
-    cursor: pointer;
-    transition: all 0.15s;
-    border: 1px solid rgba(255,255,255,0.12);
-    color: rgba(255,255,255,0.6);
-    background: transparent;
-  }
-  .season-pill.active {
-    background: var(--gold);
-    color: var(--navy);
-    border-color: var(--gold);
-  }
+.options{display:flex;flex-direction:column;gap:8px;}
 
-  .mini-checklist { display: flex; flex-direction: column; gap: 8px; }
-  .mini-check {
-    display: flex; align-items: center; gap: 10px;
-    padding: 8px 10px;
-    border-radius: 8px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.06);
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-  .mini-check:hover { background: rgba(255,255,255,0.06); }
-  .mini-check.done { opacity: 0.45; }
-  .mini-check-box {
-    width: 16px; height: 16px;
-    border-radius: 4px;
-    border: 1.5px solid rgba(255,255,255,0.25);
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s;
-    font-size: 10px; color: transparent;
-  }
-  .mini-check.done .mini-check-box {
-    background: var(--gold); border-color: var(--gold); color: var(--navy);
-  }
-  .mini-check-text { font-size: 13px; color: rgba(255,255,255,0.7); }
-  .mini-check.done .mini-check-text { text-decoration: line-through; color: rgba(255,255,255,0.3); }
+.option{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:10px;padding:12px 15px;
+  cursor:pointer;
+  display:flex;align-items:center;gap:12px;
+  transition:background 0.25s,border-color 0.25s,transform 0.25s;
+  position:relative;overflow:hidden;
+}
+.option-accent{
+  position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--brass-light);border-radius:10px 0 0 10px;
+  transform:scaleY(0);transform-origin:center;
+  transition:transform 0.3s ease;
+}
+.option:hover .option-accent,.option.active .option-accent{transform:scaleY(1);}
+.option:hover{background:rgba(255,255,255,0.06);border-color:rgba(160,128,85,0.28);transform:translateX(3px);}
+.option.active{background:rgba(160,128,85,0.09);border-color:rgba(160,128,85,0.42);transform:translateX(3px);}
 
-  .hero-card-footer {
-    margin-top: 1rem; padding-top: 1rem;
-    border-top: 1px solid rgba(255,255,255,0.08);
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .progress-text { font-size: 12px; color: rgba(255,255,255,0.4); }
-  .progress-bar-mini {
-    width: 80px; height: 4px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 2px; overflow: hidden;
-  }
-  .progress-fill-mini {
-    height: 100%; background: var(--gold);
-    border-radius: 2px; width: 0%;
-    transition: width 0.3s;
-  }
+.opt-icon{
+  width:34px;height:34px;border-radius:8px;
+  background:rgba(255,255,255,0.05);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:background 0.25s;
+}
+.option:hover .opt-icon,.option.active .opt-icon{background:rgba(160,128,85,0.16);}
+.opt-icon svg{width:16px;height:16px;stroke:rgba(255,255,255,0.45);stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round;transition:stroke 0.25s;}
+.option:hover .opt-icon svg,.option.active .opt-icon svg{stroke:var(--brass-light);}
 
-  /* STATS BAR */
-  .stats-bar {
-    background: var(--cream);
-    padding: 2.5rem 2rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .stats-inner {
-    max-width: 1200px; margin: 0 auto;
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
-  }
-  .stat-item { text-align: center; }
-  .stat-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.2rem; font-weight: 600;
-    color: var(--navy);
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-  .stat-num span { color: var(--gold); }
-  .stat-label { font-size: 13px; color: var(--text-muted); font-weight: 400; }
+.opt-body{flex:1;}
+.opt-title{font-size:13px;font-weight:500;color:rgba(255,255,255,0.85);margin-bottom:1px;line-height:1.3;}
+.opt-sub{font-size:11px;color:rgba(255,255,255,0.3);line-height:1.4;}
+.opt-arr{font-size:13px;color:rgba(255,255,255,0.13);transition:color 0.2s,transform 0.2s;flex-shrink:0;}
+.option:hover .opt-arr,.option.active .opt-arr{color:var(--brass-light);transform:translateX(2px);}
 
-  /* TOOLS SECTION */
-  .tools-section {
-    padding: 6rem 2rem;
-    background: var(--white);
-  }
-  .section-inner { max-width: 1200px; margin: 0 auto; }
+/* Response */
+.response{
+  margin-top:1.1rem;
+  background:rgba(160,128,85,0.07);
+  border:1px solid rgba(160,128,85,0.16);
+  border-radius:10px;padding:1.1rem 1.4rem;
+  opacity:0;transform:translateY(6px);
+  transition:opacity 0.45s ease,transform 0.45s ease;
+  pointer-events:none;
+}
+.response.visible{opacity:1;transform:translateY(0);pointer-events:all;}
+.resp-label{font-size:9.5px;font-weight:500;letter-spacing:0.13em;text-transform:uppercase;color:var(--brass-light);margin-bottom:0.8rem;}
+.resp-tools{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:0.9rem;}
+.resp-tool{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:100px;padding:4px 10px;
+  font-size:11px;color:rgba(255,255,255,0.55);
+  cursor:pointer;transition:all 0.15s;text-decoration:none;
+  display:inline-flex;align-items:center;gap:4px;
+}
+.resp-tool:hover{background:rgba(160,128,85,0.13);border-color:rgba(160,128,85,0.28);color:rgba(255,255,255,0.88);}
+.resp-tool svg{width:10px;height:10px;stroke:currentColor;stroke-width:1.5;fill:none;flex-shrink:0;}
+.resp-cta{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:12px;font-weight:500;color:var(--brass-light);
+  text-decoration:none;letter-spacing:0.01em;transition:gap 0.2s;
+}
+.resp-cta:hover{gap:9px;}
 
-  .section-eyebrow {
-    font-size: 12px; font-weight: 500;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 0.75rem;
-  }
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1.8rem, 3vw, 2.4rem);
-    font-weight: 500; line-height: 1.25;
-    color: var(--navy);
-    margin-bottom: 0.75rem;
-  }
-  .section-sub {
-    font-size: 16px; color: var(--text-muted);
-    font-weight: 300; line-height: 1.7;
-    max-width: 520px;
-    margin-bottom: 3rem;
-  }
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
 
-  .tools-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-  }
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;}
+  .hero-left{padding:4rem 2rem 3rem;}
+  .hero-right{padding:3rem 2rem;min-height:auto;}
+  nav{padding:0 1.5rem;}
+  .nav-links{display:none;}
+}/* ═══ philosophy-section.html ═══ */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:#ede8df;}
 
-  .tool-card {
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 2rem;
-    text-decoration: none;
-    color: var(--text);
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-    background: var(--white);
-  }
-  .tool-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: var(--navy);
-    transform: scaleX(0); transform-origin: left;
-    transition: transform 0.3s;
-  }
-  .tool-card:hover { border-color: rgba(10,35,66,0.25); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(10,35,66,0.08); }
-  .tool-card:hover::before { transform: scaleX(1); }
-  .tool-card.featured { border-color: var(--navy); background: var(--navy); }
-  .tool-card.featured::before { background: var(--gold); transform: scaleX(1); }
-  .tool-card.featured .tool-title { color: var(--white); }
-  .tool-card.featured .tool-desc { color: rgba(255,255,255,0.6); }
-  .tool-card.featured .tool-tag { background: rgba(201,168,76,0.2); color: var(--gold-light); }
+:root{
+  --navy:#0d2137;
+  --brass:#a08055;
+  --brass-light:#bfa070;
+  --brass-pale:#f0e5d0;
+  --stone:#ede8df;
+  --stone-dark:#e0d9ce;
+  --stone-deeper:#cfc6b8;
+  --linen:#f7f3ec;
+  --text:#1c1c2a;
+  --text-muted:#6e6e7a;
+  --border:rgba(13,33,55,0.07);
+}
 
-  .tool-icon {
-    width: 48px; height: 48px;
-    border-radius: 12px;
-    background: var(--cream);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px;
-    margin-bottom: 1.25rem;
-  }
-  .tool-card.featured .tool-icon { background: rgba(255,255,255,0.1); }
+/* ── PHILOSOPHY SECTION ── */
+.philosophy{
+  background:var(--stone);
+  padding:10.5rem 2rem 11rem;
+  position:relative;
+  overflow:hidden;
+}
 
-  .tool-tag {
-    display: inline-block;
-    font-size: 11px; font-weight: 500;
-    letter-spacing: 0.06em; text-transform: uppercase;
-    background: var(--cream);
-    color: var(--text-muted);
-    padding: 3px 10px; border-radius: 100px;
-    margin-bottom: 0.75rem;
-  }
-  .tool-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 18px; font-weight: 500;
-    color: var(--navy);
-    margin-bottom: 0.5rem;
-    line-height: 1.3;
-  }
-  .tool-desc {
-    font-size: 14px; color: var(--text-muted);
-    line-height: 1.6; font-weight: 300;
-    margin-bottom: 1.25rem;
-  }
-  .tool-link {
-    font-size: 13px; font-weight: 500;
-    color: var(--navy);
-    display: flex; align-items: center; gap: 6px;
-    transition: gap 0.2s;
-  }
-  .tool-card:hover .tool-link { gap: 10px; }
-  .tool-card.featured .tool-link { color: var(--gold-light); }
+/* Linen texture via CSS noise pattern */
+.philosophy::before{
+  content:'';
+  position:absolute;inset:0;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(13,33,55,0.012) 2px,
+      rgba(13,33,55,0.012) 3px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 3px,
+      rgba(13,33,55,0.008) 3px,
+      rgba(13,33,55,0.008) 4px
+    );
+  pointer-events:none;
+}
 
-  /* ABOUT SECTION */
-  .about-section {
-    padding: 6rem 2rem;
-    background: var(--cream);
-  }
-  .about-inner {
-    max-width: 1200px; margin: 0 auto;
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 5rem; align-items: center;
-  }
-  .about-visual {
-    background: var(--navy);
-    border-radius: 20px;
-    padding: 3rem;
-    position: relative;
-  }
-  .about-card-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.6rem; font-weight: 500;
-    color: var(--white); margin-bottom: 4px;
-  }
-  .about-card-title { font-size: 14px; color: var(--gold-light); margin-bottom: 1.5rem; }
-  .about-card-divider { height: 1px; background: rgba(255,255,255,0.1); margin-bottom: 1.5rem; }
-  .about-card-stat {
-    display: flex; justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    font-size: 13px;
-  }
-  .about-card-stat-label { color: rgba(255,255,255,0.45); }
-  .about-card-stat-value { color: var(--white); font-weight: 500; }
-  .about-badge {
-    position: absolute; bottom: -16px; right: 2rem;
-    background: var(--gold);
-    color: var(--navy);
-    padding: 10px 18px;
-    border-radius: 100px;
-    font-size: 13px; font-weight: 500;
-    display: flex; align-items: center; gap: 6px;
-  }
+/* Topo motif — brand signature recurring */
+.topo-bg{
+  position:absolute;
+  right:-120px;top:50%;
+  transform:translateY(-50%);
+  width:600px;height:600px;
+  opacity:0.04;pointer-events:none;
+}
 
-  .about-content .section-eyebrow { margin-top: 1rem; }
-  .about-body {
-    font-size: 16px; color: var(--text-muted);
-    line-height: 1.8; font-weight: 300;
-    margin-bottom: 1.5rem;
-  }
-  .about-list { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 2rem; }
-  .about-list li {
-    display: flex; align-items: flex-start; gap: 10px;
-    font-size: 15px; color: var(--text);
-  }
-  .about-list li::before {
-    content: '→';
-    color: var(--gold);
-    font-weight: 500;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
+/* Warm atmospheric bloom */
+.philosophy-glow{
+  position:absolute;
+  left:-100px;bottom:-100px;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,var(--brass-pale) 0%,transparent 65%);
+  opacity:0.4;pointer-events:none;
+}
 
-  /* CTA SECTION */
-  .cta-section {
-    padding: 6rem 2rem;
-    background: var(--navy);
-    text-align: center;
-    position: relative; overflow: hidden;
-  }
-  .cta-section::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(circle at 50% 50%, rgba(201,168,76,0.08) 0%, transparent 70%);
-  }
-  .cta-inner { max-width: 640px; margin: 0 auto; position: relative; z-index: 2; }
-  .cta-section .section-eyebrow { color: var(--gold); text-align: center; }
-  .cta-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1.8rem, 3vw, 2.6rem);
-    font-weight: 500; color: var(--white);
-    line-height: 1.25; margin-bottom: 1rem;
-  }
-  .cta-sub {
-    font-size: 16px; color: rgba(255,255,255,0.6);
-    font-weight: 300; line-height: 1.7;
-    margin-bottom: 2.5rem;
-  }
-  .cta-form {
-    display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
-    margin-bottom: 1rem;
-  }
-  .cta-input {
-    flex: 1; min-width: 200px;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 8px;
-    padding: 13px 16px;
-    font-size: 15px; color: var(--white);
-    font-family: 'DM Sans', sans-serif;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .cta-input::placeholder { color: rgba(255,255,255,0.35); }
-  .cta-input:focus { border-color: var(--gold); }
-  .cta-note { font-size: 12px; color: rgba(255,255,255,0.35); }
+.phil-inner{
+  max-width:1100px;margin:0 auto;
+  position:relative;z-index:2;
+}
 
-  /* FOOTER */
-  footer {
-    background: #061525;
-    padding: 4rem 2rem 2rem;
-    border-top: 1px solid rgba(255,255,255,0.06);
-  }
-  .footer-inner { max-width: 1200px; margin: 0 auto; }
+/* TOP — anchor statement */
+.phil-top{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5rem;
+  margin-bottom:7.5rem;
+  padding-bottom:7rem;
+  border-bottom:1px solid var(--stone-deeper);
+}
 
-  .footer-top {
-    display: grid;
-    grid-template-columns: 1.8fr 1fr 1fr 1.2fr;
-    gap: 3rem;
-    margin-bottom: 2.5rem;
-  }
-  .footer-tagline {
-    font-size: 13px; color: rgba(255,255,255,0.35);
-    line-height: 1.7; font-weight: 300;
-  }
-  .footer-col-title {
-    font-size: 11px; font-weight: 500;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    color: rgba(255,255,255,0.35);
-    margin-bottom: 0.75rem;
-  }
-  .footer-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-  .footer-links a {
-    font-size: 13px; color: rgba(255,255,255,0.5);
-    text-decoration: none; transition: color 0.2s;
-  }
-  .footer-links a:hover { color: rgba(255,255,255,0.85); }
+.phil-eyebrow{
+  font-size:10px;font-weight:500;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--brass);
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:2rem;
+}
+.phil-eyebrow::before{content:'';width:28px;height:1px;background:var(--brass);}
 
-  .footer-divider {
-    height: 1px; background: rgba(255,255,255,0.07);
-    margin-bottom: 1.5rem;
-  }
+.phil-anchor{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.4rem,4vw,3.6rem);
+  font-weight:400;line-height:1.12;
+  color:var(--navy);letter-spacing:-0.01em;
+}
+.phil-anchor em{font-style:italic;color:var(--brass);font-weight:300;}
 
-  .footer-compliance { display: flex; flex-direction: column; gap: 0.75rem; }
+.phil-body{
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding-bottom:0.25rem;
+}
+.phil-p{
+  font-size:16px;font-weight:300;line-height:1.85;
+  color:var(--text-muted);margin-bottom:1.25rem;
+}
+.phil-p:last-child{margin-bottom:0;}
+.phil-p strong{
+  font-weight:500;color:var(--navy);
+}
 
-  .footer-nmls {
-    display: flex; align-items: center; flex-wrap: wrap; gap: 8px;
-    font-size: 12px; color: rgba(255,255,255,0.4);
-  }
-  .footer-nmls a { color: rgba(255,255,255,0.5); text-decoration: underline; }
-  .footer-nmls a:hover { color: rgba(255,255,255,0.8); }
-  .nmls-badge {
-    background: rgba(201,168,76,0.2);
-    color: var(--gold-light);
-    font-size: 10px; font-weight: 600;
-    letter-spacing: 0.08em;
-    padding: 2px 7px; border-radius: 4px;
-  }
-  .nmls-sep { color: rgba(255,255,255,0.2); }
+/* BELIEFS — editorial, not grid-perfect */
+.beliefs{
+  display:grid;
+  grid-template-columns:1.1fr 0.95fr 1fr;
+  gap:3rem;
+}
 
-  .footer-legal {
-    font-size: 11px; color: rgba(255,255,255,0.2);
-    line-height: 1.7;
-  }
-  .footer-legal a { color: rgba(255,255,255,0.3); }
+.belief{
+  background:transparent;
+  padding:3.25rem 0;
+  position:relative;
+  border-top:1px solid var(--stone-deeper);
+  transition:border-color 0.3s ease;
+}
+.belief:hover{border-color:var(--brass-light);}
 
-  @media (max-width: 768px) {
-    .footer-top { grid-template-columns: 1fr 1fr; }
-  }
+/* Stagger vertically for editorial feel */
+.belief:nth-child(2){padding-top:4.5rem;}
+.belief:nth-child(3){padding-top:2rem;}
 
-  /* ANIMATIONS */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+/* Belief number */
+.belief-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:3rem;font-weight:300;
+  color:var(--stone-deeper);
+  line-height:1;
+  margin-bottom:1.75rem;
+  transition:color 0.3s;
+  user-select:none;
+  letter-spacing:-0.02em;
+}
+.belief:hover .belief-num{color:var(--brass-pale);}
 
-  /* RESPONSIVE */
-  @media (max-width: 768px) {
-    .hero-inner { grid-template-columns: 1fr; }
-    .hero-card { display: none; }
-    .stats-inner { grid-template-columns: repeat(2, 1fr); }
-    .tools-grid { grid-template-columns: 1fr; }
-    .about-inner { grid-template-columns: 1fr; }
-    .nav-links { display: none; }
-  }
+/* Belief accent line */
+.belief-rule{
+  width:28px;height:1.5px;
+  background:var(--brass);
+  margin-bottom:1.25rem;
+  transition:width 0.3s ease;
+}
+.belief:hover .belief-rule{width:44px;}
+
+.belief-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.5rem;font-weight:500;
+  color:var(--navy);line-height:1.25;
+  margin-bottom:0.9rem;letter-spacing:-0.005em;
+}
+.belief-title em{font-style:italic;color:var(--brass);font-weight:300;}
+
+.belief-copy{
+  font-size:13.5px;font-weight:300;line-height:1.8;
+  color:var(--text-muted);
+}
+
+/* Bottom signature */
+.phil-footer{
+  margin-top:6.5rem;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:4rem;
+  padding-top:3.5rem;
+  border-top:1px solid var(--stone-deeper);
+}
+
+/* Organic warmth — subtle light leak */
+.light-leak{
+  position:absolute;
+  top:0;left:0;right:0;height:280px;
+  background:linear-gradient(180deg,rgba(240,229,208,0.22) 0%,transparent 100%);
+  pointer-events:none;
+}
+.phil-sig{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.1rem;font-weight:400;font-style:italic;
+  color:var(--text-muted);
+  max-width:480px;line-height:1.7;
+}
+.phil-sig strong{
+  font-style:normal;font-weight:500;color:var(--navy);
+}
+.phil-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:13px;font-weight:500;color:var(--navy);
+  text-decoration:none;letter-spacing:0.02em;
+  border-bottom:1px solid rgba(13,33,55,0.2);
+  padding-bottom:2px;
+  transition:gap 0.2s,border-color 0.2s;
+  white-space:nowrap;
+  margin-top:0.25rem;
+  flex-shrink:0;
+}
+.phil-cta:hover{gap:13px;border-color:var(--navy);}
+
+/* Scroll reveal */
+.reveal{
+  opacity:0;transform:translateY(20px);
+  transition:opacity 0.7s ease,transform 0.7s ease;
+}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-delay-1{transition-delay:0.1s;}
+.reveal-delay-2{transition-delay:0.2s;}
+.reveal-delay-3{transition-delay:0.3s;}
+.reveal-delay-4{transition-delay:0.15s;}
+.reveal-delay-5{transition-delay:0.3s;}
+.reveal-delay-6{transition-delay:0.45s;}
+
+@media(max-width:900px){
+  .phil-top{grid-template-columns:1fr;gap:2rem;}
+  .beliefs{grid-template-columns:1fr;gap:0;}
+  .belief:nth-child(2),.belief:nth-child(3){padding-top:3rem;}
+  .phil-footer{flex-direction:column;gap:2rem;align-items:flex-start;}
+}/* ═══ tools-section.html ═══ */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:#faf8f5;}
+
+:root{
+  --navy:#0d2137;
+  --navy-mid:#163354;
+  --brass:#a08055;
+  --brass-light:#bfa070;
+  --brass-pale:#f0e5d0;
+  --warm-white:#faf8f5;
+  --warm-white-2:#f4f1ec;
+  --stone:#ede8df;
+  --text:#1c1c2a;
+  --text-muted:#72737e;
+  --text-faint:#a0a1ab;
+  --border:rgba(13,33,55,0.07);
+  --border-hover:rgba(13,33,55,0.14);
+}
+
+/* ── TOOLS SECTION ── */
+.tools{
+  background:var(--warm-white);
+  padding:10rem 2rem 11rem;
+  position:relative;
+  overflow:hidden;
+}
+
+/* Very faint warm grid texture */
+.tools::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(var(--border) 1px,transparent 1px),
+    linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:80px 80px;
+  opacity:0.35;pointer-events:none;
+}
+
+/* Topo motif — brand signature */
+.topo-tools{
+  position:absolute;left:-80px;bottom:-80px;
+  width:480px;height:480px;opacity:0.03;
+  pointer-events:none;
+}
+
+.tools-inner{
+  max-width:1120px;margin:0 auto;
+  position:relative;z-index:2;
+}
+
+/* HEADER */
+.tools-header{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:4rem;align-items:end;
+  margin-bottom:5.5rem;
+}
+.tools-eyebrow{
+  font-size:10px;font-weight:500;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--brass);
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:1.75rem;
+}
+.tools-eyebrow::before{content:'';width:28px;height:1px;background:var(--brass);}
+.tools-headline{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.2rem,3.5vw,3.1rem);
+  font-weight:400;line-height:1.15;
+  color:var(--navy);letter-spacing:-0.01em;
+}
+.tools-headline em{font-style:italic;color:var(--brass);font-weight:300;}
+.tools-sub{
+  font-size:15px;font-weight:300;line-height:1.8;
+  color:var(--text-muted);max-width:380px;
+  align-self:end;padding-bottom:0.25rem;
+}
+
+/* ── PRIMARY TOOLS — top 3 ── */
+.primary-tools{
+  display:grid;grid-template-columns:1.15fr 1fr 1fr;
+  gap:1.5px;
+  margin-bottom:1.5px;
+  background:var(--border);
+}
+
+.tool-primary{
+  background:var(--warm-white);
+  padding:3rem 2.75rem 3rem;
+  text-decoration:none;color:var(--text);
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+  transition:background 0.3s ease;
+  group:true;
+}
+.tool-primary:hover{background:var(--warm-white-2);}
+
+/* Top accent bar */
+.tool-primary::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--brass);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform 0.4s ease;
+}
+.tool-primary:hover::before{transform:scaleX(1);}
+
+/* Featured — first tool slightly larger feel */
+.tool-primary.featured{
+  background:var(--navy);
+}
+.tool-primary.featured:hover{background:var(--navy-mid);}
+.tool-primary.featured::before{background:var(--brass-light);transform:scaleX(1);}
+.tool-primary.featured .tool-outcome{color:rgba(255,255,255,0.9);}
+.tool-primary.featured .tool-name{color:rgba(255,255,255,0.55);}
+.tool-primary.featured .tool-desc{color:rgba(255,255,255,0.45);}
+.tool-primary.featured .tool-cta{color:var(--brass-light);border-color:rgba(191,160,112,0.3);}
+.tool-primary.featured .tool-cta:hover{border-color:var(--brass-light);}
+.tool-primary.featured .tool-icon-wrap{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.1);}
+.tool-primary.featured .tool-icon-wrap svg{stroke:rgba(255,255,255,0.5);}
+.tool-primary.featured:hover .tool-icon-wrap svg{stroke:var(--brass-light);}
+.tool-primary.featured .tool-num{color:rgba(255,255,255,0.08);}
+
+.tool-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.1rem;font-weight:300;
+  color:rgba(13,33,55,0.1);
+  margin-bottom:auto;
+  padding-bottom:2.5rem;
+  letter-spacing:0.05em;
+}
+
+.tool-icon-wrap{
+  width:44px;height:44px;border-radius:10px;
+  background:var(--warm-white-2);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:1.75rem;
+  transition:background 0.25s,border-color 0.25s;
+  flex-shrink:0;
+}
+.tool-primary:not(.featured):hover .tool-icon-wrap{
+  background:var(--brass-pale);border-color:rgba(160,128,85,0.2);
+}
+.tool-icon-wrap svg{
+  width:20px;height:20px;
+  stroke:var(--text-muted);stroke-width:1.5;
+  fill:none;stroke-linecap:round;stroke-linejoin:round;
+  transition:stroke 0.25s;
+}
+.tool-primary:not(.featured):hover .tool-icon-wrap svg{stroke:var(--brass);}
+
+.tool-outcome{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.25rem;font-weight:500;
+  color:var(--navy);line-height:1.3;
+  margin-bottom:0.5rem;letter-spacing:-0.005em;
+}
+.tool-name{
+  font-size:11px;font-weight:500;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--text-faint);
+  margin-bottom:1rem;
+}
+.tool-desc{
+  font-size:13px;font-weight:300;line-height:1.75;
+  color:var(--text-muted);margin-bottom:2rem;
+  flex:1;
+}
+.tool-cta{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:12px;font-weight:500;color:var(--navy);
+  letter-spacing:0.02em;
+  border-bottom:1px solid var(--border-hover);
+  padding-bottom:2px;
+  transition:gap 0.2s,border-color 0.2s;
+  align-self:flex-start;
+}
+.tool-cta:hover{gap:10px;border-color:var(--navy);}
+
+/* ── SECONDARY TOOLS — bottom 3 ── */
+.secondary-tools{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1.5px;
+  background:var(--border);
+  border-top:none;
+}
+
+.tool-secondary{
+  background:var(--warm-white);
+  padding:2.75rem 2.75rem;
+  text-decoration:none;color:var(--text);
+  display:flex;align-items:center;gap:1.5rem;
+  transition:background 0.25s;
+  position:relative;overflow:hidden;
+}
+.tool-secondary:hover{background:var(--warm-white-2);}
+.tool-secondary::before{
+  content:'';
+  position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:var(--brass);
+  transform:scaleY(0);transform-origin:bottom;
+  transition:transform 0.35s ease;
+}
+.tool-secondary:hover::before{transform:scaleY(1);}
+
+.sec-icon{
+  width:40px;height:40px;border-radius:9px;
+  background:var(--warm-white-2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all 0.25s;
+}
+.tool-secondary:hover .sec-icon{background:var(--brass-pale);border-color:rgba(160,128,85,0.18);}
+.sec-icon svg{
+  width:17px;height:17px;stroke:var(--text-muted);
+  stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round;
+  transition:stroke 0.25s;
+}
+.tool-secondary:hover .sec-icon svg{stroke:var(--brass);}
+
+.sec-body{flex:1;}
+.sec-outcome{
+  font-size:14.5px;font-weight:500;color:var(--navy);
+  margin-bottom:3px;line-height:1.3;
+}
+.sec-name{
+  font-size:11px;font-weight:400;
+  color:var(--text-faint);letter-spacing:0.04em;
+}
+.sec-arr{
+  font-size:13px;color:var(--text-faint);
+  transition:color 0.2s,transform 0.2s;flex-shrink:0;
+}
+.tool-secondary:hover .sec-arr{color:var(--brass);transform:translateX(3px);}
+
+/* Organic row separator — subtle warm plane between primary and secondary */
+.row-bridge{
+  height:2px;
+  background:linear-gradient(90deg,
+    var(--border) 0%,
+    rgba(160,128,85,0.15) 40%,
+    rgba(160,128,85,0.08) 70%,
+    transparent 100%
+  );
+  margin:0;
+}
+
+/* FOOTER NOTE */
+.tools-note{
+  margin-top:3.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:2.5rem;
+  border-top:1px solid var(--border);
+}
+.tools-note-text{
+  font-size:13px;font-weight:300;color:var(--text-muted);
+  font-style:italic;font-family:'Cormorant Garamond',serif;
+  font-size:16px;
+}
+.tools-note-cta{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:12.5px;font-weight:500;color:var(--navy);
+  text-decoration:none;letter-spacing:0.02em;
+  border-bottom:1px solid var(--border-hover);padding-bottom:2px;
+  transition:gap 0.2s,border-color 0.2s;
+}
+.tools-note-cta:hover{gap:11px;border-color:var(--navy);}
+
+/* Reveal */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-d1{transition-delay:0.05s;}
+.reveal-d2{transition-delay:0.12s;}
+.reveal-d3{transition-delay:0.19s;}
+.reveal-d4{transition-delay:0.08s;}
+.reveal-d5{transition-delay:0.16s;}
+.reveal-d6{transition-delay:0.24s;}
+
+@media(max-width:900px){
+  .tools-header{grid-template-columns:1fr;gap:1.5rem;}
+  .primary-tools{grid-template-columns:1fr;}
+  .secondary-tools{grid-template-columns:1fr;}
+  .tools-note{flex-direction:column;gap:1.5rem;align-items:flex-start;}
+}/* ═══ outcomes-section.html ═══ */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:#0d2137;}
+
+:root{
+  --navy:#0d2137;
+  --navy-mid:#163354;
+  --navy-light:#1e4780;
+  --brass:#a08055;
+  --brass-light:#bfa070;
+  --brass-pale:#f0e5d0;
+  --warm-white:#faf8f5;
+  --stone:#ede8df;
+  --text:#1c1c2a;
+  --text-muted:#72737e;
+  --border:rgba(13,33,55,0.07);
+}
+
+/* ── CINEMATIC ANCHOR ── */
+.cinematic{
+  position:relative;
+  min-height:72vh;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  background:var(--navy);
+}
+
+/* Real cinematic image layer */
+.cinematic-img{
+  position:absolute;inset:0;
+  background:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80&auto=format&fit=crop') center/cover no-repeat;
+  opacity:0.22;
+  filter:saturate(0.5) sepia(0.15);
+  pointer-events:none;
+}
+
+/* Atmospheric background layers */
+.cinematic-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 30% 60%, rgba(160,128,85,0.09) 0%, transparent 55%),
+    radial-gradient(ellipse at 75% 30%, rgba(22,51,84,0.6) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 100%, rgba(13,33,55,0.8) 0%, transparent 60%);
+  pointer-events:none;
+}
+
+/* Topo motif */
+.cinematic-topo{
+  position:absolute;right:-100px;top:50%;
+  transform:translateY(-50%);
+  width:520px;height:520px;opacity:0.035;
+  pointer-events:none;
+}
+
+/* Warm light leak from top */
+.cinematic-light{
+  position:absolute;top:0;left:0;right:0;height:200px;
+  background:linear-gradient(180deg,rgba(160,128,85,0.07) 0%,transparent 100%);
+  pointer-events:none;
+}
+
+.cinematic-inner{
+  position:relative;z-index:2;
+  max-width:780px;
+  padding:8rem 2rem;
+  text-align:center;
+}
+
+.cin-eyebrow{
+  font-size:10px;font-weight:500;letter-spacing:0.18em;
+  text-transform:uppercase;color:rgba(191,160,112,0.7);
+  margin-bottom:2.5rem;
+  display:flex;align-items:center;justify-content:center;gap:14px;
+}
+.cin-eyebrow::before,.cin-eyebrow::after{
+  content:'';width:32px;height:1px;background:rgba(191,160,112,0.4);
+}
+
+.cin-quote{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(1.9rem,3.5vw,3rem);
+  font-weight:300;font-style:italic;
+  color:rgba(255,255,255,0.93);
+  line-height:1.45;letter-spacing:-0.01em;
+  margin-bottom:2.5rem;
+}
+.cin-quote em{
+  font-style:normal;
+  color:var(--brass-light);
+}
+
+.cin-attr{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+}
+.cin-name{
+  font-size:13px;font-weight:500;
+  color:rgba(255,255,255,0.6);letter-spacing:0.06em;
+}
+.cin-detail{
+  font-size:11.5px;color:rgba(255,255,255,0.28);
+  letter-spacing:0.04em;
+}
+.cin-result{
+  margin-top:1rem;
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(160,128,85,0.1);
+  border:1px solid rgba(160,128,85,0.2);
+  border-radius:100px;
+  padding:5px 16px;
+  font-size:11.5px;font-weight:500;
+  color:var(--brass-light);letter-spacing:0.04em;
+}
+
+/* ── STORIES SECTION ── */
+.stories{
+  background:var(--warm-white);
+  padding:8rem 2rem 9rem;
+  position:relative;overflow:hidden;
+}
+
+.stories::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(13,33,55,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(13,33,55,0.04) 1px,transparent 1px);
+  background-size:80px 80px;
+  opacity:0.3;pointer-events:none;
+}
+
+.stories-topo{
+  position:absolute;right:-60px;top:-60px;
+  width:380px;height:380px;opacity:0.025;
+  pointer-events:none;
+}
+
+.stories-inner{
+  max-width:1120px;margin:0 auto;
+  position:relative;z-index:2;
+}
+
+.stories-header{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:4rem;align-items:end;
+  margin-bottom:5rem;
+}
+.stories-eyebrow{
+  font-size:10px;font-weight:500;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--brass);
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:1.75rem;
+}
+.stories-eyebrow::before{content:'';width:28px;height:1px;background:var(--brass);}
+.stories-headline{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2rem,3.2vw,2.8rem);
+  font-weight:400;line-height:1.15;
+  color:var(--navy);letter-spacing:-0.01em;
+}
+.stories-headline em{font-style:italic;color:var(--brass);font-weight:300;}
+.stories-sub{
+  font-size:15px;font-weight:300;line-height:1.8;
+  color:var(--text-muted);
+  align-self:end;padding-bottom:0.2rem;
+  max-width:360px;
+}
+
+/* STORY CARDS */
+.story-grid{
+  display:grid;
+  grid-template-columns:1.1fr 1fr 0.9fr;
+  gap:1.5px;
+  background:var(--border);
+  margin-bottom:1.5px;
+}
+
+.story{
+  background:var(--warm-white);
+  padding:3rem 2.75rem 3rem;
+  position:relative;
+  display:flex;flex-direction:column;
+  transition:background 0.3s;
+}
+.story:hover{background:#f7f4ef;}
+
+/* Top rule — brass, expands on hover */
+.story-rule{
+  width:24px;height:1.5px;
+  background:var(--brass);
+  margin-bottom:2rem;
+  transition:width 0.35s ease;
+}
+.story:hover .story-rule{width:40px;}
+
+/* Emotional quote — leads */
+.story-quote{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.2rem;font-weight:400;font-style:italic;
+  color:var(--navy);line-height:1.55;
+  margin-bottom:1.75rem;
+  flex:1;
+}
+
+/* Financial outcome — follows */
+.story-outcome{
+  background:#f4f1ec;
+  border-radius:8px;
+  padding:1rem 1.25rem;
+  margin-bottom:1.75rem;
+  border-left:2px solid var(--brass);
+}
+.story-outcome-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.6rem;font-weight:500;
+  color:var(--navy);line-height:1;
+  margin-bottom:3px;
+}
+.story-outcome-num sup{font-size:0.9rem;color:var(--brass);}
+.story-outcome-label{
+  font-size:11px;font-weight:400;
+  color:var(--text-muted);letter-spacing:0.03em;
+  line-height:1.4;
+}
+
+/* Attribution */
+.story-attr{display:flex;align-items:center;gap:12px;}
+.story-initial{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--stone);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:500;color:var(--navy);
+  flex-shrink:0;font-family:'Cormorant Garamond',serif;
+  transition:background 0.25s;
+}
+.story:hover .story-initial{background:var(--brass-pale);}
+.story-name{
+  font-size:13px;font-weight:500;color:var(--navy);
+  margin-bottom:1px;
+}
+.story-context{
+  font-size:11px;color:var(--text-muted);
+  font-weight:300;
+}
+
+/* Layout variation — editorial realism */
+.story.story-large-quote .story-quote{
+  font-size:1.35rem;
+  line-height:1.5;
+  color:var(--navy);
+}
+.story.story-minimal .story-outcome{
+  background:transparent;
+  border-left:none;
+  border-top:1px solid var(--border);
+  border-radius:0;
+  padding:0.9rem 0 0;
+  margin-bottom:1.75rem;
+}
+.story.story-minimal .story-outcome-num{
+  font-size:1.3rem;
+  color:var(--text-muted);
+}
+.story.story-minimal .story-outcome-label{
+  font-size:11px;color:var(--text-faint);
+}
+.story.anon .story-quote{
+  color:var(--text-muted);
+}
+.story.anon .story-initial{
+  font-size:16px;color:var(--text-muted);
+  letter-spacing:-1px;
+}
+
+/* Bottom note */
+.stories-note{
+  padding-top:3rem;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:1.5px;
+}
+.stories-note-text{
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px;font-style:italic;
+  color:var(--text-muted);font-weight:300;
+  max-width:460px;line-height:1.7;
+}
+.stories-note-cta{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:12.5px;font-weight:500;color:var(--navy);
+  text-decoration:none;letter-spacing:0.02em;
+  border-bottom:1px solid rgba(13,33,55,0.15);
+  padding-bottom:2px;flex-shrink:0;
+  transition:gap 0.2s,border-color 0.2s;
+}
+.stories-note-cta:hover{gap:11px;border-color:var(--navy);}
+
+/* Stagger cards editorially */
+.story:nth-child(2){padding-top:4rem;}
+.story:nth-child(3){padding-top:2.25rem;}
+
+/* Scroll reveal */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-d1{transition-delay:0.05s;}
+.reveal-d2{transition-delay:0.15s;}
+.reveal-d3{transition-delay:0.25s;}
+
+@media(max-width:900px){
+  .stories-header{grid-template-columns:1fr;gap:1.5rem;}
+  .story-grid{grid-template-columns:1fr;}
+  .story:nth-child(2),.story:nth-child(3){padding-top:3rem;}
+  .stories-note{flex-direction:column;gap:1.5rem;align-items:flex-start;}
+}/* ═══ about-section.html ═══ */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:#0c1e33;}
+
+:root{
+  --navy:#0c1e33;
+  --navy-mid:#132840;
+  --navy-warm:#1a3350;
+  --brass:#a08055;
+  --brass-light:#bfa070;
+  --brass-pale:#f0e5d0;
+  --warm-white:#faf8f5;
+  --stone:#ede8df;
+  --cream:#f5f1eb;
+  --text-on-dark:rgba(255,255,255,0.88);
+  --text-muted-dark:rgba(255,255,255,0.45);
+  --text-faint-dark:rgba(255,255,255,0.22);
+  --border-dark:rgba(255,255,255,0.07);
+  --border-brass:rgba(160,128,85,0.2);
+}
+
+/* ── ABOUT SECTION ── */
+.about{
+  background:var(--navy);
+  padding:0;
+  position:relative;
+  overflow:hidden;
+}
+
+/* Warm atmospheric bloom — softer than outcomes */
+.about-glow-left{
+  position:absolute;top:-80px;left:-120px;
+  width:560px;height:560px;border-radius:50%;
+  background:radial-gradient(circle,rgba(160,128,85,0.055) 0%,transparent 65%);
+  pointer-events:none;
+}
+.about-glow-right{
+  position:absolute;bottom:-100px;right:-80px;
+  width:440px;height:440px;border-radius:50%;
+  background:radial-gradient(circle,rgba(26,51,80,0.8) 0%,transparent 70%);
+  pointer-events:none;
+}
+
+/* Topo motif */
+.about-topo{
+  position:absolute;right:42%;top:50%;
+  transform:translateY(-50%);
+  width:300px;height:300px;opacity:0.025;
+  pointer-events:none;
+}
+
+/* ── SPLIT LAYOUT ── */
+.about-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  min-height:100vh;
+  position:relative;z-index:2;
+}
+
+/* LEFT — Image column */
+.about-image-col{
+  position:relative;overflow:hidden;
+  min-height:640px;
+}
+
+/* Editorial portrait — REPLACE WITH REAL PHOTO */
+/* Brief: environmental portrait of Dean
+   - warm natural light interior or outdoor setting
+   - reviewing plans / walking property / candid working moment
+   - architectural magazine feel, NOT realtor headshot
+   - NOT: arms crossed, suit pose, smiling at camera
+   - Crop: portrait orientation, face upper third */
+.about-img{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(135deg, #1a3350 0%, #0c1e33 40%, #132840 100%);
+}
+/* Photo placeholder visual */
+.about-img::before{
+  content:'';
+  position:absolute;inset:0;
+  background-image:
+    radial-gradient(ellipse at 40% 35%, rgba(160,128,85,0.12) 0%, transparent 55%),
+    radial-gradient(ellipse at 70% 70%, rgba(26,51,80,0.4) 0%, transparent 50%);
+}
+.about-img::after{
+  content:'← Replace with environmental portrait of Dean';
+  position:absolute;bottom:50%;left:50%;
+  transform:translate(-50%,50%);
+  font-size:11px;font-weight:400;
+  color:rgba(255,255,255,0.2);
+  letter-spacing:0.04em;
+  text-align:center;
+  width:200px;line-height:1.6;
+  border:1px dashed rgba(255,255,255,0.1);
+  padding:1rem;border-radius:8px;
+}
+.about:hover .about-img{transform:none;}
+
+/* Dark overlay — makes image feel warm not harsh */
+.about-img-overlay{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to right, transparent 50%, var(--navy) 100%),
+    linear-gradient(to top, rgba(12,30,51,0.5) 0%, transparent 50%),
+    linear-gradient(180deg,rgba(12,30,51,0.2) 0%,transparent 30%);
+}
+
+/* Floating credential card over image */
+.about-credential{
+  position:absolute;bottom:2.5rem;left:2.5rem;
+  background:rgba(12,30,51,0.85);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--border-brass);
+  border-radius:12px;
+  padding:1.25rem 1.5rem;
+  max-width:280px;
+}
+.cred-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.35rem;font-weight:500;
+  color:var(--text-on-dark);
+  margin-bottom:2px;
+}
+.cred-title{
+  font-size:11px;font-weight:400;letter-spacing:0.06em;
+  color:var(--brass-light);
+  text-transform:uppercase;margin-bottom:1rem;
+}
+.cred-divider{height:1px;background:var(--border-dark);margin-bottom:1rem;}
+.cred-facts{display:flex;flex-direction:column;gap:6px;}
+.cred-fact{
+  display:flex;align-items:center;gap:8px;
+  font-size:12px;color:var(--text-muted-dark);
+}
+.cred-fact-dot{
+  width:4px;height:4px;border-radius:50%;
+  background:var(--brass);flex-shrink:0;
+}
+
+/* RIGHT — Editorial story */
+.about-story-col{
+  padding:7rem 5rem 7rem 4.5rem;
+  display:flex;flex-direction:column;justify-content:center;
+}
+
+.about-eyebrow{
+  font-size:10px;font-weight:500;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--brass);
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:2rem;
+}
+.about-eyebrow::before{content:'';width:28px;height:1px;background:var(--brass);}
+
+/* Anchor statement */
+.about-anchor{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(1.9rem,3vw,2.6rem);
+  font-weight:400;line-height:1.2;
+  color:var(--text-on-dark);
+  letter-spacing:-0.01em;
+  margin-bottom:2.75rem;
+}
+.about-anchor em{
+  font-style:italic;color:var(--brass-light);font-weight:300;
+}
+
+/* Story body */
+.about-body{
+  display:flex;flex-direction:column;gap:1.25rem;
+  margin-bottom:3rem;
+}
+.about-p{
+  font-size:15px;font-weight:300;line-height:1.85;
+  color:var(--text-muted-dark);
+}
+.about-p strong{font-weight:500;color:rgba(255,255,255,0.75);}
+
+/* Pull quote */
+.about-pullquote{
+  border-left:1.5px solid var(--brass);
+  padding:1.25rem 0 1.25rem 1.75rem;
+  margin:0.5rem 0 2.5rem;
+}
+.about-pullquote p{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.25rem;font-weight:300;font-style:italic;
+  color:rgba(255,255,255,0.7);line-height:1.6;
+}
+
+/* Human layer — values */
+.about-values{
+  display:flex;flex-wrap:wrap;gap:8px;
+  margin-bottom:3rem;
+}
+.about-value{
+  font-size:11px;font-weight:400;letter-spacing:0.05em;
+  color:var(--text-muted-dark);
+  border:1px solid var(--border-dark);
+  border-radius:100px;
+  padding:5px 14px;
+  transition:border-color 0.2s,color 0.2s;
+}
+.about-value:hover{border-color:var(--border-brass);color:var(--brass-light);}
+
+/* CTA */
+.about-cta-row{
+  display:flex;align-items:center;gap:1.75rem;
+  padding-top:2.5rem;
+  border-top:1px solid var(--border-dark);
+}
+.btn-brass{
+  background:transparent;
+  color:var(--brass-light);
+  border:1px solid var(--border-brass);
+  padding:11px 22px;border-radius:8px;
+  font-size:13px;font-weight:500;
+  text-decoration:none;letter-spacing:0.02em;
+  display:inline-flex;align-items:center;gap:7px;
+  transition:background 0.25s,border-color 0.25s;
+  font-family:'DM Sans',sans-serif;
+}
+.btn-brass:hover{
+  background:rgba(160,128,85,0.1);
+  border-color:rgba(191,160,112,0.4);
+}
+.about-nmls{
+  font-size:10.5px;color:var(--text-faint-dark);
+  letter-spacing:0.03em;line-height:1.6;
+}
+.about-nmls a{color:rgba(255,255,255,0.25);text-decoration:none;transition:color 0.2s;}
+.about-nmls a:hover{color:rgba(255,255,255,0.5);}
+
+/* Scroll reveal */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity 0.8s ease,transform 0.8s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-d1{transition-delay:0.1s;}
+.reveal-d2{transition-delay:0.2s;}
+.reveal-d3{transition-delay:0.3s;}
+.reveal-d4{transition-delay:0.4s;}
+.reveal-d5{transition-delay:0.5s;}
+
+@media(max-width:900px){
+  .about-grid{grid-template-columns:1fr;}
+  .about-image-col{min-height:420px;}
+  .about-img-overlay{background:linear-gradient(to top,rgba(12,30,51,0.7) 0%,transparent 60%);}
+  .about-story-col{padding:4rem 2rem;}
+  .about-credential{left:1.5rem;bottom:1.5rem;}
+}/* ═══ contact-section.html ═══ */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:#f5f1eb;}
+
+:root{
+  --navy:#0d2137;
+  --navy-mid:#163354;
+  --brass:#a08055;
+  --brass-light:#bfa070;
+  --brass-pale:#f0e5d0;
+  --warm-white:#faf8f5;
+  --stone:#ede8df;
+  --stone-dark:#e0d9ce;
+  --cream:#f5f1eb;
+  --text:#1c1c2a;
+  --text-muted:#72737e;
+  --text-faint:#a0a1ab;
+  --border:rgba(13,33,55,0.07);
+  --border-mid:rgba(13,33,55,0.12);
+}
+
+/* ── CONTACT SECTION ── */
+.contact{
+  background:var(--cream);
+  padding:10rem 2rem 0;
+  position:relative;overflow:hidden;
+}
+
+/* Linen texture */
+.contact::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(13,33,55,0.012) 2px,rgba(13,33,55,0.012) 3px),
+    repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(13,33,55,0.008) 3px,rgba(13,33,55,0.008) 4px);
+  pointer-events:none;
+}
+
+/* Warm bloom */
+.contact-glow{
+  position:absolute;top:-100px;right:-100px;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,var(--brass-pale) 0%,transparent 65%);
+  opacity:0.35;pointer-events:none;
+}
+
+/* Topo motif */
+.contact-topo{
+  position:absolute;left:-80px;bottom:200px;
+  width:360px;height:360px;opacity:0.032;
+  pointer-events:none;
+}
+
+.contact-inner{
+  max-width:1120px;margin:0 auto;
+  position:relative;z-index:2;
+}
+
+/* HEADER */
+.contact-header{
+  text-align:center;
+  margin-bottom:5rem;
+}
+.contact-eyebrow{
+  font-size:10px;font-weight:500;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--brass);
+  display:inline-flex;align-items:center;gap:12px;
+  margin-bottom:1.75rem;
+}
+.contact-eyebrow::before,.contact-eyebrow::after{
+  content:'';width:28px;height:1px;background:var(--brass);
+}
+.contact-headline{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.2rem,3.8vw,3.4rem);
+  font-weight:400;line-height:1.15;
+  color:var(--navy);letter-spacing:-0.01em;
+  margin-bottom:1.25rem;
+}
+.contact-headline em{font-style:italic;color:var(--brass);font-weight:300;}
+.contact-sub{
+  font-size:15px;font-weight:300;line-height:1.8;
+  color:var(--text-muted);max-width:440px;margin:0 auto;
+}
+
+/* CONTACT GRID */
+.contact-grid{
+  display:grid;
+  grid-template-columns:1fr 1.1fr;
+  gap:5rem;
+  align-items:start;
+  padding-bottom:6rem;
+}
+
+/* LEFT — Direct contact */
+.contact-left{}
+
+.contact-direct-label{
+  font-size:10px;font-weight:500;letter-spacing:0.14em;
+  text-transform:uppercase;color:var(--text-faint);
+  margin-bottom:1.5rem;
+}
+
+.contact-methods{
+  display:flex;flex-direction:column;gap:1px;
+  background:var(--border);
+  border-radius:12px;overflow:hidden;
+  margin-bottom:2.5rem;
+}
+.contact-method{
+  background:var(--warm-white);
+  padding:1.25rem 1.5rem;
+  display:flex;align-items:center;gap:14px;
+  text-decoration:none;
+  transition:background 0.2s;
+}
+.contact-method:hover{background:var(--stone);}
+.cm-icon{
+  width:38px;height:38px;border-radius:9px;
+  background:var(--stone);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:background 0.2s;
+}
+.contact-method:hover .cm-icon{background:var(--brass-pale);}
+.cm-icon svg{
+  width:17px;height:17px;stroke:var(--text-muted);
+  stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round;
+  transition:stroke 0.2s;
+}
+.contact-method:hover .cm-icon svg{stroke:var(--brass);}
+.cm-body{flex:1;}
+.cm-label{font-size:11px;color:var(--text-faint);letter-spacing:0.04em;margin-bottom:1px;}
+.cm-value{font-size:14px;font-weight:500;color:var(--navy);}
+.cm-arr{font-size:13px;color:var(--text-faint);transition:color 0.2s,transform 0.2s;}
+.contact-method:hover .cm-arr{color:var(--brass);transform:translateX(2px);}
+
+/* Scheduling block */
+.contact-schedule{
+  background:var(--navy);
+  border-radius:12px;
+  padding:1.75rem 2rem;
+}
+.cs-label{
+  font-size:10px;font-weight:500;letter-spacing:0.14em;
+  text-transform:uppercase;color:rgba(255,255,255,0.3);
+  margin-bottom:0.75rem;
+}
+.cs-text{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.2rem;font-weight:400;font-style:italic;
+  color:rgba(255,255,255,0.75);
+  line-height:1.5;margin-bottom:1.25rem;
+}
+.cs-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(160,128,85,0.12);
+  border:1px solid rgba(160,128,85,0.25);
+  border-radius:8px;
+  padding:10px 18px;
+  font-size:13px;font-weight:500;
+  color:var(--brass-light);
+  text-decoration:none;
+  transition:background 0.2s,border-color 0.2s;
+  font-family:'DM Sans',sans-serif;
+}
+.cs-btn:hover{background:rgba(160,128,85,0.18);border-color:rgba(160,128,85,0.4);}
+
+/* RIGHT — Form */
+.contact-form-wrap{}
+.contact-form-label{
+  font-size:10px;font-weight:500;letter-spacing:0.14em;
+  text-transform:uppercase;color:var(--text-faint);
+  margin-bottom:1.5rem;
+}
+.contact-form{
+  display:flex;flex-direction:column;gap:1px;
+  background:var(--border);
+  border-radius:12px;overflow:hidden;
+  margin-bottom:1rem;
+}
+.form-row{
+  background:var(--warm-white);
+  display:grid;gap:1px;
+}
+.form-row.two{grid-template-columns:1fr 1fr;}
+
+.form-field{
+  background:var(--warm-white);
+  padding:0;position:relative;
+}
+.form-field label{
+  display:block;
+  font-size:10px;font-weight:500;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--text-faint);
+  padding:1rem 1.25rem 0;
+  margin-bottom:4px;
+}
+.form-field input,
+.form-field select,
+.form-field textarea{
+  display:block;width:100%;
+  background:transparent;border:none;outline:none;
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;font-weight:400;color:var(--text);
+  padding:0 1.25rem 1rem;
+  resize:none;
+  transition:background 0.15s;
+  -webkit-appearance:none;
+}
+.form-field textarea{min-height:100px;padding-top:4px;}
+.form-field select{cursor:pointer;background:transparent;}
+.form-field:focus-within{background:#f7f4ef;}
+.form-field input::placeholder,
+.form-field textarea::placeholder{color:var(--text-faint);}
+
+.form-submit{
+  width:100%;
+  background:var(--navy);
+  color:var(--warm-white);
+  border:none;cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;font-weight:500;
+  padding:1.1rem 2rem;
+  letter-spacing:0.02em;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:background 0.25s;
+  border-radius:0 0 12px 12px;
+}
+.form-submit:hover{background:var(--navy-mid);}
+
+.form-note{
+  font-size:11px;color:var(--text-faint);
+  text-align:center;line-height:1.6;
+}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--navy);
+  margin-top:0;
+}
+
+.footer-top{
+  max-width:1120px;margin:0 auto;
+  padding:4rem 2rem 3rem;
+  display:grid;
+  grid-template-columns:1.8fr 1fr 1fr 1.2fr;
+  gap:3rem;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.footer-brand img{
+  height:32px;width:auto;
+  opacity:0.85;margin-bottom:1rem;display:block;
+}
+.footer-tagline{
+  font-size:13px;color:rgba(255,255,255,0.3);
+  line-height:1.7;font-weight:300;max-width:220px;
+}
+.footer-col-title{
+  font-size:10px;font-weight:500;letter-spacing:0.12em;
+  text-transform:uppercase;color:rgba(255,255,255,0.28);
+  margin-bottom:1rem;
+}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.footer-links a{
+  font-size:13px;color:rgba(255,255,255,0.45);
+  text-decoration:none;transition:color 0.2s;
+}
+.footer-links a:hover{color:rgba(255,255,255,0.8);}
+.footer-links li{font-size:13px;color:rgba(255,255,255,0.3);line-height:1.5;}
+
+/* Compliance footer */
+.footer-bottom{
+  max-width:1120px;margin:0 auto;
+  padding:2rem 2rem 3rem;
+  display:flex;flex-direction:column;gap:0.75rem;
+}
+.footer-nmls{
+  display:flex;align-items:center;flex-wrap:wrap;gap:8px;
+  font-size:11.5px;color:rgba(255,255,255,0.3);
+}
+.footer-nmls a{color:rgba(255,255,255,0.35);text-decoration:underline;}
+.footer-nmls a:hover{color:rgba(255,255,255,0.6);}
+.nmls-badge{
+  background:rgba(160,128,85,0.18);
+  color:var(--brass-light);
+  font-size:9.5px;font-weight:600;
+  letter-spacing:0.1em;
+  padding:2px 7px;border-radius:4px;
+}
+.footer-legal{
+  font-size:10.5px;color:rgba(255,255,255,0.18);
+  line-height:1.75;max-width:900px;
+}
+.footer-legal a{color:rgba(255,255,255,0.25);}
+
+/* Reveal */
+.reveal{opacity:0;transform:translateY(14px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-d1{transition-delay:0.1s;}
+.reveal-d2{transition-delay:0.2s;}
+.reveal-d3{transition-delay:0.3s;}
+
+@media(max-width:900px){
+  .contact-grid{grid-template-columns:1fr;gap:3rem;}
+  .footer-top{grid-template-columns:1fr 1fr;}
+  .form-row.two{grid-template-columns:1fr;}
+}
 </style>
 </head>
 <body>
-
-<!-- NAV -->
 <nav>
-  <a href="/" class="nav-logo">
-    <img src="HL_Logo_Horizontal_White.png" alt="The Handy Lender — Powered by Cornerstone First Mortgage">
+  <a href="/" style="text-decoration:none;">
+    <img src="HL_Logo_Horizontal_Color2.png" alt="The Handy Lender" style="height:28px;width:auto;display:block;opacity:0.9;">
   </a>
   <ul class="nav-links">
     <li><a href="#tools">Tools</a></li>
+    <li><a href="#philosophy">Our Approach</a></li>
     <li><a href="#about">About</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#contact" class="nav-cta">Get a Quote</a></li>
+    <li><a href="#contact" class="nav-cta">Start the Conversation</a></li>
   </ul>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
-  <div class="hero-bg-pattern"></div>
-  <div class="hero-grid-lines"></div>
-  <div class="hero-inner">
-    <div class="hero-content">
-      <div class="hero-eyebrow">Cornerstone First Mortgage · Colorado</div>
-      <h1>Helping homeowners build <em>wealth</em> through smart financing</h1>
-      <p class="hero-sub">From your first home to your next investment — Dean Reiber provides the tools, guidance, and financing expertise to protect and grow your biggest asset.</p>
-      <div class="hero-actions">
-        <a href="#tools" class="btn-primary">Explore Tools →</a>
-        <a href="#contact" class="btn-ghost">Get a Free Quote</a>
-      </div>
-      <div class="hero-trust">
-        <div class="trust-item"><div class="trust-dot"></div>Licensed Colorado Lender</div>
-        <div class="trust-item"><div class="trust-dot"></div>No obligation consultations</div>
-        <div class="trust-item"><div class="trust-dot"></div>Free homeowner tools</div>
-      </div>
+
+  <!-- LEFT -->
+  <div class="hero-left">
+
+    <!-- Cinematic image atmosphere -->
+    <div class="hero-left-img"></div>
+
+    <!-- Topographic brand motif -->
+    <div class="topo-overlay">
+      <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="200" cy="200" rx="190" ry="80" stroke="#0d2137" stroke-width="1"/>
+        <ellipse cx="200" cy="200" rx="160" ry="64" stroke="#0d2137" stroke-width="1"/>
+        <ellipse cx="200" cy="200" rx="128" ry="50" stroke="#0d2137" stroke-width="1"/>
+        <ellipse cx="200" cy="200" rx="96" ry="37" stroke="#0d2137" stroke-width="1"/>
+        <ellipse cx="200" cy="200" rx="64" ry="25" stroke="#0d2137" stroke-width="1"/>
+        <ellipse cx="200" cy="200" rx="32" ry="13" stroke="#0d2137" stroke-width="1"/>
+        <ellipse cx="200" cy="200" rx="190" ry="120" stroke="#0d2137" stroke-width="0.5" transform="rotate(20 200 200)"/>
+        <ellipse cx="200" cy="200" rx="155" ry="95" stroke="#0d2137" stroke-width="0.5" transform="rotate(20 200 200)"/>
+        <ellipse cx="200" cy="200" rx="118" ry="70" stroke="#0d2137" stroke-width="0.5" transform="rotate(20 200 200)"/>
+        <ellipse cx="200" cy="200" rx="80" ry="46" stroke="#0d2137" stroke-width="0.5" transform="rotate(20 200 200)"/>
+      </svg>
     </div>
 
-    <!-- MINI INTERACTIVE CARD -->
-    <div class="hero-card">
-      <div class="hero-card-header">
-        <div class="hero-card-icon">🏡</div>
-        <div>
-          <div class="hero-card-title">Home Health Checklist</div>
-          <div class="hero-card-sub">Interactive seasonal guide</div>
+    <div class="hero-left-inner">
+      <div class="hero-kicker">
+        <span class="kicker-line"></span>
+        The Handy Lender™ · Dean Reiber
+      </div>
+
+      <h1 class="hero-headline">
+        The way you<br>own your home<br><em>matters.</em>
+      </h1>
+
+      <p class="hero-sub">
+        Thoughtful guidance for every stage of homeownership.
+      </p>
+
+      <div class="hero-cta-group">
+        <a href="#journey" class="btn-primary">See What's Possible →</a>
+        <a href="#tools" class="btn-text">Explore the tools</a>
+      </div>
+
+      <div class="hero-proof">
+        <div class="proof-item">
+          <div class="proof-num">20<sup>+</sup></div>
+          <div class="proof-label">Years of homeowner guidance</div>
+        </div>
+        <div class="proof-item">
+          <div class="proof-num">1k<sup>+</sup></div>
+          <div class="proof-label">Families helped thrive</div>
+        </div>
+        <div class="proof-item">
+          <div class="proof-num">6</div>
+          <div class="proof-label">Guidance designed around real life</div>
         </div>
       </div>
-      <div class="season-pills">
-        <div class="season-pill active" onclick="setSeason('spring', this)">🌿 Spring</div>
-        <div class="season-pill" onclick="setSeason('summer', this)">☀️ Summer</div>
-        <div class="season-pill" onclick="setSeason('fall', this)">🍂 Fall</div>
-        <div class="season-pill" onclick="setSeason('winter', this)">❄️ Winter</div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="hero-right" id="journey">
+    <!-- Topo motif dark -->
+    <svg class="topo-dark" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="200" cy="200" rx="190" ry="80" stroke="white" stroke-width="1"/>
+      <ellipse cx="200" cy="200" rx="155" ry="62" stroke="white" stroke-width="1"/>
+      <ellipse cx="200" cy="200" rx="118" ry="46" stroke="white" stroke-width="1"/>
+      <ellipse cx="200" cy="200" rx="82" ry="32" stroke="white" stroke-width="1"/>
+      <ellipse cx="200" cy="200" rx="46" ry="18" stroke="white" stroke-width="1"/>
+      <ellipse cx="200" cy="200" rx="190" ry="115" stroke="white" stroke-width="0.5" transform="rotate(25 200 200)"/>
+      <ellipse cx="200" cy="200" rx="148" ry="88" stroke="white" stroke-width="0.5" transform="rotate(25 200 200)"/>
+      <ellipse cx="200" cy="200" rx="106" ry="62" stroke="white" stroke-width="0.5" transform="rotate(25 200 200)"/>
+    </svg>
+
+    <div class="right-glow"></div>
+
+    <div class="convo-wrap">
+      <div class="convo-eyebrow">Your path forward</div>
+
+      <div class="convo-dean">
+        Tell me where you are — I'll point you in the right direction.
       </div>
-      <div class="mini-checklist" id="mini-list"></div>
-      <div class="hero-card-footer">
-        <span class="progress-text" id="mini-progress">0 of 4 complete</span>
-        <div class="progress-bar-mini"><div class="progress-fill-mini" id="mini-fill"></div></div>
+
+      <div class="convo-q" id="convo-q">
+        "Where are you in your homeownership journey right now?"
       </div>
+
+      <div class="options">
+        <div class="option" onclick="pick(this,'owner')">
+          <div class="option-accent"></div>
+          <div class="opt-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div class="opt-body">
+            <div class="opt-title">I own a home and want to build wealth</div>
+            <div class="opt-sub">Maintenance, equity, refinancing & more</div>
+          </div>
+          <div class="opt-arr">→</div>
+        </div>
+
+        <div class="option" onclick="pick(this,'buyer')">
+          <div class="option-accent"></div>
+          <div class="opt-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+          <div class="opt-body">
+            <div class="opt-title">I'm ready to buy my first home</div>
+            <div class="opt-sub">Down payment help, calculators & guidance</div>
+          </div>
+          <div class="opt-arr">→</div>
+        </div>
+
+        <div class="option" onclick="pick(this,'seller')">
+          <div class="option-accent"></div>
+          <div class="opt-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+          <div class="opt-body">
+            <div class="opt-title">I'm thinking about selling or upgrading</div>
+            <div class="opt-sub">Prep checklists, equity analysis & timing</div>
+          </div>
+          <div class="opt-arr">→</div>
+        </div>
+
+        <div class="option" onclick="pick(this,'investor')">
+          <div class="option-accent"></div>
+          <div class="opt-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div>
+          <div class="opt-body">
+            <div class="opt-title">I want to invest in real estate</div>
+            <div class="opt-sub">Investment analysis & financing strategy</div>
+          </div>
+          <div class="opt-arr">→</div>
+        </div>
+      </div>
+
+      <div class="response" id="response"></div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+const data={
+  owner:{
+    q:'"A homeowner focused on what\'s next — let\'s make sure your biggest asset is working as hard as you are."',
+    tools:['Home Health Planner','Equity Tracker','Buydown Calculator','Refinance Analyzer'],
+    cta:'See all homeowner tools'
+  },
+  buyer:{
+    q:'"Ready to buy — let\'s make sure you walk in prepared, protected, and completely confident."',
+    tools:['DPA Finder','Mortgage Calculator','Buyer\'s Guide','Pre-Approval Checklist'],
+    cta:'Start your buyer journey'
+  },
+  seller:{
+    q:'"Timing and preparation are everything — let\'s maximize every dollar you walk away with."',
+    tools:['Home Prep Checklist','Equity Estimator','Upgrade Calculator','Timing Guide'],
+    cta:'See seller resources'
+  },
+  investor:{
+    q:'"Real estate done right — let\'s run the numbers and build a strategy around your goals."',
+    tools:['Investor Analyzer','DSCR Calculator','Portfolio Planner','ROI Estimator'],
+    cta:'Explore investor tools'
+  }
+};
+
+function pick(el,key){
+  document.querySelectorAll('.option').forEach(o=>o.classList.remove('active'));
+  el.classList.add('active');
+  const d=data[key];
+  const q=document.getElementById('convo-q');
+  q.classList.add('fading');
+  setTimeout(()=>{q.textContent=d.q;q.classList.remove('fading');},300);
+  const r=document.getElementById('response');
+  r.classList.remove('visible');
+  r.innerHTML=`
+    <div class="resp-label">Recommended starting points</div>
+    <div class="resp-tools">${d.tools.map(t=>`<a href="#tools" class="resp-tool"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>${t}</a>`).join('')}</div>
+    <a href="#tools" class="resp-cta">${d.cta} →</a>
+  `;
+  setTimeout(()=>r.classList.add('visible'),60);
+}
+</script><section class="philosophy" id="philosophy">
+
+  <!-- Recurring topo brand motif -->
+  <svg class="topo-bg" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="300" cy="300" rx="280" ry="115" stroke="#0d2137" stroke-width="1.5"/>
+    <ellipse cx="300" cy="300" rx="235" ry="93" stroke="#0d2137" stroke-width="1.5"/>
+    <ellipse cx="300" cy="300" rx="188" ry="73" stroke="#0d2137" stroke-width="1.5"/>
+    <ellipse cx="300" cy="300" rx="140" ry="54" stroke="#0d2137" stroke-width="1.5"/>
+    <ellipse cx="300" cy="300" rx="92" ry="36" stroke="#0d2137" stroke-width="1.5"/>
+    <ellipse cx="300" cy="300" rx="45" ry="18" stroke="#0d2137" stroke-width="1.5"/>
+    <ellipse cx="300" cy="300" rx="280" ry="165" stroke="#0d2137" stroke-width="0.75" transform="rotate(22 300 300)"/>
+    <ellipse cx="300" cy="300" rx="225" ry="130" stroke="#0d2137" stroke-width="0.75" transform="rotate(22 300 300)"/>
+    <ellipse cx="300" cy="300" rx="168" ry="96" stroke="#0d2137" stroke-width="0.75" transform="rotate(22 300 300)"/>
+    <ellipse cx="300" cy="300" rx="110" ry="62" stroke="#0d2137" stroke-width="0.75" transform="rotate(22 300 300)"/>
+  </svg>
+
+  <div class="light-leak"></div>
+  <div class="philosophy-glow"></div>
+
+  <div class="phil-inner">
+
+    <!-- TOP: Anchor -->
+    <div class="phil-top">
+      <div class="reveal">
+        <div class="phil-eyebrow">Our Philosophy</div>
+        <h2 class="phil-anchor">
+          A home isn't<br>a transaction.<br><em>It's a lifelong<br>relationship.</em>
+        </h2>
+      </div>
+      <div class="phil-body reveal reveal-delay-1">
+        <p class="phil-p">Your home shapes the way you live, the wealth you build, and the future you create for your family. It deserves to be treated that way.</p>
+        <p class="phil-p">Most people are handed a mortgage and left to figure out the rest on their own. We believe homeowners deserve <strong>something better</strong> — thoughtful guidance before, during, and long after closing day.</p>
+      </div>
+    </div>
+
+    <!-- BELIEFS -->
+    <div class="beliefs">
+
+      <div class="belief reveal reveal-delay-4">
+        <div class="belief-num">01</div>
+        <div class="belief-rule"></div>
+        <div class="belief-title">A home should create<br><em>freedom</em> — not confusion.</div>
+        <p class="belief-copy">Too many homeowners feel overwhelmed by decisions they weren't prepared to make. The right guidance turns complexity into clarity — and clarity into confidence.</p>
+      </div>
+
+      <div class="belief reveal reveal-delay-5">
+        <div class="belief-num">02</div>
+        <div class="belief-rule"></div>
+        <div class="belief-title">The way you own your<br>home <em>matters.</em></div>
+        <p class="belief-copy">Your home is one of the most powerful tools you'll ever own. How you maintain it, finance it, and build equity in it determines how much it works for you — not just now, but for decades.</p>
+      </div>
+
+      <div class="belief reveal reveal-delay-6">
+        <div class="belief-num">03</div>
+        <div class="belief-rule"></div>
+        <div class="belief-title">Guidance shouldn't<br>end at <em>closing.</em></div>
+        <p class="belief-copy">Most lenders disappear the day you sign. We stay — with tools, advice, and a relationship built around your long-term success. Because a mortgage is just the beginning.</p>
+      </div>
+
+    </div>
+
+    <!-- FOOTER SIGNATURE -->
+    <div class="phil-footer reveal">
+      <p class="phil-sig">
+        "I started The Handy Lender because I kept seeing the same thing — <strong>good families navigating some of the biggest decisions of their lives without enough guidance.</strong> This is my way of changing that."
+        <br><br>— <strong>Dean Reiber</strong>, The Handy Lender™
+      </p>
+      <a href="#tools" class="phil-cta">See the tools built around this philosophy →</a>
+    </div>
+
+  </div>
+</section>
+
+<section class="tools" id="tools">
+
+  <!-- Topo motif -->
+  <svg class="topo-tools" viewBox="0 0 480 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="240" cy="240" rx="225" ry="90" stroke="#0d2137" stroke-width="1.5"/>
+    <ellipse cx="240" cy="240" rx="185" ry="72" stroke="#0d2137" stroke-width="1.5"/>
+    <ellipse cx="240" cy="240" rx="144" ry="56" stroke="#0d2137" stroke-width="1.5"/>
+    <ellipse cx="240" cy="240" rx="102" ry="40" stroke="#0d2137" stroke-width="1.5"/>
+    <ellipse cx="240" cy="240" rx="60" ry="24" stroke="#0d2137" stroke-width="1.5"/>
+    <ellipse cx="240" cy="240" rx="225" ry="136" stroke="#0d2137" stroke-width="0.75" transform="rotate(18 240 240)"/>
+    <ellipse cx="240" cy="240" rx="178" ry="106" stroke="#0d2137" stroke-width="0.75" transform="rotate(18 240 240)"/>
+    <ellipse cx="240" cy="240" rx="130" ry="76" stroke="#0d2137" stroke-width="0.75" transform="rotate(18 240 240)"/>
+  </svg>
+
+  <div class="tools-inner">
+
+    <!-- HEADER -->
+    <div class="tools-header reveal">
+      <div>
+        <div class="tools-eyebrow">The Platform</div>
+        <h2 class="tools-headline">
+          Everything we've built<br>starts with <em>better<br>homeownership.</em>
+        </h2>
+      </div>
+      <p class="tools-sub">
+        Every tool here was built around a single belief — that homeowners who are informed, prepared, and guided make better decisions. For themselves, and for their families.
+      </p>
+    </div>
+
+    <!-- PRIMARY TOOLS -->
+    <div class="primary-tools">
+
+      <a href="/maintenance-guide" class="tool-primary featured reveal reveal-d1">
+        <div class="tool-num">01</div>
+        <div class="tool-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <div class="tool-outcome">Stay ahead of your home — not behind it.</div>
+        <div class="tool-name">Home Health Planner</div>
+        <p class="tool-desc">A seasonal maintenance checklist that keeps your home in top condition, prevents costly surprises, and protects the value of your investment year-round.</p>
+        <span class="tool-cta">Open the planner →</span>
+      </a>
+
+      <a href="/investor-analyzer" class="tool-primary reveal reveal-d2">
+        <div class="tool-num">02</div>
+        <div class="tool-icon-wrap">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        </div>
+        <div class="tool-outcome">Understand whether a property truly supports your future.</div>
+        <div class="tool-name">Investor Analyzer</div>
+        <p class="tool-desc">Run the real numbers on any investment property — cash flow, financing, and long-term return — so your decisions are grounded in clarity, not optimism.</p>
+        <span class="tool-cta">Analyze a property →</span>
+      </a>
+
+      <a href="/dpa-finder" class="tool-primary reveal reveal-d3">
+        <div class="tool-num">03</div>
+        <div class="tool-icon-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div class="tool-outcome">Find money you didn't know existed.</div>
+        <div class="tool-name">Down Payment Assistance Finder</div>
+        <p class="tool-desc">Thousands of buyers leave grant and assistance money on the table. This tool helps you discover what programs you may qualify for in Colorado.</p>
+        <span class="tool-cta">Find your programs →</span>
+      </a>
+
+    </div>
+
+    <!-- Organic row separator -->
+    <div class="row-bridge"></div>
+
+    <!-- SECONDARY TOOLS -->
+    <div class="secondary-tools">
+
+      <a href="/buydown-calculator" class="tool-secondary reveal reveal-d4">
+        <div class="sec-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div class="sec-body">
+          <div class="sec-outcome">Lower your rate. Understand the tradeoff.</div>
+          <div class="sec-name">Buydown Calculator</div>
+        </div>
+        <div class="sec-arr">→</div>
+      </a>
+
+      <a href="/payment-planner" class="tool-secondary reveal reveal-d5">
+        <div class="sec-icon">
+          <svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg>
+        </div>
+        <div class="sec-body">
+          <div class="sec-outcome">See your real monthly picture.</div>
+          <div class="sec-name">Home Payment Planner</div>
+        </div>
+        <div class="sec-arr">→</div>
+      </a>
+
+      <a href="/seller-guide" class="tool-secondary reveal reveal-d6">
+        <div class="sec-icon">
+          <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        </div>
+        <div class="sec-body">
+          <div class="sec-outcome">Sell smarter. Leave nothing on the table.</div>
+          <div class="sec-name">Home Prep Checklist</div>
+        </div>
+        <div class="sec-arr">→</div>
+      </a>
+
+    </div>
+
+    <!-- FOOTER NOTE -->
+    <div class="tools-note reveal">
+      <p class="tools-note-text">
+        "Every tool here exists because a homeowner needed it and couldn't find it anywhere else."
+      </p>
+      <a href="#contact" class="tools-note-cta">Not sure where to start? Let's talk →</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- CINEMATIC ANCHOR -->
+<section class="cinematic">
+  <div class="cinematic-img"></div>
+  <div class="cinematic-bg"></div>
+  <div class="cinematic-light"></div>
+
+  <svg class="cinematic-topo" viewBox="0 0 520 520" fill="none">
+    <ellipse cx="260" cy="260" rx="245" ry="98" stroke="white" stroke-width="1.5"/>
+    <ellipse cx="260" cy="260" rx="200" ry="78" stroke="white" stroke-width="1.5"/>
+    <ellipse cx="260" cy="260" rx="154" ry="60" stroke="white" stroke-width="1.5"/>
+    <ellipse cx="260" cy="260" rx="108" ry="42" stroke="white" stroke-width="1.5"/>
+    <ellipse cx="260" cy="260" rx="62" ry="24" stroke="white" stroke-width="1.5"/>
+    <ellipse cx="260" cy="260" rx="245" ry="148" stroke="white" stroke-width="0.75" transform="rotate(22 260 260)"/>
+    <ellipse cx="260" cy="260" rx="194" ry="116" stroke="white" stroke-width="0.75" transform="rotate(22 260 260)"/>
+    <ellipse cx="260" cy="260" rx="142" ry="84" stroke="white" stroke-width="0.75" transform="rotate(22 260 260)"/>
+  </svg>
+
+  <div class="cinematic-inner reveal">
+    <div class="cin-eyebrow">Real Outcomes</div>
+    <p class="cin-quote">
+      "For the first time, I felt like someone was <em>actually on my side</em> — not just closing a loan and moving on."
+    </p>
+    <div class="cin-attr">
+      <span class="cin-name">SARAH & MARK T.</span>
+      <span class="cin-detail">Highlands Ranch, CO · First-time homeowners</span>
+      <span class="cin-result">Lower payments and a long-term strategy they finally felt confident in · $41k saved</span>
     </div>
   </div>
 </section>
 
-<!-- STATS -->
-<div class="stats-bar">
-  <div class="stats-inner">
-    <div class="stat-item">
-      <div class="stat-num">20<span>+</span></div>
-      <div class="stat-label">Years of experience</div>
+<!-- STORIES -->
+<section class="stories">
+
+  <svg class="stories-topo" viewBox="0 0 380 380" fill="none">
+    <ellipse cx="190" cy="190" rx="178" ry="72" stroke="#0d2137" stroke-width="1.5"/>
+    <ellipse cx="190" cy="190" rx="142" ry="56" stroke="#0d2137" stroke-width="1.5"/>
+    <ellipse cx="190" cy="190" rx="106" ry="41" stroke="#0d2137" stroke-width="1.5"/>
+    <ellipse cx="190" cy="190" rx="70" ry="27" stroke="#0d2137" stroke-width="1.5"/>
+    <ellipse cx="190" cy="190" rx="35" ry="13" stroke="#0d2137" stroke-width="1.5"/>
+  </svg>
+
+  <div class="stories-inner">
+
+    <div class="stories-header reveal">
+      <div>
+        <div class="stories-eyebrow">The Journey</div>
+        <h2 class="stories-headline">
+          Guidance that shows up<br><em>long after</em> closing day.
+        </h2>
+      </div>
+      <p class="stories-sub">
+        Every story here starts the same way — someone who needed more than a lender. What they got was a long-term partner.
+      </p>
     </div>
-    <div class="stat-item">
-      <div class="stat-num">1<span>k+</span></div>
-      <div class="stat-label">Homeowners helped</div>
+
+    <div class="story-grid">
+
+      <!-- Story 1 — Named -->
+      <div class="story reveal reveal-d1">
+        <div class="story-rule"></div>
+        <p class="story-quote">
+          "We had no idea what we were doing. Dean didn't just explain the mortgage — he helped us understand what we were actually buying into, and what to do with it once we owned it."
+        </p>
+        <div class="story-outcome">
+          <div class="story-outcome-num">$41<sup>k</sup></div>
+          <div class="story-outcome-label">Saved over loan life via 2-1 buydown strategy · Highlands Ranch, CO</div>
+        </div>
+        <div class="story-attr">
+          <div class="story-initial">ST</div>
+          <div>
+            <div class="story-name">Sarah & Mark T.</div>
+            <div class="story-context">First-time buyers · 2023</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Story 2 — Named, oversized quote variation -->
+      <div class="story story-large-quote reveal reveal-d2">
+        <div class="story-rule"></div>
+        <p class="story-quote">
+          "Three years after closing, Dean reached out to let us know the market had shifted and we could refinance. Nobody does that. That call saved us over $300 a month."
+        </p>
+        <div class="story-outcome">
+          <div class="story-outcome-num">$312</div>
+          <div class="story-outcome-label">Monthly payment reduction through proactive refinance guidance · Denver, CO</div>
+        </div>
+        <div class="story-attr">
+          <div class="story-initial">JR</div>
+          <div>
+            <div class="story-name">James R.</div>
+            <div class="story-context">Existing homeowner · Refinanced 2024</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Story 3 — Anonymized, minimal outcome variation -->
+      <div class="story story-minimal anon reveal reveal-d3">
+        <div class="story-rule"></div>
+        <p class="story-quote">
+          "I came in thinking I wasn't ready to buy. Turned out there was a down payment assistance program I'd never heard of that covered nearly everything I needed."
+        </p>
+        <div class="story-outcome">
+          <div class="story-outcome-num">$18<sup>k</sup></div>
+          <div class="story-outcome-label">In DPA grant funding discovered · Colorado first-time buyer · 2024</div>
+        </div>
+        <div class="story-attr">
+          <div class="story-initial">···</div>
+          <div>
+            <div class="story-name">Colorado First-Time Buyer</div>
+            <div class="story-context">Name withheld by request · 2024</div>
+          </div>
+        </div>
+      </div>
+
     </div>
-    <div class="stat-item">
-      <div class="stat-num">4<span> tools</span></div>
-      <div class="stat-label">Free homeowner resources</div>
+
+    <div class="stories-note reveal">
+      <p class="stories-note-text">
+        "Most people don't need perfect timing. They need better guidance."
+        <br>— Dean Reiber
+      </p>
+      <a href="#contact" class="stories-note-cta">Let's figure out your next move →</a>
     </div>
-    <div class="stat-item">
-      <div class="stat-num">1<span>–3%</span></div>
-      <div class="stat-label">Home value saved annually</div>
-    </div>
+
   </div>
-</div>
+</section>
 
-<!-- TOOLS -->
-<section class="tools-section" id="tools">
-  <div class="section-inner">
-    <div class="section-eyebrow">Free Resources</div>
-    <h2 class="section-title">Tools built for homeowners,<br>not just borrowers</h2>
-    <p class="section-sub">Whether you're maintaining, buying, or preparing to sell — these tools help you make smarter decisions at every stage.</p>
+<section class="about" id="about">
 
-    <div class="tools-grid">
-      <a href="/maintenance-guide" class="tool-card featured">
-        <div class="tool-icon">🏡</div>
-        <div class="tool-tag">Most Popular</div>
-        <div class="tool-title">Home Health Checklist</div>
-        <div class="tool-desc">Seasonal maintenance checklists that help you stay ahead of repairs, protect your investment, and save thousands over time.</div>
-        <div class="tool-link">Open the guide →</div>
-      </a>
+  <div class="about-glow-left"></div>
+  <div class="about-glow-right"></div>
 
-      <a href="/calculator" class="tool-card">
-        <div class="tool-icon">🧮</div>
-        <div class="tool-tag">Buyers & Refinancers</div>
-        <div class="tool-title">Mortgage Calculator</div>
-        <div class="tool-desc">Estimate your monthly payment, compare loan scenarios, and understand your full cost of ownership before you commit.</div>
-        <div class="tool-link">Calculate now →</div>
-      </a>
+  <svg class="about-topo" viewBox="0 0 300 300" fill="none">
+    <ellipse cx="150" cy="150" rx="140" ry="56" stroke="white" stroke-width="1"/>
+    <ellipse cx="150" cy="150" rx="110" ry="44" stroke="white" stroke-width="1"/>
+    <ellipse cx="150" cy="150" rx="80" ry="32" stroke="white" stroke-width="1"/>
+    <ellipse cx="150" cy="150" rx="50" ry="20" stroke="white" stroke-width="1"/>
+    <ellipse cx="150" cy="150" rx="140" ry="90" stroke="white" stroke-width="0.5" transform="rotate(20 150 150)"/>
+    <ellipse cx="150" cy="150" rx="105" ry="66" stroke="white" stroke-width="0.5" transform="rotate(20 150 150)"/>
+  </svg>
 
-      <a href="/seller-guide" class="tool-card">
-        <div class="tool-icon">📋</div>
-        <div class="tool-tag">Sellers</div>
-        <div class="tool-title">Home Prep Checklist</div>
-        <div class="tool-desc">Get your home market-ready with a prioritized checklist of repairs, updates, and staging tips that maximize sale price.</div>
-        <div class="tool-link">Start prepping →</div>
-      </a>
+  <div class="about-grid">
+
+    <!-- LEFT: Editorial Image -->
+    <div class="about-image-col">
+      <div class="about-img"></div>
+      <div class="about-img-overlay"></div>
+
+      <div class="about-credential reveal">
+        <div class="cred-name">Dean Reiber</div>
+        <div class="cred-title">Loan Officer · The Handy Lender™</div>
+        <div class="cred-divider"></div>
+        <div class="cred-facts">
+          <div class="cred-fact">
+            <div class="cred-fact-dot"></div>
+            <span>Cornerstone First Mortgage</span>
+          </div>
+          <div class="cred-fact">
+            <div class="cred-fact-dot"></div>
+            <span>Colorado roots</span>
+          </div>
+          <div class="cred-fact">
+            <div class="cred-fact-dot"></div>
+            <span>20+ years in housing</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Editorial Story -->
+    <div class="about-story-col">
+
+      <div class="about-eyebrow reveal">About Dean</div>
+
+      <h2 class="about-anchor reveal reveal-d1">
+        I never believed a lender's<br>job should end<br><em>at closing.</em>
+      </h2>
+
+      <div class="about-body">
+        <p class="about-p reveal reveal-d2">
+          After years of working with homeowners across Colorado, I kept noticing the same pattern. People would close on a home — one of the biggest decisions of their lives — and then be left entirely on their own to figure out what came next.
+        </p>
+        <p class="about-p reveal reveal-d2">
+          Nobody was teaching them how to maintain what they'd bought. Nobody was helping them understand how to build equity intentionally, or when to refinance, or how to think about their home as a long-term financial asset. <strong>They had a mortgage. They didn't have guidance.</strong>
+        </p>
+      </div>
+
+      <div class="about-pullquote reveal reveal-d3">
+        <p>"The Handy Lender exists because I believe homeowners deserve a partner who stays — not a lender who disappears the day you sign."</p>
+      </div>
+
+      <div class="about-body">
+        <p class="about-p reveal reveal-d3">
+          So I built The Handy Lender around the full experience of homeownership — from first purchase to long-term stewardship. Tools that actually help. Guidance that actually continues. A relationship built around your success, not just your transaction.
+        </p>
+        <p class="about-p reveal reveal-d3">
+          I'm a builder at heart. I believe in craftsmanship — in things done with care and intention. That's how I approach every client relationship, and it's the standard I hold The Handy Lender to.
+        </p>
+      </div>
+
+      <div class="about-values reveal reveal-d4">
+        <span class="about-value">Stewardship</span>
+        <span class="about-value">Long-term thinking</span>
+        <span class="about-value">Honest guidance</span>
+        <span class="about-value">Colorado roots</span>
+        <span class="about-value">Craftsmanship</span>
+        <span class="about-value">Practical wisdom</span>
+      </div>
+
+      <div class="about-cta-row reveal reveal-d5">
+        <a href="#contact" class="btn-brass">Reach out when you're ready →</a>
+        <div class="about-nmls">
+          (303) 903-8901<br>
+          NMLS <a href="https://www.nmlsconsumeraccess.org/EntityDetails.aspx/INDIVIDUAL/2463805" target="_blank">#2463805</a> · Co. NMLS <a href="https://www.nmlsconsumeraccess.org/EntityDetails.aspx/COMPANY/173855" target="_blank">#173855</a>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 
-<!-- ABOUT -->
-<section class="about-section" id="about">
-  <div class="about-inner">
-    <div class="about-visual">
-      <img src="HL_Logo_Horizontal_White.png" alt="The Handy Lender" style="height:28px; width:auto; margin-bottom:1.25rem; opacity:0.9;">
-      <div class="about-card-name">Dean Reiber</div>
-      <div class="about-card-title">The Handy Lender™ · Cornerstone First Mortgage</div>
-      <div class="about-card-divider"></div>
-      <div class="about-card-stat">
-        <span class="about-card-stat-label">Specialty</span>
-        <span class="about-card-stat-value">Purchase & Refinance</span>
-      </div>
-      <div class="about-card-stat">
-        <span class="about-card-stat-label">Location</span>
-        <span class="about-card-stat-value">Colorado</span>
-      </div>
-      <div class="about-card-stat">
-        <span class="about-card-stat-label">Company</span>
-        <span class="about-card-stat-value">Cornerstone First Mortgage</span>
-      </div>
-      <div class="about-card-stat">
-        <span class="about-card-stat-label">Focus</span>
-        <span class="about-card-stat-value">Homeowner Wealth Building</span>
-      </div>
-      <div class="about-badge">🏅 Licensed Mortgage Professional</div>
+<section class="contact" id="contact">
+
+  <div class="contact-glow"></div>
+
+  <svg class="contact-topo" viewBox="0 0 360 360" fill="none">
+    <ellipse cx="180" cy="180" rx="168" ry="68" stroke="#0d2137" stroke-width="1.5"/>
+    <ellipse cx="180" cy="180" rx="132" ry="52" stroke="#0d2137" stroke-width="1.5"/>
+    <ellipse cx="180" cy="180" rx="96" ry="38" stroke="#0d2137" stroke-width="1.5"/>
+    <ellipse cx="180" cy="180" rx="60" ry="24" stroke="#0d2137" stroke-width="1.5"/>
+    <ellipse cx="180" cy="180" rx="28" ry="11" stroke="#0d2137" stroke-width="1.5"/>
+    <ellipse cx="180" cy="180" rx="168" ry="102" stroke="#0d2137" stroke-width="0.75" transform="rotate(20 180 180)"/>
+    <ellipse cx="180" cy="180" rx="126" ry="76" stroke="#0d2137" stroke-width="0.75" transform="rotate(20 180 180)"/>
+  </svg>
+
+  <div class="contact-inner">
+
+    <div class="contact-header reveal">
+      <div class="contact-eyebrow">Get in Touch</div>
+      <h2 class="contact-headline">
+        Tell me where you are<br>in the <em>journey.</em>
+      </h2>
+      <p class="contact-sub">
+        No pressure. No obligation. Just an honest conversation about where you are and what might help.
+      </p>
     </div>
 
-    <div class="about-content">
-      <div class="section-eyebrow">About Dean</div>
-      <h2 class="section-title">More than a lender — a long-term partner</h2>
-      <p class="about-body">Most lenders disappear after closing. Dean Reiber stays connected — because building wealth through homeownership is a long game, and you deserve a partner who treats it that way.</p>
-      <ul class="about-list">
-        <li>Expert guidance on purchase loans, refinancing & investment properties</li>
-        <li>Free tools to help you protect and grow your home's value</li>
-        <li>Seasonal maintenance reminders to keep costly repairs at bay</li>
-        <li>Down payment assistance programs for qualifying buyers</li>
-        <li>Honest advice even when the answer is "wait"</li>
-      </ul>
-      <a href="#contact" class="btn-primary" style="background: var(--navy); color: var(--white);">Schedule a Conversation →</a>
-    </div>
-  </div>
-</section>
+    <div class="contact-grid">
 
-<!-- CTA -->
-<section class="cta-section" id="contact">
-  <div class="cta-inner">
-    <div class="section-eyebrow">Get Started</div>
-    <h2 class="cta-title">Ready to make your next move?</h2>
-    <p class="cta-sub">Whether you're buying, refinancing, or just planning ahead — a quick conversation costs nothing and could save you thousands.</p>
-    <form class="cta-form" name="contact" method="POST" data-netlify="true">
-      <input type="hidden" name="form-name" value="contact">
-      <input class="cta-input" type="text" name="name" placeholder="Your name" required>
-      <input class="cta-input" type="email" name="email" placeholder="Email address" required>
-      <input class="cta-input" type="tel" name="phone" placeholder="Phone number">
-      <button type="submit" class="btn-primary" style="white-space:nowrap">Send Message →</button>
-    </form>
-    <p class="cta-note">No spam. No pressure. Just honest guidance.</p>
-    <div style="margin-top:1.5rem; padding-top:1.5rem; border-top:1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:center; gap:2rem; flex-wrap:wrap;">
-      <a href="tel:3039038901" style="color:rgba(255,255,255,0.6); font-size:14px; text-decoration:none; display:flex; align-items:center; gap:6px;">📞 (303) 903-8901</a>
-      <a href="mailto:dean@thehandylender.com" style="color:rgba(255,255,255,0.6); font-size:14px; text-decoration:none; display:flex; align-items:center; gap:6px;">✉️ dean@thehandylender.com</a>
+      <!-- LEFT: Direct contact -->
+      <div class="contact-left reveal reveal-d1">
+
+        <div class="contact-direct-label">Reach out directly</div>
+
+        <div class="contact-methods">
+          <a href="tel:3039038901" class="contact-method">
+            <div class="cm-icon">
+              <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.97 1.18 2 2 0 012.96 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            </div>
+            <div class="cm-body">
+              <div class="cm-label">Call or text</div>
+              <div class="cm-value">(303) 903-8901</div>
+            </div>
+            <div class="cm-arr">→</div>
+          </a>
+          <a href="mailto:dean@thehandylender.com" class="contact-method">
+            <div class="cm-icon">
+              <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div class="cm-body">
+              <div class="cm-label">Email</div>
+              <div class="cm-value">dean@thehandylender.com</div>
+            </div>
+            <div class="cm-arr">→</div>
+          </a>
+          <div class="contact-method" style="cursor:default;">
+            <div class="cm-icon">
+              <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div class="cm-body">
+              <div class="cm-label">Office</div>
+              <div class="cm-value" style="font-size:13px;font-weight:400;">2655 Camino Del Rio North, #100<br>San Diego, CA 92108</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-schedule">
+          <div class="cs-label">Prefer to schedule?</div>
+          <p class="cs-text">"Find a time that works — I'll come prepared."</p>
+          <a href="#" class="cs-btn">
+            <svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:currentColor;stroke-width:1.5;fill:none;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Schedule a conversation
+          </a>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Form -->
+      <div class="contact-form-wrap reveal reveal-d2">
+
+        <div class="contact-form-label">Send a message</div>
+
+        <form class="contact-form" name="contact" method="POST" data-netlify="true">
+          <input type="hidden" name="form-name" value="contact">
+
+          <div class="form-row two">
+            <div class="form-field">
+              <label>First name</label>
+              <input type="text" name="first_name" placeholder="Your first name" required>
+            </div>
+            <div class="form-field">
+              <label>Last name</label>
+              <input type="text" name="last_name" placeholder="Your last name">
+            </div>
+          </div>
+
+          <div class="form-row two">
+            <div class="form-field">
+              <label>Email</label>
+              <input type="email" name="email" placeholder="your@email.com" required>
+            </div>
+            <div class="form-field">
+              <label>Phone</label>
+              <input type="tel" name="phone" placeholder="(303) 000-0000">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label>Where are you in the journey?</label>
+              <select name="journey_stage">
+                <option value="" disabled selected>Choose one...</option>
+                <option>I own a home and want to build wealth</option>
+                <option>I'm ready to buy my first home</option>
+                <option>I'm thinking about selling or upgrading</option>
+                <option>I want to invest in real estate</option>
+                <option>I'm not sure yet — just exploring</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label>Anything else you'd like me to know?</label>
+              <textarea name="message" placeholder="Optional — share whatever feels helpful..."></textarea>
+            </div>
+          </div>
+
+          <button type="submit" class="form-submit">
+            Send message
+            <svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:currentColor;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </form>
+
+        <p class="form-note reveal reveal-d3">
+          Your information is never shared or sold. Ever.
+        </p>
+
+      </div>
     </div>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-inner">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <img src="HL_Logo_Horizontal_White.png" alt="The Handy Lender" style="height:36px; width:auto; opacity:0.9; margin-bottom:1rem; display:block;">
-        <p class="footer-tagline">Helping homeowners build wealth<br>through smart financing.</p>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title">Tools</div>
-        <ul class="footer-links">
-          <li><a href="/maintenance-guide">Home Health Checklist</a></li>
-          <li><a href="/calculator">Mortgage Calculator</a></li>
-          <li><a href="/seller-guide">Home Prep Checklist</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title">Company</div>
-        <ul class="footer-links">
-          <li><a href="#about">About Dean</a></li>
-          <li><a href="#contact">Contact</a></li>
-          <li><a href="#contact">Get a Quote</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title">Contact</div>
-        <ul class="footer-links">
-          <li><a href="tel:3039038901">(303) 903-8901</a></li>
-          <li><a href="mailto:dean@thehandylender.com">dean@thehandylender.com</a></li>
-          <li style="color:rgba(255,255,255,0.3); font-size:12px; line-height:1.5;">2655 Camino Del Rio North, #100<br>San Diego, CA 92108</li>
-        </ul>
-      </div>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <img src="HL_Logo_Horizontal_White.png" alt="The Handy Lender">
+      <p class="footer-tagline">Thoughtful guidance for every stage of homeownership.</p>
     </div>
-
-    <div class="footer-divider"></div>
-
-    <div class="footer-compliance">
-      <div class="footer-nmls">
-        <span class="nmls-badge">NMLS</span>
-        <span>Dean Reiber · Loan Officer · NMLS #<a href="https://www.nmlsconsumeraccess.org/EntityDetails.aspx/INDIVIDUAL/2463805" target="_blank" rel="noopener">2463805</a></span>
-        <span class="nmls-sep">·</span>
-        <span>Cornerstone First Mortgage · Company NMLS #<a href="https://www.nmlsconsumeraccess.org/EntityDetails.aspx/COMPANY/173855" target="_blank" rel="noopener">173855</a></span>
-      </div>
-      <p class="footer-legal">© 2026 Dean Reiber · thehandylender.com · All rights reserved. This is not a commitment to lend. Loan approval is subject to credit approval and program guidelines. Not all loan programs are available in all states for all loan amounts. Interest rates and program terms are subject to change without notice. For complete licensing information, visit <a href="https://www.nmlsconsumeraccess.org" target="_blank" rel="noopener">nmlsconsumeraccess.org</a>.</p>
+    <div>
+      <div class="footer-col-title">Tools</div>
+      <ul class="footer-links">
+        <li><a href="/maintenance-guide">Home Health Planner</a></li>
+        <li><a href="/investor-analyzer">Investor Analyzer</a></li>
+        <li><a href="/dpa-finder">DPA Finder</a></li>
+        <li><a href="/buydown-calculator">Buydown Calculator</a></li>
+        <li><a href="/payment-planner">Home Payment Planner</a></li>
+        <li><a href="/seller-guide">Home Prep Checklist</a></li>
+      </ul>
     </div>
+    <div>
+      <div class="footer-col-title">Navigate</div>
+      <ul class="footer-links">
+        <li><a href="#philosophy">Our Approach</a></li>
+        <li><a href="#about">About Dean</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Contact</div>
+      <ul class="footer-links">
+        <li><a href="tel:3039038901">(303) 903-8901</a></li>
+        <li><a href="mailto:dean@thehandylender.com">dean@thehandylender.com</a></li>
+        <li>2655 Camino Del Rio North, #100<br>San Diego, CA 92108</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="footer-nmls">
+      <span class="nmls-badge">NMLS</span>
+      <span>Dean Reiber · Loan Officer · NMLS <a href="https://www.nmlsconsumeraccess.org/EntityDetails.aspx/INDIVIDUAL/2463805" target="_blank" rel="noopener">#2463805</a></span>
+      <span style="color:rgba(255,255,255,0.15);">·</span>
+      <span>Cornerstone First Mortgage · Company NMLS <a href="https://www.nmlsconsumeraccess.org/EntityDetails.aspx/COMPANY/173855" target="_blank" rel="noopener">#173855</a></span>
+    </div>
+    <p class="footer-legal">
+      © 2026 Dean Reiber · thehandylender.com · All rights reserved. This is not a commitment to lend. Loan approval is subject to credit approval and program guidelines. Not all loan programs are available in all states for all loan amounts. Interest rates and program terms are subject to change without notice. For complete licensing information, visit <a href="https://www.nmlsconsumeraccess.org" target="_blank" rel="noopener">nmlsconsumeraccess.org</a>.
+    </p>
   </div>
 </footer>
 
+
 <script>
-const seasons = {
-  spring: ['Inspect roof for winter damage','Clean gutters & downspouts','Schedule AC service','Check exterior caulking'],
-  summer: ['Test smoke & CO detectors','Inspect deck & fencing','Seal concrete cracks','Check attic ventilation'],
-  fall:   ['Service furnace before winter','Drain sprinkler system','Clean gutters of fall leaves','Check weatherstripping'],
-  winter: ['Monitor indoor humidity','Watch for ice dams','Inspect dryer vent','Know your water shutoff']
+// Single unified scroll reveal observer
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, {threshold: 0.08});
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Conversation selector
+const data={
+  owner:{
+    q:'"A homeowner focused on what\'s next — let\'s make sure your biggest asset is working as hard as you are."',
+    tools:['Home Health Planner','Equity Tracker','Buydown Calculator','Refinance Analyzer'],
+    cta:'See all homeowner tools'
+  },
+  buyer:{
+    q:'"Ready to buy — let\'s make sure you walk in prepared, protected, and completely confident."',
+    tools:['DPA Finder','Home Payment Planner','Buyer\'s Guide','Pre-Approval Checklist'],
+    cta:'Start your buyer journey'
+  },
+  seller:{
+    q:'"Timing and preparation are everything — let\'s maximize every dollar you walk away with."',
+    tools:['Home Prep Checklist','Equity Estimator','Upgrade Calculator','Timing Guide'],
+    cta:'See seller resources'
+  },
+  investor:{
+    q:'"Real estate done right — let\'s run the numbers and build a strategy around your goals."',
+    tools:['Investor Analyzer','DSCR Calculator','Portfolio Planner','ROI Estimator'],
+    cta:'Explore investor tools'
+  }
 };
-let checks = {};
 
-function setSeason(s, el) {
-  document.querySelectorAll('.season-pill').forEach(p => p.classList.remove('active'));
+function pick(el,key){
+  document.querySelectorAll('.option').forEach(o=>o.classList.remove('active'));
   el.classList.add('active');
-  renderList(s);
+  const d=data[key];
+  const q=document.getElementById('convo-q');
+  q.classList.add('fading');
+  setTimeout(()=>{q.textContent=d.q;q.classList.remove('fading');},300);
+  const r=document.getElementById('response');
+  r.classList.remove('visible');
+  r.innerHTML=`
+    <div class="resp-label">Recommended starting points</div>
+    <div class="resp-tools">${d.tools.map(t=>`<a href="#tools" class="resp-tool"><svg viewBox="0 0 24 24" style="width:10px;height:10px;stroke:currentColor;stroke-width:1.5;fill:none;"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>${t}</a>`).join('')}</div>
+    <a href="#tools" class="resp-cta">${d.cta} →</a>
+  `;
+  setTimeout(()=>r.classList.add('visible'),60);
 }
-
-function renderList(s) {
-  const list = document.getElementById('mini-list');
-  list.innerHTML = '';
-  seasons[s].forEach((item, i) => {
-    const key = s + i;
-    const div = document.createElement('div');
-    div.className = 'mini-check' + (checks[key] ? ' done' : '');
-    div.innerHTML = `<div class="mini-check-box">${checks[key] ? '✓' : ''}</div><div class="mini-check-text">${item}</div>`;
-    div.onclick = () => { checks[key] = !checks[key]; renderList(s); updateProgress(s); };
-    list.appendChild(div);
-  });
-  updateProgress(s);
-}
-
-function updateProgress(s) {
-  const total = seasons[s].length;
-  const done = seasons[s].filter((_, i) => checks[s + i]).length;
-  document.getElementById('mini-progress').textContent = done + ' of ' + total + ' complete';
-  document.getElementById('mini-fill').style.width = Math.round(done / total * 100) + '%';
-}
-
-renderList('spring');
 </script>
 </body>
 </html>
