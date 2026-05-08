@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ══ ANALYTICS ══
+       SETUP REQUIRED: Replace placeholder IDs before uploading to GitHub.
+       GA4 ID:     G-XXXXXXXXXX  → analytics.google.com → Admin → Data Streams
+       Clarity ID: XXXXXXXXXX    → clarity.microsoft.com → Settings → Setup
+  -->
+
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+
+  <!-- Microsoft Clarity -->
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "XXXXXXXXXX");
+  </script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Refinance Strategy Planner | The Handy Lender™</title>
+<meta name="description" content="Refinancing isn't about rates. It's about whether the math changes your life. Find out if now is the right time — and what it actually means for your family.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:#f5f1eb;color:#1c1c2a;}
+:root{
+  --navy:#0d2137;--navy-mid:#163354;
+  --brass:#a08055;--brass-light:#bfa070;
+  --cream:#f5f1eb;--warm-white:#faf8f5;--stone:#ede8df;
+  --teal:#0f6e56;--teal-light:#e1f5ee;--teal-mid:#1a9070;
+  --amber:#b85c00;--amber-light:#fef3e2;
+  --red:#8b2020;--red-light:#fdf0f0;
+  --text:#1c1c2a;--text-muted:#72737e;--text-faint:#a0a1ab;
+  --border:rgba(13,33,55,0.08);--border-mid:rgba(13,33,55,0.13);
+}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(13,33,55,0.97);backdrop-filter:blur(16px);padding:0 2.5rem;height:62px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);}
+.nav-logo img{height:28px;width:auto;display:block;opacity:0.92;}
+.nav-right{display:flex;align-items:center;gap:2rem;}
+.nav-right a{color:rgba(255,255,255,0.5);text-decoration:none;font-size:12.5px;transition:color 0.2s;}
+.nav-right a:hover{color:rgba(255,255,255,0.85);}
+.nav-back{border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;}
+
+/* ── INTAKE ── */
+#intake-screen{position:fixed;inset:0;z-index:150;background:var(--cream);display:flex;flex-direction:column;padding-top:62px;overflow-y:auto;}
+.intake-inner{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem;}
+.intake-card{background:white;border-radius:20px;padding:2.75rem;max-width:700px;width:100%;box-shadow:0 24px 64px rgba(13,33,55,0.1);}
+.intake-eyebrow{font-size:10px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--brass);display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;}
+.intake-eyebrow::before{content:'';width:24px;height:1px;background:var(--brass);}
+.intake-headline{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3vw,2.4rem);font-weight:400;line-height:1.15;color:var(--navy);margin-bottom:0.75rem;}
+.intake-headline em{font-style:italic;color:var(--brass);font-weight:300;}
+.intake-sub{font-size:14px;font-weight:300;color:var(--text-muted);line-height:1.75;margin-bottom:1.5rem;}
+.intake-truth{font-size:13.5px;color:var(--navy);background:var(--stone);border-radius:8px;padding:11px 15px;margin-bottom:1.75rem;line-height:1.6;border-left:3px solid var(--brass);}
+
+/* Reason selector */
+.reason-label{font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);margin-bottom:8px;display:block;}
+.reason-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.25rem;}
+.reason-opt{padding:12px 14px;border:1.5px solid var(--border-mid);border-radius:10px;cursor:pointer;transition:all 0.15s;background:var(--warm-white);}
+.reason-opt:hover{border-color:var(--brass);background:white;}
+.reason-opt.active{border-color:var(--navy);background:var(--navy);}
+.reason-opt-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px;}
+.reason-opt.active .reason-opt-title{color:white;}
+.reason-opt-sub{font-size:11.5px;color:var(--text-muted);line-height:1.5;}
+.reason-opt.active .reason-opt-sub{color:rgba(255,255,255,0.5);}
+
+.intake-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.intake-field label{display:block;font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);margin-bottom:5px;}
+.intake-field select,.intake-field input[type=text]{width:100%;padding:10px 12px;border:1.5px solid var(--border-mid);border-radius:8px;font-size:14px;color:var(--text);background:var(--warm-white);font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.2s;}
+.intake-field select:focus,.intake-field input:focus{border-color:var(--brass);background:white;}
+.intake-field input[type=range]{width:100%;padding:6px 0;border:none;background:transparent;accent-color:var(--navy);}
+.range-val{font-size:15px;font-weight:500;color:var(--navy);margin-top:3px;}
+.intake-submit{width:100%;background:var(--navy);color:white;border:none;padding:14px;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;margin-top:4px;}
+.intake-submit:hover{background:var(--navy-mid);}
+.intake-trust{text-align:center;font-size:11.5px;color:var(--text-faint);margin-top:1rem;line-height:1.6;}
+.intake-trust a{color:var(--navy);}
+
+/* ── RESULTS ── */
+#results-screen{display:none;padding-top:62px;}
+
+/* Hero */
+.results-hero{background:var(--navy);padding:2.5rem 2.5rem 0;position:relative;overflow:hidden;}
+.results-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 15% 60%,rgba(160,128,85,0.07) 0%,transparent 55%);pointer-events:none;}
+.topo-bg{position:absolute;right:-60px;top:50%;transform:translateY(-50%);width:340px;height:340px;opacity:0.035;pointer-events:none;}
+.rh-inner{max-width:1060px;margin:0 auto;position:relative;z-index:2;}
+
+.dean-voice{display:flex;align-items:flex-start;gap:14px;margin-bottom:2rem;}
+.dean-av{width:42px;height:42px;border-radius:50%;background:var(--brass);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;color:var(--navy);}
+.dean-bubble{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:0 12px 12px 12px;padding:1rem 1.25rem;flex:1;}
+.dean-bubble p{font-size:14px;font-weight:300;color:rgba(255,255,255,0.78);line-height:1.7;}
+.dean-bubble p strong{color:var(--brass-light);font-weight:500;}
+.dean-name{font-size:10.5px;color:rgba(255,255,255,0.3);margin-top:5px;letter-spacing:0.04em;}
+
+/* Life impact hero bar */
+.life-impact-bar{display:grid;grid-template-columns:1fr 2px 1fr 2px 1fr;background:rgba(255,255,255,0.06);border-radius:14px 14px 0 0;overflow:hidden;}
+.lib-divider{background:rgba(255,255,255,0.08);}
+.lib-cell{padding:1.5rem 2rem;}
+.lib-label{font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:6px;}
+.lib-num{font-family:'Cormorant Garamond',serif;font-size:2.6rem;font-weight:500;color:white;line-height:1;margin-bottom:4px;}
+.lib-num.savings{color:#6ee7b7;}
+.lib-num.cost{color:#fca5a5;}
+.lib-num.neutral{color:var(--brass-light);}
+.lib-sub{font-size:11.5px;color:rgba(255,255,255,0.35);line-height:1.5;}
+
+/* Body */
+.results-body{max-width:1060px;margin:0 auto;padding:2rem 2.5rem 6rem;}
+
+/* Verdict banner */
+.verdict-banner{border-radius:12px;padding:1.25rem 1.5rem;margin:1.5rem 0 1.25rem;display:flex;align-items:flex-start;gap:14px;}
+.verdict-banner.go{background:var(--teal-light);border:1px solid rgba(15,110,86,0.2);}
+.verdict-banner.wait{background:var(--amber-light);border:1px solid rgba(184,92,0,0.2);}
+.verdict-banner.no{background:var(--red-light);border:1px solid rgba(139,32,32,0.2);}
+.vb-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:17px;}
+.vb-icon.go{background:var(--teal);}.vb-icon.wait{background:var(--amber);}.vb-icon.no{background:var(--red);}
+.vb-main{font-size:14px;font-weight:500;color:var(--text);display:block;margin-bottom:2px;}
+.vb-sub{font-size:12.5px;color:var(--text-muted);line-height:1.55;}
+
+/* What this means in real life */
+.real-life-section{background:white;border:1px solid var(--border-mid);border-radius:14px;padding:1.75rem;margin-bottom:1.5rem;}
+.section-title-sm{font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);margin-bottom:1.25rem;}
+.real-life-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.rl-card{background:var(--warm-white);border:1px solid var(--border);border-radius:10px;padding:1.1rem;text-align:center;}
+.rl-emoji{font-size:22px;margin-bottom:6px;}
+.rl-amount{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500;color:var(--navy);line-height:1;margin-bottom:3px;}
+.rl-label{font-size:11.5px;color:var(--text-muted);line-height:1.4;}
+
+/* Break-even */
+.breakeven-section{background:white;border:1px solid var(--border-mid);border-radius:14px;padding:1.75rem;margin-bottom:1.5rem;}
+.be-visual{position:relative;height:56px;background:var(--stone);border-radius:10px;overflow:hidden;margin:1rem 0 0.5rem;}
+.be-fill{position:absolute;top:0;left:0;height:100%;background:linear-gradient(90deg,var(--teal),#34d399);border-radius:10px;transition:width 0.7s ease;}
+.be-marker{position:absolute;top:0;height:100%;width:3px;background:var(--navy);border-radius:2px;transform:translateX(-50%);}
+.be-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--text-faint);margin-bottom:1rem;}
+.be-statement{font-size:14px;color:var(--text-muted);line-height:1.7;}
+.be-statement strong{color:var(--navy);font-weight:500;}
+
+/* Net benefit timeline */
+.benefit-section{background:white;border:1px solid var(--border-mid);border-radius:14px;overflow:hidden;margin-bottom:1.5rem;}
+.benefit-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);}
+.benefit-cell{background:white;padding:1.25rem;}
+.benefit-cell.highlight{background:var(--navy);}
+.bc-period{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-faint);margin-bottom:4px;}
+.benefit-cell.highlight .bc-period{color:rgba(255,255,255,0.35);}
+.bc-num{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:500;line-height:1;color:var(--text);}
+.bc-num.pos{color:var(--teal);}
+.bc-num.neg{color:var(--red);}
+.benefit-cell.highlight .bc-num{color:#6ee7b7;}
+.bc-label{font-size:11px;color:var(--text-faint);margin-top:4px;line-height:1.4;}
+.benefit-cell.highlight .bc-label{color:rgba(255,255,255,0.3);}
+
+/* Equity & rate context */
+.context-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem;}
+.context-card{background:white;border:1px solid var(--border-mid);border-radius:12px;padding:1.5rem;}
+.context-card h3{font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);margin-bottom:1rem;}
+.ctx-row{display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px;}
+.ctx-label{color:var(--text-muted);}
+.ctx-val{font-weight:500;color:var(--text);}
+.ctx-val.pos{color:var(--teal);}
+.ctx-insight{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);font-size:12.5px;color:var(--text-muted);line-height:1.65;}
+
+/* Cash-out section (conditional) */
+.cashout-section{background:var(--stone);border:1px solid var(--border-mid);border-radius:14px;padding:1.75rem;margin-bottom:1.5rem;}
+.cashout-section h3{font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);margin-bottom:1rem;}
+.cashout-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem;}
+.co-cell{background:white;border-radius:10px;padding:1rem;border:1px solid var(--border);}
+.co-label{font-size:10.5px;color:var(--text-muted);margin-bottom:4px;}
+.co-num{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:500;color:var(--navy);line-height:1;}
+.co-sub{font-size:11px;color:var(--text-faint);margin-top:3px;}
+.cashout-note{font-size:13px;color:var(--text-muted);line-height:1.7;font-style:italic;}
+
+/* Dean's interpretation */
+.guidance-section{background:var(--warm-white);border:1px solid var(--border-mid);border-radius:14px;padding:1.75rem;margin-bottom:1.5rem;}
+.guidance-header{display:flex;align-items:center;gap:12px;margin-bottom:1.25rem;}
+.guidance-av{width:38px;height:38px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:500;color:var(--brass-light);flex-shrink:0;}
+.g-label{font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--brass);margin-bottom:2px;}
+.g-title{font-size:15px;font-weight:500;color:var(--navy);}
+.guidance-items{display:flex;flex-direction:column;gap:10px;}
+.guidance-item{display:flex;gap:12px;align-items:flex-start;padding:1rem;background:white;border-radius:10px;border:1px solid var(--border);}
+.g-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;}
+.guidance-item p{font-size:13.5px;color:var(--text-muted);line-height:1.65;}
+.guidance-item p strong{color:var(--navy);font-weight:500;}
+
+/* Free refi for life */
+.freerefi-section{background:var(--navy);border-radius:14px;padding:2rem;margin-bottom:1.5rem;position:relative;overflow:hidden;}
+.freerefi-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 20%,rgba(160,128,85,0.08) 0%,transparent 55%);pointer-events:none;}
+.frl-inner{position:relative;z-index:2;}
+.frl-eyebrow{font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:rgba(191,160,112,0.6);margin-bottom:0.75rem;}
+.frl-headline{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400;color:white;margin-bottom:0.6rem;line-height:1.2;}
+.frl-headline em{font-style:italic;color:var(--brass-light);}
+.frl-body{font-size:13.5px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.8;margin-bottom:1.25rem;}
+.frl-points{display:flex;flex-direction:column;gap:8px;}
+.frl-point{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6;}
+.frl-dot{width:5px;height:5px;border-radius:50%;background:var(--brass);flex-shrink:0;margin-top:6px;}
+
+/* Next move */
+.next-move{background:var(--navy);border-radius:14px;padding:2rem;margin-bottom:1.5rem;}
+.nm-eyebrow{font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:rgba(191,160,112,0.6);margin-bottom:0.75rem;}
+.nm-headline{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;color:white;margin-bottom:1.25rem;line-height:1.2;}
+.nm-steps{display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;}
+.nm-step{display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,0.05);border-radius:10px;padding:1rem 1.25rem;}
+.nm-num{width:22px;height:22px;border-radius:50%;background:var(--brass);color:var(--navy);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.nm-step p{font-size:13.5px;color:rgba(255,255,255,0.65);line-height:1.6;}
+.nm-step p strong{color:white;font-weight:500;}
+.nm-cta{display:flex;gap:10px;flex-wrap:wrap;}
+.btn-brass{background:var(--brass);color:var(--navy);border:none;padding:12px 22px;border-radius:8px;font-size:13.5px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;display:inline-flex;align-items:center;transition:background 0.2s;}
+.btn-brass:hover{background:var(--brass-light);}
+.btn-ghost{background:transparent;color:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.18);padding:12px 22px;border-radius:8px;font-size:13.5px;font-weight:400;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;display:inline-flex;align-items:center;transition:all 0.2s;}
+.btn-ghost:hover{color:white;border-color:rgba(255,255,255,0.38);}
+
+/* Emotional impact */
+.emotional-section{background:white;border:1px solid var(--border-mid);border-radius:14px;padding:1.75rem;margin-bottom:1.5rem;}
+.emotional-score{display:flex;align-items:center;gap:1.5rem;margin-bottom:1.25rem;}
+.es-meter{flex:1;}
+.es-track{height:12px;background:var(--stone);border-radius:100px;overflow:hidden;position:relative;margin-bottom:6px;}
+.es-fill{height:100%;border-radius:100px;transition:width 0.7s ease;}
+.es-fill.transformational{background:linear-gradient(90deg,#34d399,#10b981);}
+.es-fill.meaningful{background:linear-gradient(90deg,#6ee7b7,#34d399);}
+.es-fill.modest{background:linear-gradient(90deg,#fcd34d,#f59e0b);}
+.es-fill.minimal{background:linear-gradient(90deg,#fca5a5,#ef4444);}
+.es-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--text-faint);}
+.es-verdict{flex-shrink:0;text-align:center;}
+.es-emoji{font-size:32px;line-height:1;display:block;margin-bottom:4px;}
+.es-score-label{font-size:11px;font-weight:500;color:var(--text-muted);letter-spacing:0.04em;}
+.emotional-items{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.ei-item{background:var(--warm-white);border-radius:10px;padding:1rem;border:1px solid var(--border);}
+.ei-label{font-size:10px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;}
+.ei-value{font-size:13px;font-weight:500;color:var(--text);line-height:1.4;}
+.ei-value.pos{color:var(--teal);}
+.ei-value.neg{color:var(--red);}
+.ei-value.neutral{color:var(--text-muted);}
+
+/* Reset the clock warning */
+.clock-warning{border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;display:flex;gap:14px;align-items:flex-start;}
+.clock-warning.show{background:rgba(184,92,0,0.06);border:1px solid rgba(184,92,0,0.18);}
+.clock-warning.hide{display:none;}
+.cw-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+.cw-content{}
+.cw-title{font-size:13.5px;font-weight:500;color:var(--amber);margin-bottom:5px;}
+.cw-body{font-size:13px;color:var(--text-muted);line-height:1.7;}
+.cw-body strong{color:var(--text);font-weight:500;}
+.cw-highlight{font-size:13px;font-style:italic;color:var(--navy);margin-top:8px;padding:8px 12px;background:white;border-radius:7px;border-left:3px solid var(--brass);line-height:1.6;}
+
+/* Lifetime interest */
+.lifetime-section{background:white;border:1px solid var(--border-mid);border-radius:14px;overflow:hidden;margin-bottom:1.5rem;}
+.lt-toggle{width:100%;background:none;border:none;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.lt-toggle-left{display:flex;flex-direction:column;gap:2px;text-align:left;}
+.lt-toggle-label{font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);}
+.lt-toggle-title{font-size:15px;font-weight:500;color:var(--navy);}
+.lt-icon{font-size:18px;color:var(--text-faint);transition:transform 0.25s;}
+.lt-icon.open{transform:rotate(45deg);}
+.lt-body{display:none;padding:0 1.5rem 1.5rem;border-top:1px solid var(--border);}
+.lt-body.open{display:block;}
+.lt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:10px;overflow:hidden;margin-top:1.25rem;margin-bottom:1rem;}
+.lt-cell{background:var(--warm-white);padding:1.1rem;}
+.lt-cell-label{font-size:10px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;}
+.lt-cell-num{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:500;line-height:1;color:var(--text);}
+.lt-cell-num.savings{color:var(--teal);}
+.lt-cell-num.cost{color:var(--red);}
+.lt-cell-sub{font-size:11px;color:var(--text-faint);margin-top:3px;line-height:1.4;}
+.lt-insight{font-size:13px;color:var(--text-muted);line-height:1.75;padding:1rem;background:var(--stone);border-radius:8px;}
+.lt-insight strong{color:var(--navy);font-weight:500;}
+
+/* Rate scenario */
+.rate-scenario-section{background:var(--stone);border:1px solid var(--border-mid);border-radius:14px;padding:1.75rem;margin-bottom:1.5rem;}
+.rs-eyebrow{font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--brass);margin-bottom:0.6rem;}
+.rs-headline{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:400;color:var(--navy);margin-bottom:0.5rem;line-height:1.3;}
+.rs-sub{font-size:13px;font-weight:300;color:var(--text-muted);line-height:1.7;margin-bottom:1.25rem;}
+.rs-ctrl{display:flex;align-items:center;gap:1rem;background:white;border-radius:8px;padding:0.85rem 1rem;margin-bottom:1rem;border:1px solid var(--border);}
+.rs-ctrl label{font-size:12px;color:var(--text-muted);white-space:nowrap;}
+.rs-ctrl input[type=range]{flex:1;accent-color:var(--navy);}
+.rs-rate-val{font-size:13px;font-weight:500;color:var(--navy);min-width:55px;text-align:right;}
+.rs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.rs-cell{background:white;border-radius:10px;padding:1rem;border:1px solid var(--border);}
+.rs-cell.active{border-color:var(--navy);background:var(--navy);}
+.rs-cell-label{font-size:10px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;}
+.rs-cell.active .rs-cell-label{color:rgba(255,255,255,0.35);}
+.rs-cell-num{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:500;line-height:1;color:var(--text);}
+.rs-cell.active .rs-cell-num{color:#6ee7b7;}
+.rs-cell-sub{font-size:11px;color:var(--text-faint);margin-top:3px;}
+.rs-cell.active .rs-cell-sub{color:rgba(255,255,255,0.3);}
+
+/* Disclosure */
+.disclosure{background:white;border:1px solid var(--border-mid);border-radius:10px;padding:14px 18px;margin-top:1.5rem;}
+.disclosure p{font-size:10px;color:var(--text-faint);line-height:1.9;}
+
+/* Footer */
+.site-footer{background:var(--navy);border-top:1px solid rgba(255,255,255,0.06);padding:16px 2.5rem;display:flex;align-items:center;justify-content:space-between;margin-top:2rem;}
+.site-footer img{height:24px;opacity:0.7;}
+.footer-right{font-size:10px;color:rgba(255,255,255,0.28);text-align:right;line-height:1.7;}
+
+@media(max-width:768px){
+  nav{padding:0 1.25rem;}
+  .nav-links-group{display:none;}
+  .emotional-items{grid-template-columns:repeat(2,1fr);}
+  .lt-grid{grid-template-columns:1fr;}
+  .rs-grid{grid-template-columns:1fr;}
+  .life-impact-bar{grid-template-columns:1fr;}
+  .lib-divider{height:1px;width:auto;}
+  .real-life-grid{grid-template-columns:repeat(2,1fr);}
+  .benefit-grid{grid-template-columns:repeat(2,1fr);}
+  .context-grid{grid-template-columns:1fr;}
+  .cashout-grid{grid-template-columns:1fr;}
+  .reason-grid{grid-template-columns:1fr;}
+  .intake-grid{grid-template-columns:1fr;}
+  .results-body{padding:1.5rem 1.25rem 5rem;}
+  .results-hero{padding:1.75rem 1.25rem 0;}
+  .site-footer{flex-direction:column;gap:1rem;padding:1.5rem;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/"><img src="HL_Logo_Horizontal_White.png" alt="The Handy Lender" style="height:28px;width:auto;display:block;opacity:0.9;"></a>
+  <div class="nav-right">
+    <span class="nav-links-group" style="display:flex;gap:2rem;">
+      <a href="/#tools">Tools</a>
+      <a href="/#about">About</a>
+      <a href="/#contact">Contact</a>
+    </span>
+    <a href="/" class="nav-back">← Home</a>
+  </div>
+</nav>
+
+<!-- ══ INTAKE ══ -->
+<div id="intake-screen">
+  <div class="intake-inner">
+    <div class="intake-card">
+      <div class="intake-eyebrow">The Handy Lender™ · Refinance Strategy Planner</div>
+      <h1 class="intake-headline">Refinancing isn't about rates.<br><em>It's about whether the math changes your life.</em></h1>
+      <p class="intake-sub">Most refinance calculators tell you when you break even. This one tells you whether a refinance actually makes your life better — and by how much.</p>
+      <div class="intake-truth">The right question isn't "what's the rate?" It's "what does this money do for our family every month?" That's what this tool answers.</div>
+
+      <span class="reason-label">Why are you thinking about refinancing?</span>
+      <div class="reason-grid">
+        <div class="reason-opt active" onclick="setReason('payment',this)">
+          <div class="reason-opt-title">Lower my monthly payment</div>
+          <div class="reason-opt-sub">"We need more breathing room each month"</div>
+        </div>
+        <div class="reason-opt" onclick="setReason('term',this)">
+          <div class="reason-opt-title">Pay off my home faster</div>
+          <div class="reason-opt-sub">"I want to own this outright sooner"</div>
+        </div>
+        <div class="reason-opt" onclick="setReason('cashout',this)">
+          <div class="reason-opt-title">Access my equity</div>
+          <div class="reason-opt-sub">"Renovation, debt payoff, or a big need"</div>
+        </div>
+        <div class="reason-opt" onclick="setReason('consolidate',this)">
+          <div class="reason-opt-title">Consolidate debt</div>
+          <div class="reason-opt-sub">"Roll high-interest debt into the mortgage"</div>
+        </div>
+      </div>
+
+      <div class="intake-grid">
+        <div class="intake-field">
+          <label>Current home value</label>
+          <input type="range" id="q-value" min="200000" max="900000" step="5000" value="500000" oninput="document.getElementById('q-value-val').textContent='$'+parseInt(this.value).toLocaleString()">
+          <div class="range-val" id="q-value-val">$500,000</div>
+        </div>
+        <div class="intake-field">
+          <label>Current loan balance</label>
+          <input type="range" id="q-balance" min="50000" max="800000" step="5000" value="380000" oninput="document.getElementById('q-balance-val').textContent='$'+parseInt(this.value).toLocaleString()">
+          <div class="range-val" id="q-balance-val">$380,000</div>
+        </div>
+        <div class="intake-field">
+          <label>Current interest rate</label>
+          <input type="range" id="q-currate" min="3.0" max="9.0" step="0.125" value="7.25" oninput="document.getElementById('q-currate-val').textContent=parseFloat(this.value).toFixed(3)+'%'">
+          <div class="range-val" id="q-currate-val">7.250%</div>
+        </div>
+        <div class="intake-field">
+          <label>New rate you're considering</label>
+          <input type="range" id="q-newrate" min="3.0" max="9.0" step="0.125" value="6.25" oninput="document.getElementById('q-newrate-val').textContent=parseFloat(this.value).toFixed(3)+'%'">
+          <div class="range-val" id="q-newrate-val">6.250%</div>
+        </div>
+        <div class="intake-field">
+          <label>Years remaining on loan</label>
+          <select id="q-remaining">
+            <option value="30">30 years remaining</option>
+            <option value="27">27 years remaining</option>
+            <option value="25" selected>25 years remaining</option>
+            <option value="22">22 years remaining</option>
+            <option value="20">20 years remaining</option>
+            <option value="17">17 years remaining</option>
+            <option value="15">15 years remaining</option>
+            <option value="10">10 years remaining</option>
+          </select>
+        </div>
+        <div class="intake-field">
+          <label>New loan term</label>
+          <select id="q-newterm">
+            <option value="30" selected>30 years</option>
+            <option value="20">20 years</option>
+            <option value="15">15 years</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="intake-field" style="margin-bottom:1.25rem;">
+        <label>Estimated closing costs</label>
+        <input type="range" id="q-costs" min="1500" max="12000" step="250" value="4000" oninput="document.getElementById('q-costs-val').textContent='$'+parseInt(this.value).toLocaleString()">
+        <div class="range-val" id="q-costs-val">$4,000</div>
+        <div style="font-size:11px;color:var(--text-faint);margin-top:4px;">Typical range: $2,000–$8,000. With Free Refinancing for Life™, lender fees are $0.</div>
+      </div>
+
+      <button class="intake-submit" onclick="submitIntake()">Show me how this changes my life →</button>
+      <p class="intake-trust">No personal data collected. For educational purposes. <a href="/#contact">Talk to Dean</a> for your actual numbers.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ RESULTS ══ -->
+<div id="results-screen">
+  <div class="results-hero">
+    <svg class="topo-bg" viewBox="0 0 340 340" fill="none">
+      <ellipse cx="170" cy="170" rx="158" ry="64" stroke="white" stroke-width="1.5"/>
+      <ellipse cx="170" cy="170" rx="124" ry="50" stroke="white" stroke-width="1.5"/>
+      <ellipse cx="170" cy="170" rx="90" ry="36" stroke="white" stroke-width="1.5"/>
+      <ellipse cx="170" cy="170" rx="56" ry="22" stroke="white" stroke-width="1.5"/>
+      <ellipse cx="170" cy="170" rx="24" ry="10" stroke="white" stroke-width="1.5"/>
+    </svg>
+    <div class="rh-inner">
+      <div class="dean-voice">
+        <div class="dean-av">D</div>
+        <div>
+          <div class="dean-bubble">
+            <p id="dean-message">Let me show you what this actually means for your family...</p>
+            <div class="dean-name">— Dean Reiber, The Handy Lender™</div>
+          </div>
+        </div>
+      </div>
+      <div class="life-impact-bar">
+        <div class="lib-cell">
+          <div class="lib-label">Monthly payment change</div>
+          <div class="lib-num" id="lib-monthly">—</div>
+          <div class="lib-sub" id="lib-monthly-sub">vs. your current payment</div>
+        </div>
+        <div class="lib-divider"></div>
+        <div class="lib-cell">
+          <div class="lib-label">Annual impact</div>
+          <div class="lib-num" id="lib-annual">—</div>
+          <div class="lib-sub" id="lib-annual-sub">per year, every year</div>
+        </div>
+        <div class="lib-divider"></div>
+        <div class="lib-cell">
+          <div class="lib-label">Break-even point</div>
+          <div class="lib-num neutral" id="lib-breakeven">—</div>
+          <div class="lib-sub">months until this pays for itself</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="results-body">
+
+    <!-- VERDICT -->
+    <div class="verdict-banner" id="verdict-banner">
+      <div class="vb-icon" id="vb-icon">—</div>
+      <div><strong class="vb-main" id="vb-main">—</strong><span class="vb-sub" id="vb-sub">—</span></div>
+    </div>
+
+    <!-- EMOTIONAL IMPACT -->
+    <div class="emotional-section">
+      <div class="section-title-sm" style="margin-bottom:1rem;">What this changes emotionally</div>
+      <div class="emotional-score">
+        <div class="es-meter">
+          <div class="es-track"><div class="es-fill" id="es-fill" style="width:0%"></div></div>
+          <div class="es-labels"><span>Minimal</span><span>Modest</span><span>Meaningful</span><span>Transformational</span></div>
+        </div>
+        <div class="es-verdict">
+          <span class="es-emoji" id="es-emoji">—</span>
+          <span class="es-score-label" id="es-label">—</span>
+        </div>
+      </div>
+      <div class="emotional-items" id="emotional-items"></div>
+    </div>
+
+    <!-- RESET THE CLOCK WARNING -->
+    <div class="clock-warning hide" id="clock-warning">
+      <div class="cw-icon">⏰</div>
+      <div class="cw-content">
+        <div class="cw-title">Important: understand what's driving the savings</div>
+        <div class="cw-body">Your payment goes down — but it's worth understanding <strong>why</strong> before you decide. A lower payment can come from a lower rate, or simply from restarting the loan clock back to 30 years. <strong>Those are not the same thing.</strong>
+        <div class="cw-highlight">"A lower rate saves you money. Restarting a 25-year loan as a new 30-year loan lowers your payment by spreading it over more time — but you may pay more in total interest. Make sure you know which one is driving your savings."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHAT THIS MEANS IN REAL LIFE -->
+    <div class="real-life-section">
+      <div class="section-title-sm">What this means in real life</div>
+      <div class="real-life-grid" id="real-life-grid"></div>
+    </div>
+
+    <!-- BREAK-EVEN VISUAL -->
+    <div class="breakeven-section">
+      <div class="section-title-sm">How long until this pays for itself</div>
+      <div class="be-visual">
+        <div class="be-fill" id="be-fill" style="width:0%"></div>
+        <div class="be-marker" id="be-marker" style="left:50%"></div>
+      </div>
+      <div class="be-labels">
+        <span>Now</span>
+        <span id="be-mid-label">—</span>
+        <span id="be-end-label">—</span>
+      </div>
+      <div class="be-statement" id="be-statement">—</div>
+    </div>
+
+    <!-- NET BENEFIT TIMELINE -->
+    <div class="benefit-section">
+      <div class="section-title-sm" style="padding:1.25rem 1.5rem 0;">Your net benefit over time</div>
+      <div class="benefit-grid" id="benefit-grid"></div>
+    </div>
+
+    <!-- LIFETIME INTEREST COMPARISON -->
+    <div class="lifetime-section">
+      <button class="lt-toggle" onclick="toggleLifetime(this)">
+        <div class="lt-toggle-left">
+          <div class="lt-toggle-label">Long-term view</div>
+          <div class="lt-toggle-title">Total interest paid — before & after</div>
+        </div>
+        <div class="lt-icon">+</div>
+      </button>
+      <div class="lt-body" id="lt-body">
+        <div class="lt-grid" id="lt-grid"></div>
+        <div class="lt-insight" id="lt-insight">—</div>
+      </div>
+    </div>
+
+    <!-- WHAT IF RATES DROP FURTHER -->
+    <div class="rate-scenario-section">
+      <div class="rs-eyebrow">Rate scenario explorer</div>
+      <h3 class="rs-headline">What if rates dropped a little more?</h3>
+      <p class="rs-sub">Not a forecast — just a tool for understanding. See how a different rate changes the math, and what threshold makes this a clear decision.</p>
+      <div class="rs-ctrl">
+        <label>If the rate were:</label>
+        <input type="range" id="rs-rate" min="3.0" max="9.0" step="0.125" value="5.5" oninput="updateRateScenario()">
+        <span class="rs-rate-val" id="rs-rate-display">5.500%</span>
+      </div>
+      <div class="rs-grid" id="rs-grid"></div>
+    </div>
+
+    <!-- EQUITY & CONTEXT -->
+    <div class="context-grid">
+      <div class="context-card">
+        <h3>Your equity position</h3>
+        <div class="ctx-row"><span class="ctx-label">Current home value</span><span class="ctx-val" id="ctx-value">—</span></div>
+        <div class="ctx-row"><span class="ctx-label">Current loan balance</span><span class="ctx-val" id="ctx-balance">—</span></div>
+        <div class="ctx-row"><span class="ctx-label">Current equity</span><span class="ctx-val pos" id="ctx-equity">—</span></div>
+        <div class="ctx-row"><span class="ctx-label">Loan-to-value ratio</span><span class="ctx-val" id="ctx-ltv">—</span></div>
+        <div class="ctx-insight" id="ctx-equity-insight">—</div>
+      </div>
+      <div class="context-card">
+        <h3>Rate reduction context</h3>
+        <div class="ctx-row"><span class="ctx-label">Your current rate</span><span class="ctx-val" id="ctx-currate">—</span></div>
+        <div class="ctx-row"><span class="ctx-label">New rate</span><span class="ctx-val pos" id="ctx-newrate">—</span></div>
+        <div class="ctx-row"><span class="ctx-label">Rate reduction</span><span class="ctx-val pos" id="ctx-reduction">—</span></div>
+        <div class="ctx-row"><span class="ctx-label">Current payment (P&I)</span><span class="ctx-val" id="ctx-curpmt">—</span></div>
+        <div class="ctx-row"><span class="ctx-label">New payment (P&I)</span><span class="ctx-val" id="ctx-newpmt">—</span></div>
+        <div class="ctx-insight" id="ctx-rate-insight">—</div>
+      </div>
+    </div>
+
+    <!-- CASH-OUT (conditional) -->
+    <div class="cashout-section" id="cashout-section" style="display:none;">
+      <h3>Your equity access scenario</h3>
+      <div class="cashout-grid" id="cashout-grid"></div>
+      <div class="cashout-note" id="cashout-note">—</div>
+    </div>
+
+    <!-- DEAN'S GUIDANCE -->
+    <div class="guidance-section">
+      <div class="guidance-header">
+        <div class="guidance-av">D</div>
+        <div>
+          <div class="g-label">Dean's interpretation</div>
+          <div class="g-title" id="guidance-title">Here's what I'd consider.</div>
+        </div>
+      </div>
+      <div class="guidance-items" id="guidance-items"></div>
+    </div>
+
+    <!-- FREE REFI FOR LIFE -->
+    <div class="freerefi-section">
+      <div class="frl-inner">
+        <div class="frl-eyebrow">Free Refinancing for Life™</div>
+        <h3 class="frl-headline">The lender fee that<br><em>never comes back.</em></h3>
+        <p class="frl-body">One of the biggest barriers to refinancing is the closing cost math. With Free Refinancing for Life™, Dean's lender fee is $0 — every time, for the life of your loan. That changes the break-even calculation meaningfully, and it means you're never stuck in a rate waiting for costs to justify the move.</p>
+        <div class="frl-points">
+          <div class="frl-point"><div class="frl-dot"></div><span>No lender origination fee — ever</span></div>
+          <div class="frl-point"><div class="frl-dot"></div><span>Third-party costs (title, appraisal) still apply — but the biggest fee is gone</span></div>
+          <div class="frl-point"><div class="frl-dot"></div><span>Means smaller rate drops justify a refinance — the threshold is lower</span></div>
+          <div class="frl-point"><div class="frl-dot"></div><span>Dean stays connected so you know when the math works — you don't have to watch</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEXT MOVE -->
+    <div class="next-move">
+      <div class="nm-eyebrow">Your next best move</div>
+      <h3 class="nm-headline" id="nm-headline">Here's how I'd think about this.</h3>
+      <div class="nm-steps" id="nm-steps"></div>
+      <div class="nm-cta">
+        <a href="/#contact" class="btn-brass">Talk through your options with Dean →</a>
+        <a href="/ownership-cost-planner" class="btn-ghost">Run the full cost planner</a>
+      </div>
+    </div>
+
+    <div class="disclosure">
+      <p><strong>Important:</strong> All calculations are estimates for educational purposes only. Actual savings depend on final loan amount, rate, closing costs, credit profile, and lender. Break-even assumes consistent monthly savings applied against closing costs with no time-value adjustment. Net benefit projections assume you remain in the home for the period shown. Cash-out scenarios assume 80% LTV maximum. "Free Refinancing for Life™" refers to Dean Reiber's lender origination fee — third-party costs including title insurance, appraisal, and recording fees still apply. This tool does not constitute financial advice or a commitment to lend. Dean Reiber NMLS #2463805 · Cornerstone First Mortgage NMLS #173855 · Equal Housing Lender.</p>
+    </div>
+  </div>
+
+  <div class="site-footer">
+    <img src="HL_Logo_Horizontal_White.png" alt="The Handy Lender">
+    <div class="footer-right">Dean Reiber · Loan Officer · NMLS #2463805<br>Cornerstone First Mortgage · Company NMLS #173855 · Equal Housing Lender</div>
+  </div>
+</div>
+
+<script>
+var selectedReason = 'payment';
+
+function setReason(r, el) {
+  selectedReason = r;
+  document.querySelectorAll('.reason-opt').forEach(o => o.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function fmt(v) { return '$' + Math.round(Math.abs(v)).toLocaleString(); }
+function fmtR(v) { return v.toFixed(3) + '%'; }
+function pmt(rate, n, pv) {
+  if (rate === 0) return pv / n;
+  var r = rate / 12;
+  return pv * r * Math.pow(1+r,n) / (Math.pow(1+r,n)-1);
+}
+
+function submitIntake() {
+  var value = parseInt(document.getElementById('q-value').value);
+  var balance = parseInt(document.getElementById('q-balance').value);
+  var curRate = parseFloat(document.getElementById('q-currate').value);
+  var newRate = parseFloat(document.getElementById('q-newrate').value);
+  var remaining = parseInt(document.getElementById('q-remaining').value);
+  var newTerm = parseInt(document.getElementById('q-newterm').value);
+  var costs = parseInt(document.getElementById('q-costs').value);
+
+  document.getElementById('intake-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'block';
+  window.scrollTo(0, 0);
+  buildResults({value, balance, curRate, newRate, remaining, newTerm, costs, reason: selectedReason});
+}
+
+function buildResults(d) {
+  var curPmt = pmt(d.curRate/100, d.remaining*12, d.balance);
+  var newPmt = pmt(d.newRate/100, d.newTerm*12, d.balance);
+  var monthlyDiff = curPmt - newPmt; // positive = savings
+  var annualDiff = monthlyDiff * 12;
+  var breakEvenMos = monthlyDiff > 0 ? Math.round(d.costs / monthlyDiff) : 999;
+  var equity = d.value - d.balance;
+  var ltv = Math.round((d.balance / d.value) * 100);
+  var rateDrop = d.curRate - d.newRate;
+  var rateIncreasing = d.newRate >= d.curRate;
+
+  // ── HERO BAR ──
+  var mEl = document.getElementById('lib-monthly');
+  var aEl = document.getElementById('lib-annual');
+  if (monthlyDiff > 0) {
+    mEl.textContent = fmt(monthlyDiff) + '/mo';
+    mEl.className = 'lib-num savings';
+    aEl.textContent = fmt(annualDiff) + '/yr';
+    aEl.className = 'lib-num savings';
+  } else if (monthlyDiff < 0) {
+    mEl.textContent = '+' + fmt(-monthlyDiff) + '/mo';
+    mEl.className = 'lib-num cost';
+    document.getElementById('lib-monthly-sub').textContent = 'higher than current payment';
+    aEl.textContent = '+' + fmt(-annualDiff) + '/yr';
+    aEl.className = 'lib-num cost';
+    document.getElementById('lib-annual-sub').textContent = 'more per year';
+  } else {
+    mEl.textContent = '$0/mo'; mEl.className = 'lib-num neutral';
+    aEl.textContent = 'No change'; aEl.className = 'lib-num neutral';
+  }
+  var beEl = document.getElementById('lib-breakeven');
+  if (breakEvenMos < 999) {
+    beEl.textContent = breakEvenMos + ' mo';
+  } else {
+    beEl.textContent = 'N/A';
+    beEl.className = 'lib-num cost';
+  }
+
+  // ── DEAN MESSAGE ──
+  var reasonLabels = {payment:'lower monthly payment', term:'shorter payoff timeline', cashout:'equity access', consolidate:'debt consolidation'};
+  var msg = '';
+  if (rateIncreasing) {
+    msg = 'The new rate you entered is <strong>higher than your current rate</strong> — so refinancing wouldn\'t reduce your payment. That might make sense for a cash-out or term change, but I want to make sure the math is clear before you decide anything.';
+  } else if (monthlyDiff > 500) {
+    msg = 'The numbers here tell a clear story: <strong>' + fmt(monthlyDiff) + '/mo in savings</strong> is meaningful. For a family focused on ' + reasonLabels[d.reason] + ', that\'s ' + fmt(annualDiff) + ' per year that stays in your household. The break-even at ' + breakEvenMos + ' months is well within a normal stay horizon.';
+  } else if (monthlyDiff > 150) {
+    msg = 'There\'s real savings here — <strong>' + fmt(monthlyDiff) + '/mo</strong> — though the case depends on how long you plan to stay. At ' + breakEvenMos + ' months to break even, this works well if you\'re committed to the home for the next few years. If you\'re uncertain about the timeline, let\'s talk through it.';
+  } else if (monthlyDiff > 0) {
+    msg = 'The savings are modest — <strong>' + fmt(monthlyDiff) + '/mo</strong>. Whether that justifies a refinance depends on your closing costs and how long you stay. With Free Refinancing for Life™, the lender fee is already $0, which improves the math. But this is a close call and worth a real conversation.';
+  } else {
+    msg = 'At the rates you\'ve entered, a straight rate-and-term refinance <strong>wouldn\'t reduce your payment</strong>. That doesn\'t mean refinancing is wrong — it depends on your goal. If you\'re looking at a shorter term or cash-out, the picture looks different. Let\'s look at the full analysis.';
+  }
+  document.getElementById('dean-message').innerHTML = msg;
+
+  // ── VERDICT ──
+  var vb = document.getElementById('verdict-banner');
+  var vIcon = document.getElementById('vb-icon');
+  var vMain = document.getElementById('vb-main');
+  var vSub = document.getElementById('vb-sub');
+  if (rateIncreasing && d.reason === 'payment') {
+    vb.className = 'verdict-banner no'; vIcon.className = 'vb-icon no'; vIcon.textContent = '✕';
+    vMain.textContent = 'This doesn\'t improve your payment.';
+    vSub.textContent = 'Your new rate is higher than your current rate. Refinancing at this rate increases — not decreases — your monthly obligation. Unless the goal is cash-out or a shorter term, wait for rates to improve.';
+  } else if (breakEvenMos <= 24 && monthlyDiff > 0) {
+    vb.className = 'verdict-banner go'; vIcon.className = 'vb-icon go'; vIcon.textContent = '✓';
+    vMain.textContent = 'The math works clearly in your favor.';
+    vSub.textContent = 'You break even in ' + breakEvenMos + ' months and save ' + fmt(annualDiff) + ' per year after that. If you plan to stay in this home, this refinance makes strong financial sense.';
+  } else if (breakEvenMos <= 48 && monthlyDiff > 0) {
+    vb.className = 'verdict-banner go'; vIcon.className = 'vb-icon go'; vIcon.textContent = '✓';
+    vMain.textContent = 'This works if you\'re staying put.';
+    vSub.textContent = 'Break-even at ' + breakEvenMos + ' months means you need about ' + Math.ceil(breakEvenMos/12) + ' years to recoup closing costs. If that aligns with your timeline, this is a sound move.';
+  } else if (monthlyDiff > 0) {
+    vb.className = 'verdict-banner wait'; vIcon.className = 'vb-icon wait'; vIcon.textContent = '→';
+    vMain.textContent = 'Worthwhile — but the timeline matters.';
+    vSub.textContent = 'At ' + breakEvenMos + ' months to break even, you need ' + Math.ceil(breakEvenMos/12) + ' years to recoup costs. If you might move before then, the math gets tighter. Worth discussing your plans before committing.';
+  } else {
+    vb.className = 'verdict-banner wait'; vIcon.className = 'vb-icon wait'; vIcon.textContent = '→';
+    vMain.textContent = 'Not the right moment for a rate-and-term refi.';
+    vSub.textContent = 'The current rate environment doesn\'t create meaningful savings here. That doesn\'t mean never — with Free Refinancing for Life™, when rates do move, you\'ll be first to know.';
+  }
+
+  // ── REAL LIFE MEANING ──
+  var rlItems = [];
+  if (monthlyDiff > 0) {
+    rlItems = [
+      {emoji:'🛒', amount: fmt(monthlyDiff * 1) + '/mo', label:'Extra monthly budget\nfor groceries, savings, or life'},
+      {emoji:'💳', amount: fmt(annualDiff), label:'Extra per year — every year\nyou hold this loan'},
+      {emoji:'🏦', amount: fmt(monthlyDiff * 60), label:'Over 5 years\nat current savings rate'},
+      {emoji:'📅', amount: breakEvenMos + ' months', label:'Until closing costs are\nfully recovered'},
+      {emoji:'🏡', amount: fmt(monthlyDiff * 120), label:'Over 10 years\nif you stay that long'},
+      {emoji:'💰', amount: fmt(d.costs), label:'Cost to get there\n(includes all closing costs)'}
+    ];
+  } else {
+    rlItems = [
+      {emoji:'📊', amount: fmt(curPmt) + '/mo', label:'Your current P&I payment'},
+      {emoji:'📋', amount: fmt(newPmt) + '/mo', label:'New payment at ' + fmtR(d.newRate)},
+      {emoji:'📅', amount: d.newTerm + ' yrs', label:'New loan term'},
+      {emoji:'🏠', amount: fmt(equity), label:'Current home equity'},
+      {emoji:'📈', amount: ltv + '%', label:'Current loan-to-value'},
+      {emoji:'💬', amount: 'Talk to Dean', label:'For a personalized\nstrategy assessment'}
+    ];
+  }
+  document.getElementById('real-life-grid').innerHTML = rlItems.map(it =>
+    `<div class="rl-card"><div class="rl-emoji">${it.emoji}</div><div class="rl-amount">${it.amount}</div><div class="rl-label">${it.label}</div></div>`
+  ).join('');
+
+  // ── BREAK-EVEN VISUAL ──
+  var maxMos = Math.max(breakEvenMos * 1.8, 60);
+  var fillPct = Math.min(95, (breakEvenMos / maxMos) * 100);
+  document.getElementById('be-fill').style.width = (monthlyDiff > 0 ? 100 : 0) + '%';
+  document.getElementById('be-marker').style.left = fillPct + '%';
+  document.getElementById('be-mid-label').textContent = Math.round(maxMos/2) + ' months';
+  document.getElementById('be-end-label').textContent = Math.round(maxMos) + ' months';
+  var beStmt = document.getElementById('be-statement');
+  if (monthlyDiff > 0 && breakEvenMos < 999) {
+    beStmt.innerHTML = 'Your <strong>' + fmt(d.costs) + ' in closing costs</strong> are recovered after <strong>' + breakEvenMos + ' months (' + (breakEvenMos/12).toFixed(1) + ' years)</strong>. Every payment after that is pure savings — <strong>' + fmt(monthlyDiff) + '/mo</strong> that stays in your family\'s budget.';
+  } else {
+    beStmt.innerHTML = 'At the rates entered, <strong>closing costs cannot be recovered through payment savings</strong>. This refinance may still make sense for other goals — talk to Dean about whether a different structure changes the picture.';
+  }
+
+  // ── BENEFIT TIMELINE ──
+  var periods = [
+    {label:'Year 1', years:1},
+    {label:'Year 3', years:3},
+    {label:'Year 5', years:5, highlight:true},
+    {label:'Year 10', years:10}
+  ];
+  document.getElementById('benefit-grid').innerHTML = periods.map(p => {
+    var gross = monthlyDiff * p.years * 12;
+    var net = gross - d.costs;
+    var isHL = p.highlight;
+    return `<div class="benefit-cell${isHL?' highlight':''}">
+      <div class="bc-period">${p.label}</div>
+      <div class="bc-num ${net>0?'pos':net<0?'neg':''}">${net>=0?'':'-'}${fmt(net)}</div>
+      <div class="bc-label">${net>0?'net benefit after costs':net<0?'still recouping costs':'break-even'}</div>
+    </div>`;
+  }).join('');
+
+  // ── CONTEXT CARDS ──
+  document.getElementById('ctx-value').textContent = fmt(d.value);
+  document.getElementById('ctx-balance').textContent = fmt(d.balance);
+  document.getElementById('ctx-equity').textContent = fmt(equity) + ' (' + Math.round(equity/d.value*100) + '%)';
+  document.getElementById('ctx-ltv').textContent = ltv + '%';
+  var eInsight = ltv <= 80
+    ? 'At ' + ltv + '% LTV, you\'re in excellent position. No PMI applies, and you have strong equity access if needed.'
+    : ltv <= 90
+    ? 'At ' + ltv + '% LTV, your equity is building. No cash-out available yet at 80% LTV threshold, but you\'re on track.'
+    : 'At ' + ltv + '% LTV, equity is limited. Focus on payment reduction rather than cash-out for now.';
+  document.getElementById('ctx-equity-insight').textContent = eInsight;
+
+  document.getElementById('ctx-currate').textContent = fmtR(d.curRate);
+  document.getElementById('ctx-newrate').textContent = fmtR(d.newRate);
+  document.getElementById('ctx-reduction').textContent = rateDrop > 0 ? '-' + rateDrop.toFixed(3) + '%' : '+' + Math.abs(rateDrop).toFixed(3) + '%';
+  document.getElementById('ctx-curpmt').textContent = fmt(curPmt) + '/mo';
+  document.getElementById('ctx-newpmt').textContent = fmt(newPmt) + '/mo';
+  var rInsight = rateDrop >= 1 ? 'A ' + rateDrop.toFixed(2) + '% rate drop is significant — this is a clear candidate for refinancing if the timeline supports it.'
+    : rateDrop >= 0.5 ? 'A ' + rateDrop.toFixed(2) + '% reduction is meaningful. The savings are real — break-even timing is the key variable.'
+    : rateDrop > 0 ? 'A ' + rateDrop.toFixed(2) + '% reduction is modest. With Free Refinancing for Life™, smaller drops can still make sense — but worth evaluating carefully.'
+    : 'The rate isn\'t lower. Unless this is a cash-out or term-change scenario, a rate-and-term refi doesn\'t help here.';
+  document.getElementById('ctx-rate-insight').textContent = rInsight;
+
+  // ── CASH-OUT (if applicable) ──
+  var maxCashOut = Math.max(0, d.value * 0.80 - d.balance);
+  if ((d.reason === 'cashout' || d.reason === 'consolidate') && maxCashOut > 0) {
+    document.getElementById('cashout-section').style.display = 'block';
+    var newLoan = d.value * 0.80;
+    var newPmtCO = pmt(d.newRate/100, d.newTerm*12, newLoan);
+    document.getElementById('cashout-grid').innerHTML = `
+      <div class="co-cell"><div class="co-label">Maximum cash available</div><div class="co-num">${fmt(maxCashOut)}</div><div class="co-sub">At 80% LTV — standard limit</div></div>
+      <div class="co-cell"><div class="co-label">New loan balance</div><div class="co-num">${fmt(newLoan)}</div><div class="co-sub">At 80% of home value</div></div>
+      <div class="co-cell"><div class="co-label">New payment with cash-out</div><div class="co-num">${fmt(newPmtCO)}/mo</div><div class="co-sub">P&I only · at ${fmtR(d.newRate)}</div></div>`;
+    var coNote = d.reason === 'consolidate'
+      ? 'Rolling high-interest debt into your mortgage lowers your total monthly obligation — but extends that debt to 30 years. Make sure the monthly relief justifies the long-term cost. Dean can model the net impact across your full debt picture.'
+      : 'Cash-out gives you immediate access to equity without a separate loan. The tradeoff: you\'re borrowing against your home, and the new payment reflects the higher balance. Worth being clear-eyed about what the cash is for and whether the payment is comfortable.';
+    document.getElementById('cashout-note').textContent = coNote;
+  }
+
+  // ── DEAN'S GUIDANCE ──
+  var reasonGuidance = {
+    payment: [
+      {icon:'💰', text:'<strong>Payment relief is the most common reason to refinance — and the most emotionally tangible.</strong> ' + fmt(monthlyDiff) + '/mo may sound like a number, but for most families it\'s a car payment, a month of groceries, or the difference between saving and not saving.'},
+      {icon:'📅', text:'<strong>The break-even timing is the key variable.</strong> If you plan to stay in this home beyond ' + breakEvenMos + ' months, the savings are real and cumulative. If there\'s any chance you\'d sell or move before that, the math shifts.'},
+    ],
+    term: [
+      {icon:'🏡', text:'<strong>Paying off faster builds equity and eliminates interest over time — but it comes with a higher monthly payment.</strong> A 15-year term versus 30 can save hundreds of thousands in lifetime interest, but the payment increases significantly.'},
+      {icon:'🧮', text:'<strong>Make sure the higher payment is genuinely comfortable.</strong> A shorter term is only beneficial if the payment doesn\'t create strain. Financial flexibility is worth something too.'},
+    ],
+    cashout: [
+      {icon:'🏗️', text:'<strong>Cash-out refinancing can be smart — especially for renovations that add value.</strong> The key question is whether the cash use justifies adding to your mortgage balance. Renovations with strong ROI (kitchen, bath, ADU) often do. Consumer spending generally doesn\'t.'},
+      {icon:'⚖️', text:'<strong>You\'re borrowing against your home.</strong> That\'s a meaningful decision. If the renovation adds to your home\'s value or the cash eliminates high-interest debt, the math often works. Dean can model the net equity impact.'},
+    ],
+    consolidate: [
+      {icon:'💳', text:'<strong>Rolling debt into your mortgage lowers your total monthly payment — but converts short-term debt into 30-year debt.</strong> The monthly relief is real. The long-term cost requires honest evaluation.'},
+      {icon:'📊', text:'<strong>The right question is total interest paid, not monthly payment.</strong> A credit card at 22% consolidated into a 6.5% mortgage sounds like a win — but if it takes 30 years to pay off, the math gets complicated. Worth modeling the full picture.'},
+    ]
+  };
+  var gItems = reasonGuidance[d.reason] || reasonGuidance.payment;
+  if (ltv > 80) gItems.push({icon:'📈', text:'<strong>At ' + ltv + '% LTV, your equity position limits some options.</strong> Cash-out refinancing typically requires 20% equity (80% LTV). As your home appreciates and your balance drops, more doors open.'});
+  if (rateDrop < 0.5 && rateDrop > 0) gItems.push({icon:'⏳', text:'<strong>The rate reduction is modest at ' + rateDrop.toFixed(2) + '%.</strong> That\'s not a reason to stop — with Free Refinancing for Life™, the lender fee is already $0, which improves the break-even significantly. But it\'s worth waiting to see if rates move further.'});
+
+  document.getElementById('guidance-items').innerHTML = gItems.map(g =>
+    `<div class="guidance-item"><div class="g-icon">${g.icon}</div><p>${g.text}</p></div>`
+  ).join('');
+
+  var guidanceTitles = {payment:'Here\'s what the payment savings actually mean.', term:'The tradeoffs of a shorter term.', cashout:'What to know before accessing equity.', consolidate:'The honest debt consolidation picture.'};
+  document.getElementById('guidance-title').textContent = guidanceTitles[d.reason];
+
+  // ── NEXT MOVE ──
+  var steps = [];
+  if (monthlyDiff > 200 && breakEvenMos < 36) {
+    steps = [
+      {text:'<strong>Get a Loan Estimate.</strong> The numbers above are based on your inputs — an actual Loan Estimate gives you real rates, real costs, and a real monthly payment based on your credit profile.'},
+      {text:'<strong>Confirm your timeline.</strong> If you plan to stay beyond ' + breakEvenMos + ' months, this refinance works clearly in your favor. If there\'s any uncertainty, share that with Dean — it changes the recommendation.'},
+      {text:'<strong>Ask about timing.</strong> If rates are still moving, sometimes waiting 60–90 days for a better rate meaningfully improves the long-term math. Dean tracks this so you don\'t have to.'}
+    ];
+    document.getElementById('nm-headline').textContent = 'The math supports moving forward.';
+  } else if (monthlyDiff > 0) {
+    steps = [
+      {text:'<strong>Have an honest conversation about your timeline.</strong> At ' + breakEvenMos + ' months to break even, this works if you\'re staying — but the timeline is the key variable Dean needs to know.'},
+      {text:'<strong>Ask what rate it would take to make this a clear yes.</strong> Sometimes a small improvement in rate dramatically changes the break-even math. Dean can identify the threshold.'},
+      {text:'<strong>Don\'t let inertia decide.</strong> The cost of not refinancing at the right moment is real — it\'s just invisible. Setting a rate target and staying connected means you don\'t miss it.'}
+    ];
+    document.getElementById('nm-headline').textContent = 'Close — but let\'s look at the full picture.';
+  } else {
+    steps = [
+      {text:'<strong>Stay connected.</strong> With Free Refinancing for Life™, when rates move to a level that works, Dean will reach out. You don\'t need to watch the market — that\'s what the relationship is for.'},
+      {text:'<strong>Consider whether your goal has another path.</strong> If you\'re seeking cash-out or debt relief, there may be other tools — a HELOC, a portfolio loan, or a targeted payoff strategy — that serve you better right now.'},
+      {text:'<strong>Nothing about this is urgent.</strong> The right refinance at the right time is worth far more than a rushed one. Keep building equity and let the opportunity come to you.'}
+    ];
+    document.getElementById('nm-headline').textContent = 'Not the right moment — but here\'s what to do.';
+  }
+  document.getElementById('nm-steps').innerHTML = steps.map((s,i) =>
+    `<div class="nm-step"><div class="nm-num">${i+1}</div><p>${s.text}</p></div>`
+  ).join('');
+
+  // ── EMOTIONAL IMPACT ──
+  var emotionalScore = 0;
+  var emotionLabel = '', emotionEmoji = '', emotionClass = '';
+  if (monthlyDiff >= 500) { emotionalScore = 95; emotionLabel = 'Potentially transformational'; emotionEmoji = '🌟'; emotionClass = 'transformational'; }
+  else if (monthlyDiff >= 300) { emotionalScore = 75; emotionLabel = 'Meaningfully impactful'; emotionEmoji = '✨'; emotionClass = 'meaningful'; }
+  else if (monthlyDiff >= 150) { emotionalScore = 50; emotionLabel = 'Helpful breathing room'; emotionEmoji = '😌'; emotionClass = 'modest'; }
+  else if (monthlyDiff >= 50) { emotionalScore = 25; emotionLabel = 'Modest — worth evaluating'; emotionEmoji = '🤔'; emotionClass = 'minimal'; }
+  else { emotionalScore = 10; emotionLabel = 'Probably not worth the disruption'; emotionEmoji = '⏳'; emotionClass = 'minimal'; }
+
+  var esFill = document.getElementById('es-fill');
+  esFill.style.width = emotionalScore + '%';
+  esFill.className = 'es-fill ' + emotionClass;
+  document.getElementById('es-emoji').textContent = emotionEmoji;
+  document.getElementById('es-label').textContent = emotionLabel;
+
+  var rlMeanings = monthlyDiff >= 300
+    ? ['Monthly grocery budget freed', 'Emergency fund building', 'College savings contribution', 'Retirement account top-up', 'Annual family travel', 'Monthly stress reduction']
+    : monthlyDiff >= 150
+    ? ['Smaller monthly pressure', 'One less worry each month', 'Debt payoff acceleration', 'Utility & insurance buffer', 'Annual home maintenance fund', 'Incremental financial breathing room']
+    : ['Marginal monthly flexibility', 'Minor cash flow improvement', 'Small savings contribution', 'Modest payment reduction', 'Slight break-even improvement', 'Relationship with rate future'];
+
+  var rlAmounts = monthlyDiff > 0
+    ? [fmt(monthlyDiff)+'/mo', fmt(monthlyDiff*3)+'/qtr', fmt(annualDiff/12*3)+'/qtr', fmt(annualDiff/12*1)+'/mo', fmt(annualDiff)+'/yr', fmt(monthlyDiff*60)+' over 5yr']
+    : [fmt(curPmt)+'/mo', fmt(newPmt)+'/mo', d.newTerm+' yrs', fmt(equity), ltv+'%', 'Talk to Dean'];
+
+  document.getElementById('emotional-items').innerHTML = [0,1,2,3,4,5].map(i =>
+    `<div class="ei-item"><div class="ei-label">${rlMeanings[i]}</div><div class="ei-value ${monthlyDiff>200?'pos':monthlyDiff>0?'neutral':'neg'}">${rlAmounts[i]}</div></div>`
+  ).join('');
+
+  // ── RESET THE CLOCK WARNING ──
+  var clockWarning = document.getElementById('clock-warning');
+  var termExtended = d.newTerm > d.remaining && monthlyDiff > 0;
+  if (termExtended) {
+    clockWarning.className = 'clock-warning show';
+  } else {
+    clockWarning.className = 'clock-warning hide';
+  }
+
+  // ── STORE DATA FOR INTERACTIVE SECTIONS ──
+  window._refiData = d;
+  window._refiCalc = { curPmt, newPmt, monthlyDiff, annualDiff, breakEvenMos, equity, ltv, rateDrop };
+
+  // ── LIFETIME INTEREST ──
+  buildLifetime(d, curPmt, newPmt);
+
+  // ── RATE SCENARIO (init) ──
+  document.getElementById('rs-rate').value = Math.max(3.0, d.newRate - 0.5).toFixed(3);
+  updateRateScenario();
+}
+
+function buildLifetime(d, curPmt, newPmt) {
+  var curTotalInterest = curPmt * d.remaining * 12 - d.balance;
+  var newTotalInterest = newPmt * d.newTerm * 12 - d.balance;
+  var interestSaved = curTotalInterest - newTotalInterest;
+  var isShortening = d.newTerm < d.remaining;
+
+  document.getElementById('lt-grid').innerHTML = `
+    <div class="lt-cell">
+      <div class="lt-cell-label">Interest remaining (current loan)</div>
+      <div class="lt-cell-num cost">$${Math.round(Math.abs(curTotalInterest)).toLocaleString()}</div>
+      <div class="lt-cell-sub">${d.remaining} years at ${d.curRate.toFixed(3)}%</div>
+    </div>
+    <div class="lt-cell">
+      <div class="lt-cell-label">Interest on new loan</div>
+      <div class="lt-cell-num ${newTotalInterest < curTotalInterest ? 'savings' : 'cost'}">$${Math.round(Math.abs(newTotalInterest)).toLocaleString()}</div>
+      <div class="lt-cell-sub">${d.newTerm} years at ${d.newRate.toFixed(3)}%</div>
+    </div>
+    <div class="lt-cell">
+      <div class="lt-cell-label">${interestSaved > 0 ? 'Lifetime interest saved' : 'Additional interest paid'}</div>
+      <div class="lt-cell-num ${interestSaved > 0 ? 'savings' : 'cost'}">${interestSaved >= 0 ? '' : '-'}$${Math.round(Math.abs(interestSaved)).toLocaleString()}</div>
+      <div class="lt-cell-sub">${interestSaved > 0 ? 'Less paid over life of loan' : 'More paid — term reset is the reason'}</div>
+    </div>`;
+
+  var insight = '';
+  if (isShortening && interestSaved > 0) {
+    insight = `<strong>Shortening your term saves dramatically on lifetime interest.</strong> Moving from ${d.remaining} to ${d.newTerm} years eliminates ${d.remaining - d.newTerm} years of interest payments — a total of $${Math.round(interestSaved).toLocaleString()} less paid to the lender over the life of the loan. The tradeoff is a higher monthly payment. If your budget supports it, this is often the most financially powerful move.`;
+  } else if (!isShortening && interestSaved > 0) {
+    insight = `<strong>The rate reduction saves you $${Math.round(interestSaved).toLocaleString()} in lifetime interest</strong> — even with the same term. Lower rate, same timeline, less total paid. That's a clean win.`;
+  } else if (!isShortening && interestSaved < 0) {
+    insight = `<strong>Restarting a ${d.remaining}-year loan as a new ${d.newTerm}-year loan means paying interest for ${d.newTerm - d.remaining} additional years.</strong> Even at a lower rate, the extended timeline can cost more in total interest. The monthly payment goes down — but the lifetime cost may go up. This is worth understanding clearly before deciding.`;
+  } else {
+    insight = `<strong>Your lifetime interest picture depends heavily on how long you stay in the home.</strong> If you sell or refinance again before the term ends, the total interest paid resets with each transaction. The break-even and net benefit timelines above are often more useful than the lifetime figures for real decision-making.`;
+  }
+  document.getElementById('lt-insight').innerHTML = insight;
+}
+
+function toggleLifetime(btn) {
+  var body = document.getElementById('lt-body');
+  var icon = btn.querySelector('.lt-icon');
+  body.classList.toggle('open');
+  icon.classList.toggle('open');
+  icon.textContent = body.classList.contains('open') ? '×' : '+';
+}
+
+function updateRateScenario() {
+  var d = window._refiData;
+  if (!d) return;
+  var scenarioRate = parseFloat(document.getElementById('rs-rate').value);
+  document.getElementById('rs-rate-display').textContent = scenarioRate.toFixed(3) + '%';
+
+  var scenarioPmt = pmt(scenarioRate/100, d.newTerm*12, d.balance);
+  var curPmt = window._refiCalc.curPmt;
+  var scenarioDiff = curPmt - scenarioPmt;
+  var scenarioBE = scenarioDiff > 0 ? Math.round(d.costs / scenarioDiff) : 999;
+  var isCurrentRate = Math.abs(scenarioRate - d.newRate) < 0.01;
+
+  document.getElementById('rs-grid').innerHTML = `
+    <div class="rs-cell">
+      <div class="rs-cell-label">Monthly payment</div>
+      <div class="rs-cell-num">$${Math.round(scenarioPmt).toLocaleString()}/mo</div>
+      <div class="rs-cell-sub">P&I at ${scenarioRate.toFixed(3)}%</div>
+    </div>
+    <div class="rs-cell ${scenarioDiff > window._refiCalc.monthlyDiff ? 'active' : ''}">
+      <div class="rs-cell-label">Monthly savings</div>
+      <div class="rs-cell-num">$${Math.round(Math.max(0,scenarioDiff)).toLocaleString()}/mo</div>
+      <div class="rs-cell-sub">${scenarioDiff > window._refiCalc.monthlyDiff ? 'Better than current plan' : scenarioDiff > 0 ? 'vs. your current payment' : 'No savings at this rate'}</div>
+    </div>
+    <div class="rs-cell">
+      <div class="rs-cell-label">Break-even</div>
+      <div class="rs-cell-num">${scenarioBE < 999 ? scenarioBE+' mo' : 'N/A'}</div>
+      <div class="rs-cell-sub">${scenarioBE < 999 ? 'to recover closing costs' : 'Rate too high for savings'}</div>
+    </div>`;
+}
+</script>
+</body>
+</html>
