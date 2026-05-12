@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rate Scenario Analyzer — Handy Lender</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#08111f;--ink2:#0d1a30;--ink3:#0a1628;--navy:#1a3a6b;--gold:#c9a84c;--gold2:#e2c270;--gold3:rgba(201,168,76,.12);--border:rgba(201,168,76,.15);--border2:rgba(255,255,255,.06);--green:#3ecf82;--red:#f07070;--blue:#60a5fa;--amber:#fbbf24;--purple:#a78bfa;--sl:#5a7090;--sl2:#8aa0bc;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--ink);color:rgba(255,255,255,.88);font-family:'Instrument Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+.bg-grid{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(201,168,76,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.03) 1px,transparent 1px);background-size:40px 40px;}
+.bg-glow{position:fixed;top:-200px;left:50%;transform:translateX(-50%);width:900px;height:500px;pointer-events:none;z-index:0;background:radial-gradient(ellipse,rgba(26,58,107,.35) 0%,transparent 70%);}
+.topbar{position:relative;z-index:10;background:rgba(8,17,31,.92);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);}
+.tb-inner{max-width:1120px;margin:0 auto;padding:13px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.brand{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:#fff;}.brand span{color:var(--gold2);}
+.tb-tag{font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--sl2);padding-left:14px;border-left:1px solid rgba(255,255,255,.1);}
+.tb-right{font-size:11px;color:var(--sl);text-align:right;line-height:1.8;}.tb-right strong{color:var(--gold);display:block;font-size:12px;}
+.page{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:36px 32px 80px;}
+
+/* HERO */
+.hero{margin-bottom:32px;}
+.hero h1{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;line-height:1.2;margin-bottom:8px;}
+.hero h1 em{color:var(--gold2);font-style:normal;}
+.hero p{font-size:13.5px;color:var(--sl2);line-height:1.65;max-width:680px;}
+
+/* SCENARIO CARDS */
+.sc-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;}
+.sc-card{background:var(--ink2);border:1px solid var(--border);border-radius:14px;padding:20px 24px;position:relative;overflow:hidden;}
+.sc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:14px 14px 0 0;}
+.sc-a::before{background:linear-gradient(90deg,var(--gold),var(--gold2));}
+.sc-b::before{background:linear-gradient(90deg,var(--green),#60efb0);}
+.sc-tag{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;}
+.sc-a .sc-tag{color:var(--gold2);}.sc-b .sc-tag{color:var(--green);}
+.sc-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:14px;}
+.sc-rows{display:flex;flex-direction:column;gap:5px;}
+.sc-row{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--border2);}
+.sc-row:last-child{border:none;}
+.sc-row .l{color:var(--sl2);}.sc-row .v{font-family:'DM Mono',monospace;font-weight:500;}
+.v.gd{color:var(--gold2);}.v.gn{color:var(--green);}.v.rd{color:var(--red);}
+.pills{display:flex;gap:5px;flex-wrap:wrap;margin-top:12px;}
+.pill{font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;font-family:'DM Mono',monospace;}
+.pill.p1{background:rgba(167,139,250,.12);color:var(--purple);border:1px solid rgba(167,139,250,.2);}
+.pill.p2{background:rgba(96,165,250,.1);color:var(--blue);border:1px solid rgba(96,165,250,.18);}
+.pill.p3{background:rgba(62,207,130,.08);color:var(--green);border:1px solid rgba(62,207,130,.18);}
+.pill.pa{background:var(--gold3);color:var(--gold2);border:1px solid var(--border);}
+.refund-note{margin-top:10px;padding:8px 10px;background:rgba(62,207,130,.06);border:1px solid rgba(62,207,130,.15);border-radius:7px;font-size:11px;color:var(--green);line-height:1.5;}
+.refund-note strong{color:#fff;}
+
+/* CONTROLS */
+.ctrl-wrap{background:var(--ink2);border:1px solid var(--border);border-radius:16px;padding:26px 30px;margin-bottom:26px;}
+.ctrl-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);margin-bottom:22px;display:flex;align-items:center;gap:10px;}
+.ctrl-title::before{content:'';width:18px;height:2px;background:var(--gold2);display:block;}
+
+/* PATH SELECTOR */
+.path-selector{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px;}
+.path-btn{padding:12px 10px;border-radius:10px;border:1px solid var(--border2);background:var(--ink3);cursor:pointer;transition:all .2s;text-align:center;}
+.path-btn.active-a{border-color:rgba(201,168,76,.4);background:rgba(201,168,76,.07);}
+.path-btn.active-b{border-color:rgba(62,207,130,.35);background:rgba(62,207,130,.06);}
+.path-btn:hover{border-color:var(--border);}
+.path-tag{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
+.path-btn.active-a .path-tag{color:var(--gold2);}.path-btn.active-b .path-tag{color:var(--green);}
+.path-btn:not(.active-a):not(.active-b) .path-tag{color:var(--sl);}
+.path-name{font-size:11px;font-weight:600;color:rgba(255,255,255,.7);line-height:1.3;}
+.path-detail{font-size:10px;color:var(--sl);margin-top:3px;font-family:'DM Mono',monospace;}
+
+.sliders-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px;}
+.sg{display:flex;flex-direction:column;gap:7px;}
+.sl-lbl{font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--sl2);display:flex;justify-content:space-between;align-items:center;}
+.sl-val{font-family:'DM Mono',monospace;font-size:17px;font-weight:500;color:var(--gold2);}
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:var(--ink3);border-radius:2px;outline:none;cursor:pointer;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--gold);border:2px solid var(--ink);cursor:pointer;box-shadow:0 0 6px rgba(201,168,76,.4);}
+.presets{display:flex;gap:5px;flex-wrap:wrap;margin-top:2px;}
+.pb{font-size:10px;padding:3px 7px;border-radius:5px;background:var(--ink3);border:1px solid var(--border2);color:var(--sl2);cursor:pointer;font-family:'Instrument Sans',sans-serif;transition:all .15s;}
+.pb:hover,.pb.on{background:var(--gold3);border-color:var(--border);color:var(--gold2);}
+.sl-hint{font-size:10.5px;color:var(--sl);line-height:1.4;}
+.refi-cost-row{display:flex;align-items:center;gap:14px;margin-top:18px;padding-top:18px;border-top:1px solid var(--border2);}
+.refi-cost-lbl{font-size:12px;color:var(--sl2);white-space:nowrap;}
+.rci{background:var(--ink3);border:1px solid var(--border);border-radius:7px;color:rgba(255,255,255,.9);font-family:'DM Mono',monospace;font-size:13px;padding:6px 12px;width:110px;outline:none;}
+.refi-cost-hint{font-size:11px;color:var(--sl);}
+
+/* SUBSIDY REFUND CALLOUT */
+.refund-callout{background:rgba(62,207,130,.05);border:1px solid rgba(62,207,130,.2);border-radius:12px;padding:16px 20px;margin-bottom:22px;display:flex;gap:14px;align-items:flex-start;}
+.rc-icon{font-size:22px;flex-shrink:0;margin-top:1px;}
+.rc-body{}
+.rc-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--green);margin-bottom:4px;}
+.rc-text{font-size:12.5px;color:var(--sl2);line-height:1.6;}.rc-text strong{color:rgba(255,255,255,.9);}
+
+/* RESULTS */
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:26px;}
+.rcard{background:var(--ink2);border:1px solid var(--border);border-radius:14px;padding:22px 26px;position:relative;overflow:hidden;}
+.rcard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.rcard.ra::before{background:linear-gradient(90deg,var(--gold),var(--gold2));}
+.rcard.rb::before{background:linear-gradient(90deg,var(--green),#60efb0);}
+.rcard-head{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px;}
+.rcard.ra .rcard-head{color:var(--gold2);}.rcard.rb .rcard-head{color:var(--green);}
+.big-num{font-family:'DM Mono',monospace;font-size:28px;font-weight:500;margin-bottom:4px;}
+.big-sub{font-size:11px;color:var(--sl);margin-bottom:16px;}
+.rrows{display:flex;flex-direction:column;gap:5px;padding-top:14px;border-top:1px solid var(--border2);}
+.rrow{display:flex;justify-content:space-between;font-size:12px;}
+.rrow .l{color:var(--sl2);}.rrow .v{font-family:'DM Mono',monospace;font-weight:500;}
+
+/* WINNER BADGE */
+.winner-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;font-family:'Syne',sans-serif;letter-spacing:.5px;margin-bottom:12px;}
+.wb-b{background:rgba(62,207,130,.12);color:var(--green);border:1px solid rgba(62,207,130,.25);}
+.wb-a{background:rgba(201,168,76,.1);color:var(--gold2);border:1px solid var(--border);}
+.wb-tie{background:rgba(255,255,255,.06);color:var(--sl2);border:1px solid var(--border2);}
+
+/* VERDICT */
+.verdict{background:linear-gradient(135deg,rgba(13,26,48,.8),rgba(8,17,31,.9));border:1px solid var(--border);border-radius:16px;padding:26px 30px;margin-bottom:26px;position:relative;overflow:hidden;}
+.verdict::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 80% 50%,rgba(201,168,76,.04),transparent 60%);}
+.verdict-tag{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold2);margin-bottom:10px;}
+.verdict-text{font-size:13.5px;line-height:1.75;color:rgba(255,255,255,.82);}
+.verdict-text strong{color:#fff;}.verdict-text .hl{color:var(--gold2);font-weight:600;}.verdict-text .gn{color:var(--green);font-weight:600;}.verdict-text .rd{color:var(--red);}
+
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:2px;}
+.tbl th{font-family:'Syne',sans-serif;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--sl2);padding:8px 10px;border-bottom:1px solid var(--border2);text-align:right;}
+.tbl th:first-child{text-align:left;}
+.tbl td{padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.03);font-family:'DM Mono',monospace;text-align:right;color:rgba(255,255,255,.75);}
+.tbl td:first-child{font-family:'Instrument Sans',sans-serif;color:var(--sl2);text-align:left;}
+.tbl tr:last-child td{border:none;}
+.tbl .gn{color:var(--green);font-weight:600;}.tbl .rd{color:var(--red);}
+.tbl .gd{color:var(--gold2);}
+.tbl tr.refi-row td{background:rgba(62,207,130,.04);}
+
+@media(max-width:700px){
+  .page{padding:20px 16px 60px;}.tb-inner{padding:10px 16px;}
+  .sc-grid,.results-grid,.sliders-grid,.path-selector{grid-template-columns:1fr;}
+  .path-selector{grid-template-columns:1fr 1fr;}
+  .hero h1{font-size:22px;}
+  .ctrl-wrap{padding:18px 16px;}
+}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<div class="topbar">
+  <div class="tb-inner">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div class="brand">Handy<span>Lender</span></div>
+      <div class="tb-tag">Rate Scenario Analyzer</div>
+    </div>
+    <div class="tb-right"><strong>Dean Jay Reiber · NMLS #2463805</strong>dreiber@cfmtg.com · 866-815-1803</div>
+  </div>
+</div>
+
+<div class="page">
+  <div class="hero">
+    <h1>What if rates drop to <em id="h-rate">5.50%</em> in <em id="h-months">12 months</em>?</h1>
+    <p>Model any future rate scenario for Ryan's $392,000 loan. Scenario B's 2-1 temp buydown has a hidden advantage: <strong style="color:#fff">any unused subsidy is refunded at refinance</strong> — dramatically cutting the net cost of refinancing.</p>
+  </div>
+
+  <!-- SCENARIO CARDS -->
+  <div class="sc-grid">
+    <div class="sc-card sc-a">
+      <div class="sc-tag">Scenario A</div>
+      <div class="sc-name">$12,000 → Permanent 5.875%</div>
+      <div class="sc-rows">
+        <div class="sc-row"><span class="l">Rate (locked forever)</span><span class="v gd">5.875%</span></div>
+        <div class="sc-row"><span class="l">Points cost</span><span class="v">$12,000</span></div>
+        <div class="sc-row"><span class="l">P&amp;I (all months)</span><span class="v">$2,318.83/mo</span></div>
+        <div class="sc-row"><span class="l">Break-even vs par</span><span class="v rd">62.8 months (5.2 yrs)</span></div>
+        <div class="sc-row"><span class="l">Subsidy refund at refi</span><span class="v rd">$0 — nothing to refund</span></div>
+      </div>
+      <div class="pills"><span class="pill pa">All 30 yrs: 5.875% · $2,319/mo</span></div>
+    </div>
+    <div class="sc-card sc-b">
+      <div class="sc-tag">Scenario B — Recommended</div>
+      <div class="sc-name">6.375% Perm + 2-1 Temporary Buydown</div>
+      <div class="sc-rows">
+        <div class="sc-row"><span class="l">Permanent rate</span><span class="v gn">6.375%</span></div>
+        <div class="sc-row"><span class="l">Perm points ($3,134) + temp buydown ($8,866)</span><span class="v">$12,000 total</span></div>
+        <div class="sc-row"><span class="l">Year 1 subsidy (used at close)</span><span class="v gn">$5,860 consumed</span></div>
+        <div class="sc-row"><span class="l">Year 2 subsidy (refundable if refi in Yr 1)</span><span class="v gn">$3,006 refundable</span></div>
+      </div>
+      <div class="pills">
+        <span class="pill p1">Yr 1: 4.375% · $1,957/mo</span>
+        <span class="pill p2">Yr 2: 5.375% · $2,195/mo</span>
+        <span class="pill p3">Yr 3+: 6.375% · $2,446/mo</span>
+      </div>
+      <div class="refund-note">&#128200; If Ryan refis at month 12: unused Year 2 subsidy of <strong>$3,006</strong> is refunded — cutting net refi cost to just <strong>$1,494</strong>.</div>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="ctrl-wrap">
+    <div class="ctrl-title">Configure the Scenario</div>
+
+    <!-- PATH SELECTOR -->
+    <div style="margin-bottom:18px;">
+      <div style="font-size:11px;color:var(--sl2);font-weight:600;letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px;">Select Refinance Path</div>
+      <div class="path-selector" id="path-selector">
+        <div class="path-btn active-b" data-path="B-early" onclick="setPath('B-early')">
+          <div class="path-tag">Scenario B</div>
+          <div class="path-name">Refi During Year 1</div>
+          <div class="path-detail">≤ mo 12 · full refund</div>
+        </div>
+        <div class="path-btn" data-path="B-mid" onclick="setPath('B-mid')">
+          <div class="path-tag">Scenario B</div>
+          <div class="path-name">Refi During Year 2</div>
+          <div class="path-detail">mo 13–24 · partial refund</div>
+        </div>
+        <div class="path-btn" data-path="B-late" onclick="setPath('B-late')">
+          <div class="path-tag">Scenario B</div>
+          <div class="path-name">Refi Year 3+</div>
+          <div class="path-detail">mo 25+ · no refund</div>
+        </div>
+        <div class="path-btn" data-path="A" onclick="setPath('A')">
+          <div class="path-tag">Scenario A</div>
+          <div class="path-name">Refi from 5.875%</div>
+          <div class="path-detail">any time · no refund</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sliders-grid">
+      <div class="sg">
+        <div class="sl-lbl">Future Rate <span class="sl-val" id="v-rate">5.50%</span></div>
+        <input type="range" id="sl-rate" min="3.5" max="6.6" step="0.125" value="5.5" oninput="update()">
+        <div class="presets">
+          <button class="pb" onclick="setRate(5.75)">5.75%</button>
+          <button class="pb" onclick="setRate(5.5)">5.50%</button>
+          <button class="pb" onclick="setRate(5.25)">5.25%</button>
+          <button class="pb" onclick="setRate(5.0)">5.00%</button>
+          <button class="pb" onclick="setRate(4.75)">4.75%</button>
+        </div>
+        <div class="sl-hint">Rate available at time of refi</div>
+      </div>
+      <div class="sg">
+        <div class="sl-lbl">Refi Month <span class="sl-val" id="v-months">12</span></div>
+        <input type="range" id="sl-months" min="6" max="60" step="1" value="12" oninput="update()">
+        <div class="presets">
+          <button class="pb" onclick="setMonths(12)">Mo 12</button>
+          <button class="pb" onclick="setMonths(18)">Mo 18</button>
+          <button class="pb" onclick="setMonths(24)">Mo 24</button>
+          <button class="pb" onclick="setMonths(36)">Mo 36</button>
+          <button class="pb" onclick="setMonths(48)">Mo 48</button>
+        </div>
+        <div class="sl-hint" id="sl-months-hint">Month when refinance occurs</div>
+      </div>
+      <div class="sg">
+        <div class="sl-lbl">View Horizon <span class="sl-val" id="v-horizon">5 yrs</span></div>
+        <input type="range" id="sl-horizon" min="2" max="10" step="1" value="5" oninput="update()">
+        <div class="presets">
+          <button class="pb" onclick="setHorizon(3)">3 yr</button>
+          <button class="pb" onclick="setHorizon(5)">5 yr</button>
+          <button class="pb" onclick="setHorizon(7)">7 yr</button>
+          <button class="pb" onclick="setHorizon(10)">10 yr</button>
+        </div>
+        <div class="sl-hint">Total analysis window</div>
+      </div>
+    </div>
+    <div class="refi-cost-row">
+      <div class="refi-cost-lbl">Refi closing costs:</div>
+      <input class="rci" id="refi-cost" value="$4,500" onchange="update()">
+      <div class="refi-cost-hint">Typical no-points refi · adjust as needed</div>
+    </div>
+  </div>
+
+  <!-- SUBSIDY REFUND CALLOUT -->
+  <div class="refund-callout" id="refund-callout">
+    <div class="rc-icon">&#9889;</div>
+    <div class="rc-body">
+      <div class="rc-title" id="rc-title">Subsidy Refund: The Hidden Advantage</div>
+      <div class="rc-text" id="rc-text"></div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-grid">
+    <div class="rcard ra">
+      <div class="rcard-head" id="ra-head">Scenario A — Perm 5.875%</div>
+      <div id="ra-winner"></div>
+      <div class="big-num" id="ra-total" style="color:var(--gold2)">—</div>
+      <div class="big-sub" id="ra-sub">total cost over period</div>
+      <div class="rrows">
+        <div class="rrow"><span class="l">Payment before refi</span><span class="v" style="color:rgba(255,255,255,.8)">$2,318.83/mo</span></div>
+        <div class="rrow"><span class="l">Payment after refi</span><span class="v gn" id="ra-after">—</span></div>
+        <div class="rrow"><span class="l">Points sunk at refi</span><span class="v rd" id="ra-sunk">—</span></div>
+        <div class="rrow"><span class="l">Subsidy refund</span><span class="v rd">$0</span></div>
+        <div class="rrow"><span class="l">Net refi cost</span><span class="v" id="ra-netrefi">—</span></div>
+        <div class="rrow"><span class="l">Refi break-even</span><span class="v" id="ra-be">—</span></div>
+      </div>
+    </div>
+    <div class="rcard rb">
+      <div class="rcard-head" id="rb-head">Scenario B — 6.375% + 2-1 Temp</div>
+      <div id="rb-winner"></div>
+      <div class="big-num" id="rb-total" style="color:var(--green)">—</div>
+      <div class="big-sub" id="rb-sub">total cost over period</div>
+      <div class="rrows">
+        <div class="rrow"><span class="l">Payment before refi</span><span class="v" style="color:rgba(255,255,255,.8)" id="rb-before">—</span></div>
+        <div class="rrow"><span class="l">Payment after refi</span><span class="v gn" id="rb-after">—</span></div>
+        <div class="rrow"><span class="l">Perm points sunk at refi</span><span class="v gd" id="rb-sunk">—</span></div>
+        <div class="rrow"><span class="l">Subsidy refund</span><span class="v gn" id="rb-refund">—</span></div>
+        <div class="rrow"><span class="l">Net refi cost</span><span class="v gn" id="rb-netrefi">—</span></div>
+        <div class="rrow"><span class="l">Refi break-even</span><span class="v" id="rb-be">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VERDICT -->
+  <div class="verdict">
+    <div class="verdict-tag">&#9670; Analysis</div>
+    <div class="verdict-text" id="verdict">Adjust the controls above to generate the scenario analysis.</div>
+  </div>
+
+
+  <!-- TABLE -->
+  <div class="chart-card">
+    <div class="chart-hd">Year-by-Year Summary</div>
+    <div style="overflow-x:auto;">
+      <table class="tbl">
+        <thead><tr>
+          <th style="text-align:left">Period</th>
+          <th>A Monthly</th><th>B Monthly</th>
+          <th>A Cumulative</th><th>B Cumulative</th>
+          <th>Difference</th>
+        </tr></thead>
+        <tbody id="tbl-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const LOAN=392000,RATE_A=5.875/100,RATE_PAR=6.625/100,RATE_B_PERM=6.375/100;
+const RATE_B_Y1=4.375/100,RATE_B_Y2=5.375/100;
+const COST_B_PERM=3134,COST_B_TEMP=8866,COST_A=12000;
+
+function piPayment(loan,rate,yrs=30){
+  const r=rate/12,n=yrs*12;
+  return r===0?loan/n:loan*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
+}
+
+const PI_A=piPayment(LOAN,RATE_A);
+const PI_B_Y1=piPayment(LOAN,RATE_B_Y1);
+const PI_B_Y2=piPayment(LOAN,RATE_B_Y2);
+const PI_B_Y3=piPayment(LOAN,RATE_B_PERM);
+
+// Subsidy structure
+const SUB_Y1_MO = PI_B_Y3 - PI_B_Y1;  // $488.37/mo year 1
+const SUB_Y2_MO = PI_B_Y3 - PI_B_Y2;  // $250.48/mo year 2
+const SUB_Y1_TOT = SUB_Y1_MO * 12;    // $5,860
+const SUB_Y2_TOT = SUB_Y2_MO * 12;    // $3,006
+
+function subsidy_refund(refiMonth) {
+  if (refiMonth <= 12)  return SUB_Y2_TOT;                          // full year 2 unused
+  if (refiMonth <= 24)  return SUB_Y2_MO * (24 - refiMonth);        // partial year 2
+  return 0;
+}
+
+function pmtB(mo) {
+  if(mo<=12) return PI_B_Y1;
+  if(mo<=24) return PI_B_Y2;
+  return PI_B_Y3;
+}
+
+function fmt(n){return'$'+Math.round(Math.abs(n)).toLocaleString('en-US');}
+function fmtD(n,d=2){return'$'+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});}
+function parseDollar(s){return parseFloat(String(s).replace(/[^0-9.]/g,''))||0;}
+
+let currentPath = 'B-early';
+function setPath(p) {
+  currentPath = p;
+  document.querySelectorAll('.path-btn').forEach(b => {
+    b.classList.remove('active-a','active-b');
+    if(b.dataset.path===p) b.classList.add(p==='A'?'active-a':'active-b');
+  });
+  // Constrain month slider
+  const sl = document.getElementById('sl-months');
+  if(p==='B-early'){sl.max=12; if(+sl.value>12)sl.value=12;}
+  else if(p==='B-mid'){sl.min=13;sl.max=24; if(+sl.value<13)sl.value=13; if(+sl.value>24)sl.value=24;}
+  else if(p==='B-late'){sl.min=25;sl.max=60; if(+sl.value<25)sl.value=25;}
+  else{sl.min=6;sl.max=60;}
+  update();
+}
+
+function setRate(v){document.getElementById('sl-rate').value=v;update();}
+function setMonths(v){document.getElementById('sl-months').value=v;update();}
+function setHorizon(v){document.getElementById('sl-horizon').value=v;update();}
+
+function update(){
+  const refiRate   = parseFloat(document.getElementById('sl-rate').value);
+  const refiMonth  = parseInt(document.getElementById('sl-months').value);
+  const horizonYrs = parseInt(document.getElementById('sl-horizon').value);
+  const horizon    = horizonYrs * 12;
+  const refiCostGross = parseDollar(document.getElementById('refi-cost').value);
+
+  document.getElementById('v-rate').textContent    = refiRate.toFixed(3).replace(/\.?0+$/,'')+'%';
+  document.getElementById('v-months').textContent  = 'Mo '+refiMonth;
+  document.getElementById('v-horizon').textContent = horizonYrs+' yrs';
+  document.getElementById('h-rate').textContent    = refiRate.toFixed(3).replace(/\.?0+$/,'')+'%';
+  document.getElementById('h-months').textContent  = refiMonth+' months';
+
+  const pi_refi = piPayment(LOAN, refiRate/100);
+  const refund  = currentPath === 'A' ? 0 : subsidy_refund(refiMonth);
+  const refiCostNetB = Math.max(0, refiCostGross - refund);
+  const refiCostNetA = refiCostGross;
+
+  // ── CUMULATIVE COST ARRAYS ──
+  let cumA=0, cumB=0;
+  const dataA=[], dataB=[];
+
+  for(let m=1; m<=horizon; m++){
+    // A: flat PI_A until refi, then pi_refi + refi cost at refi month
+    const pmtA = m <= refiMonth ? PI_A : pi_refi;
+    const addA = m === refiMonth+1 ? refiCostNetA : 0;
+    cumA += pmtA + addA;
+
+    // B: stepped payments until refi, then pi_refi + net refi cost
+    const pmtBm = m <= refiMonth ? pmtB(m) : pi_refi;
+    const addB  = m === refiMonth+1 ? refiCostNetB : 0;
+    cumB += pmtBm + addB;
+
+    dataA.push(Math.round(cumA));
+    dataB.push(Math.round(cumB));
+  }
+
+  const totalA = dataA[horizon-1];
+  const totalB = dataB[horizon-1];
+  const diff   = totalB - totalA;
+
+  // Refi savings per month
+  const savA = PI_A    - pi_refi;
+  const savB = PI_B_Y3 - pi_refi;
+
+  // Refi break-even (net)
+  const beA = savA > 0 ? refiCostNetA / savA : null;
+  const beB = savB > 0 ? refiCostNetB / savB : null;
+
+  // ── SUBSIDY REFUND CALLOUT ──
+  const rcTitle = document.getElementById('rc-title');
+  const rcText  = document.getElementById('rc-text');
+  if(currentPath === 'A'){
+    document.getElementById('refund-callout').style.background='rgba(240,112,112,.05)';
+    document.getElementById('refund-callout').style.borderColor='rgba(240,112,112,.2)';
+    document.getElementById('refund-callout').querySelector('.rc-icon').textContent='⚠';
+    rcTitle.style.color='var(--red)';
+    rcTitle.textContent='Scenario A: No Refund at Refi';
+    rcText.innerHTML=`Ryan spent <strong>${fmt(COST_A)}</strong> on discount points to buy down to 5.875%. At a refi to <strong>${refiRate.toFixed(3).replace(/\.?0+$/,'')}%</strong> at month ${refiMonth}, <strong class="v rd">none of that is recoverable</strong>. He has recouped only <strong>${fmt(Math.max(0,(piPayment(LOAN,RATE_PAR)-PI_A)*refiMonth))}</strong> in savings vs par rate. The remaining <strong class="v rd">${fmt(Math.max(0,COST_A-(piPayment(LOAN,RATE_PAR)-PI_A)*refiMonth))}</strong> is permanently lost.`;
+  } else {
+    document.getElementById('refund-callout').style.background='rgba(62,207,130,.05)';
+    document.getElementById('refund-callout').style.borderColor='rgba(62,207,130,.2)';
+    document.getElementById('refund-callout').querySelector('.rc-icon').textContent='⚡';
+    rcTitle.style.color='var(--green)';
+    if(refund > 0){
+      rcTitle.textContent='Subsidy Refund: $'+Math.round(refund).toLocaleString()+' Comes Back at Refi';
+      rcText.innerHTML=`At month ${refiMonth}, <strong>${refund > 2000 ? Math.round(24-refiMonth)+' months of' : Math.round(24-refiMonth)+' months of'} Year ${refiMonth<=12?'2':'2'} subsidy remain unused</strong> — <strong class="v gn">${fmt(refund)}</strong> is refunded from the escrow account. This cuts the net refi cost from <strong>${fmt(refiCostGross)}</strong> down to just <strong class="v gn">${fmt(refiCostNetB)}</strong>. Refi break-even: <strong>${beB ? Math.ceil(beB)+' months' : 'N/A'}</strong> vs <strong>${beA ? Math.ceil(beA)+' months from Scenario A' : 'no benefit from A'}</strong>.`;
+    } else {
+      rcTitle.textContent='No Subsidy Refund (Used After Month 24)';
+      rcText.innerHTML=`By month ${refiMonth}, the 2-1 buydown subsidy is fully consumed — Ryan captured <strong>${fmt(SUB_Y1_TOT+SUB_Y2_TOT)}</strong> in total payment savings across Years 1 and 2. No refund at refi, but the perm points sunk ($${COST_B_PERM.toLocaleString()}) are still <strong class="v gn">$${(COST_A-COST_B_PERM).toLocaleString()} less</strong> than Scenario A's $12K.`;
+    }
+  }
+
+  // ── RESULT CARDS ──
+  document.getElementById('ra-total').textContent = fmt(totalA);
+  document.getElementById('rb-total').textContent = fmt(totalB);
+  document.getElementById('ra-sub').textContent = `total cost over ${horizonYrs} years`;
+  document.getElementById('rb-sub').textContent = `total cost over ${horizonYrs} years`;
+
+  const pA_after = pi_refi, pB_after = pi_refi;
+  document.getElementById('ra-after').textContent = fmtD(pA_after)+'/mo';
+  document.getElementById('rb-after').textContent = fmtD(pB_after)+'/mo';
+
+  const recoupedA = Math.min(COST_A, (piPayment(LOAN,RATE_PAR)-PI_A)*refiMonth);
+  const sunkA_net = Math.max(0, COST_A - recoupedA);
+  document.getElementById('ra-sunk').textContent = fmt(sunkA_net)+' not recouped';
+  document.getElementById('rb-sunk').textContent = fmt(COST_B_PERM)+' (perm pts only)';
+  document.getElementById('rb-refund').textContent = refund > 0 ? fmt(refund)+' ← from escrow' : '$0 (fully used)';
+  document.getElementById('rb-refund').className = 'v ' + (refund > 0 ? 'gn' : 'v');
+  document.getElementById('ra-netrefi').textContent = fmt(refiCostNetA);
+  document.getElementById('rb-netrefi').textContent = fmt(refiCostNetB)+(refund>0?' (after refund)':'');
+  document.getElementById('ra-be').textContent = beA ? Math.ceil(beA)+' mo ('+((beA/12).toFixed(1))+' yrs)' : 'No savings from refi';
+  document.getElementById('ra-be').className = 'v '+(beA&&beA<24?'gn':beA&&beA<48?'gd':'rd');
+  document.getElementById('rb-be').textContent = beB ? Math.ceil(beB)+' mo ('+((beB/12).toFixed(1))+' yrs)' : 'No savings from refi';
+  document.getElementById('rb-be').className = 'v '+(beB&&beB<12?'gn':beB&&beB<30?'gd':'rd');
+
+  const bWins = diff < 0;
+  const aWins = diff > 200;
+  const tie = !bWins && !aWins;
+  document.getElementById('ra-winner').innerHTML = aWins ? '<div class="winner-badge wb-a">★ Lower cost this scenario</div>' : '';
+  document.getElementById('rb-winner').innerHTML = bWins ? '<div class="winner-badge wb-b">★ Lower cost this scenario</div>' : tie ? '<div class="winner-badge wb-tie">Roughly tied</div>' : '';
+
+  // ── VERDICT TEXT ──
+  let vHTML = '';
+  const refi_label = `<strong>${refiRate.toFixed(3).replace(/\.?0+$/,'')}%</strong> at month ${refiMonth}`;
+
+  if(currentPath==='A'){
+    // Scenario A refi
+    if(!beA || beA > 60){
+      vHTML=`Refinancing from <span class="hl">5.875%</span> to ${refi_label} saves only <strong>${fmtD(Math.max(0,savA))}/mo</strong> — barely worth the ${fmt(refiCostGross)} closing cost. Break-even takes <span class="rd">${beA?Math.ceil(beA)+' months':'N/A'}</span>. This refi doesn't make financial sense unless Ryan plans to stay in the home for many years after. The <span class="rd">${fmt(sunkA_net)} in unrecouped points</span> at the time of refi is permanently gone. Scenario A's break-even against par was <strong>62.8 months</strong> — if Ryan refinances before that, the $12K buydown was a losing trade.`;
+    } else {
+      vHTML=`Refinancing from <span class="hl">5.875%</span> to ${refi_label} saves <strong>${fmtD(savA)}/mo</strong>. Break-even: <strong>${Math.ceil(beA)} months</strong>. However, Ryan still loses <span class="rd">${fmt(sunkA_net)}</span> in unrecouped points at the time of refi. If rates get to ${refiRate.toFixed(3).replace(/\.?0+$/,'')}% by month ${refiMonth}, he would have been <span class="gn">much better off</span> with Scenario B — which has no unrecouped points beyond the $${COST_B_PERM.toLocaleString()} in perm pts, and would have received a $${Math.round(subsidy_refund(refiMonth)).toLocaleString()} subsidy refund.`;
+    }
+  } else if(bWins){
+    const adv = fmt(Math.abs(diff));
+    if(refund > 0){
+      vHTML=`<span class="gn">Scenario B wins by ${adv}</span> over ${horizonYrs} years. The key mechanism: Ryan refinances at month ${refiMonth} and receives a <strong class="gn">${fmt(refund)} subsidy refund</strong> from the unused Year 2 buydown escrow. This cuts his net refi cost to just <strong>${fmt(refiCostNetB)}</strong> — break-even in only <strong>${beB?Math.ceil(beB)+' months':'N/A'}</strong>. Compare that to Scenario A, where refi costs the full <strong>${fmt(refiCostGross)}</strong> and takes <strong>${beA?Math.ceil(beA)+' months':'much longer'}</strong> to recover. The year of payments at 4.375% gave Ryan <strong>${fmt(SUB_Y1_TOT)}</strong> in breathing room — and the Year 2 escrow acted as a refi subsidy he never had to think about.`;
+    } else {
+      vHTML=`<span class="gn">Scenario B wins by ${adv}</span> over ${horizonYrs} years. By month ${refiMonth}, the 2-1 buydown was fully used — Ryan captured <strong>${fmt(SUB_Y1_TOT+SUB_Y2_TOT)}</strong> in total Year 1–2 payment savings. No refund at this point, but only <strong>${fmt(COST_B_PERM)}</strong> in perm points are sunk at refi (vs <strong class="rd">${fmt(sunkA_net)}</strong> for Scenario A). The refi break-even for B is <strong>${beB?Math.ceil(beB)+' months':''}</strong> — significantly better than Scenario A's <strong>${beA?Math.ceil(beA)+' months':'N/A'}</strong>.`;
+    }
+  } else if(aWins){
+    vHTML=`<span class="hl">Scenario A wins by ${fmt(Math.abs(diff))}</span> in this specific scenario — but with an important caveat. This outcome requires rates to <em>not drop significantly</em> before month ${refiMonth}, and Ryan to hold long enough to recoup the $12K. The 5.875% rate saves <strong>${fmtD(Math.max(0,savA))}/mo</strong> vs a refi rate of ${refiRate.toFixed(3).replace(/\.?0+$/,'')}%. This is the <em>only</em> scenario where A outperforms: rates stay modestly elevated and Ryan holds for the full horizon. Try setting the refi rate below 5.5% or the refi month below 18 and watch Scenario B take back the lead.`;
+  } else {
+    vHTML=`These scenarios are roughly equivalent over ${horizonYrs} years. Small changes in assumptions — refi rate, timing, or closing costs — can tip either way. This is the narrow zone where the permanent buydown in Scenario A breaks even with Scenario B's flexible approach.`;
+  }
+  document.getElementById('verdict').innerHTML = vHTML;
+
+  // ── CHART ──
+
+  // ── TABLE ──
+  buildTable(refiMonth, refiRate, horizon, pi_refi, refiCostNetA, refiCostNetB, refund);
+}
+
+
+function buildTable(refiMonth, refiRate, horizon, pi_refi, rcA, rcB, refund){
+  const tbody = document.getElementById('tbl-body');
+  let cumA=0,cumB=0;
+  const rows=[];
+  for(let m=1;m<=horizon;m++){
+    const pA = m<=refiMonth ? PI_A : pi_refi;
+    const pB = m<=refiMonth ? pmtB(m) : pi_refi;
+    cumA += pA + (m===refiMonth+1?rcA:0);
+    cumB += pB + (m===refiMonth+1?rcB:0);
+    const isYE=m%12===0, isR=m===refiMonth;
+    if(!isYE&&!isR) continue;
+    rows.push({m,pA:Math.round(pA),pB:Math.round(pB),cA:Math.round(cumA),cB:Math.round(cumB),refi:isR,ye:isYE});
+  }
+  tbody.innerHTML=rows.map(r=>{
+    const d=r.cB-r.cA, bw=d<0;
+    const lbl=r.refi&&!r.ye?`Mo ${r.m} — Refi → ${refiRate.toFixed(3).replace(/\.?0+$/,'')}%${refund>0?' + '+fmt(refund)+' refund':''}`:`Year ${Math.round(r.m/12)}${r.refi?' (Refi)':''}`;
+    return`<tr class="${r.refi?'refi-row':''}">
+      <td>${lbl}</td>
+      <td>${fmt(r.pA)}</td><td>${fmt(r.pB)}</td>
+      <td>${fmt(r.cA)}</td><td>${fmt(r.cB)}</td>
+      <td class="${bw?'gn':'rd'}">${bw?'▼ ':'▲ '}${fmt(Math.abs(d))} ${bw?'B cheaper':'A cheaper'}</td>
+    </tr>`;
+  }).join('');
+}
+
+window.addEventListener('load',()=>{setPath('B-early');});
+window.addEventListener('resize',()=>setTimeout(update,80));
+</script>
+</body>
+</html>
