@@ -183,7 +183,25 @@ html,body{background:var(--ink);color:var(--ow);font-family:'Outfit',sans-serif;
 .fn{font-size:11px;color:var(--sl);padding:18px 0 0;line-height:1.7;border-top:1px solid var(--bd2);margin-top:22px;}
 .fn a{color:var(--gold2);text-decoration:none;}
 .fn a:hover{text-decoration:underline;}
+
+/* ── LOOM VIDEO WALKTHROUGH ── */
+.loom-section{margin:32px auto;max-width:960px;padding:0 16px;}
+.loom-card{background:linear-gradient(135deg,rgba(14,26,56,.95) 0%,rgba(10,22,40,.98) 100%);border:1px solid var(--bd);border-radius:16px;overflow:hidden;}
+.loom-header{display:flex;align-items:center;gap:14px;padding:20px 28px 16px;border-bottom:1px solid var(--bd2);}
+.loom-icon{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#625df5,#9b51e0);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.loom-hd{flex:1;}
+.loom-title{font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;color:var(--ow);margin-bottom:3px;}
+.loom-sub{font-size:12px;color:var(--sl);line-height:1.4;}
+.loom-badge{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;background:rgba(98,93,245,.2);color:#a89ef8;border:1px solid rgba(98,93,245,.3);border-radius:20px;padding:3px 10px;flex-shrink:0;}
+.loom-embed{position:relative;padding-bottom:56.25%;height:0;background:#000;}
+.loom-embed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;}
+.loom-footer{padding:12px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.loom-note{font-size:11px;color:var(--sl);line-height:1.5;}
+.loom-note strong{color:var(--gold2);}
+.loom-open{font-size:11px;font-weight:600;color:var(--gold2);text-decoration:none;border:1px solid rgba(200,164,68,.3);border-radius:6px;padding:5px 12px;transition:all .15s;}
+.loom-open:hover{background:rgba(200,164,68,.1);}
 </style>
+  <meta name="loom-url" content="">
 </head>
 <body>
 
@@ -209,8 +227,8 @@ html,body{background:var(--ink);color:var(--ow);font-family:'Outfit',sans-serif;
 <!-- LEGEND -->
 <div class="legend">
   <div class="lt zl">① Zillow — $70K Down · 5.99% Permanent (3.066 pts · $12,019)</div>
-  <div class="lt c1">② Cornerstone — $70K Down · 5.99% Permanent (2.09 pts · $8,193)</div>
-  <div class="lt c2">③ Cornerstone — $53K Down · 6.49%→5.99% Perm (2.09 pts · $8,548) + 1-0 Temp Buydown</div>
+  <div class="lt c1">② Cornerstone — $70K Down · 5.99% Permanent (2.2 pts · $8,624)</div>
+  <div class="lt c2">③ Cornerstone — $70K Down · 5.99% Perm + 1-0 Temp Buydown</div>
   <div class="lt c3">④ Cornerstone — $53K Down · 2-1 Temp Buydown Only (No Perm Points)</div>
 </div>
 
@@ -218,8 +236,8 @@ html,body{background:var(--ink);color:var(--ow);font-family:'Outfit',sans-serif;
 <div class="win-banner">
   <div class="win-icon">★</div>
   <div>
-    <h3>Scenario ② delivers the same permanent rate as Zillow (5.99%) at 32% lower cost. ③ is the Hybrid — $53K down, rate locked at 5.99% permanently, lowest Year 1 payment. ④ saves $18,112 at closing with no permanent points.</h3>
-    <p>Scenario ③ Hybrid: $53K down, permanent buydown 6.49%→5.99% (2.09 pts = $8,548) plus 1-0 temporary buydown to 4.99% Year 1 ($3,077 seller-funded). Total buydown cost $11,625 — fully covered by seller concessions with $375 to spare. All scenarios: 28-day prepaid interest · 12-month HO premium · $649 appraisal · $5,000 earnest deposit.</p>
+    <h3>Scenarios ② and ③ deliver the same permanent rate as Zillow (5.99%) — but at 2.2 points (28% less cost). ④ saves $20,275 at closing with the lowest Year 1 payment of all four.</h3>
+    <p>Cornerstone's 2.2-point cost to achieve 5.99% vs Zillow's 3.066 points saves $3,395 in points alone on the same loan. The remaining seller concession balance offsets closing costs. All scenarios now use identical assumptions: 28-day prepaid interest · 12-month HO premium · $649 appraisal · $5,000 earnest deposit.</p>
   </div>
 </div>
 
@@ -241,7 +259,7 @@ html,body{background:var(--ink);color:var(--ow);font-family:'Outfit',sans-serif;
 
   <!-- CFM S2 -->
   <div class="pmt-card cfm1">
-    <div class="pc-head">② CFM — 5.99% Perm (2.09 pts)</div>
+    <div class="pc-head">② CFM — 5.99% Perm (2.2 pts)</div>
     <div class="yr-badge">ALL YEARS</div>
     <div class="pmt-row"><span class="lbl">Principal &amp; Interest</span><span class="val match">$2,347.72</span></div>
     <div class="pmt-row"><span class="lbl">Hazard (HO) Insurance</span><span class="val">$160.00</span></div>
@@ -253,22 +271,22 @@ html,body{background:var(--ink);color:var(--ow);font-family:'Outfit',sans-serif;
 
   <!-- CFM S3 -->
   <div class="pmt-card cfm2">
-    <div class="pc-head">③ CFM Hybrid — Perm 5.99% + 1-0 Temp</div>
+    <div class="pc-head">③ CFM — Perm 5.99% + 1-0</div>
     <div class="yr-badge">YEAR 1 (4.99%)</div>
-    <div class="pmt-row"><span class="lbl">Principal &amp; Interest</span><span class="val" style="color:var(--gt)">$2,193.10</span></div>
+    <div class="pmt-row"><span class="lbl">Principal &amp; Interest</span><span class="val" style="color:var(--gt)">$2,101.95</span></div>
     <div class="pmt-row"><span class="lbl">Hazard (HO) Insurance</span><span class="val">$160.00</span></div>
     <div class="pmt-row"><span class="lbl">Real Estate Taxes</span><span class="val">$401.80</span></div>
-    <div class="pmt-row"><span class="lbl">Mortgage Insurance (PMI)</span><span class="val" style="color:var(--rt)">$40.90</span></div>
+    <div class="pmt-row"><span class="lbl">Mortgage Insurance (PMI)</span><span class="val">$39.20</span></div>
     <div class="pmt-row"><span class="lbl">HOA Dues</span><span class="val">$35.00</span></div>
-    <div class="pmt-total"><span style="color:var(--gold2)">Total / Month</span><span style="color:var(--gold2)">$2,830.80</span></div>
+    <div class="pmt-total"><span style="color:var(--gold2)">Total / Month</span><span style="color:var(--gold2)">$2,737.95</span></div>
     <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.07);font-size:11px;color:var(--sl2);">
-      Year 2+: reverts to <strong style="color:var(--ow)">5.99% perm → $3,087.23/mo</strong>
+      Year 2+: reverts to <strong style="color:var(--ow)">5.99% perm → $2,983.72/mo</strong>
     </div>
   </div>
 
   <!-- CFM S4 -->
   <div class="pmt-card cfm3">
-    <div class="pc-head">④ CFM — 2-1 Temporary Buydown Only</div>
+    <div class="pc-head">④ CFM — 2-1 Buydown Only</div>
     <div class="yr-badge">YEAR 1 (4.49%)</div>
     <div class="pmt-row"><span class="lbl">Principal &amp; Interest</span><span class="val" style="color:var(--gt)">$2,069.91</span></div>
     <div class="pmt-row"><span class="lbl">Hazard (HO) Insurance</span><span class="val">$160.00</span></div>
@@ -289,8 +307,8 @@ html,body{background:var(--ink);color:var(--ow);font-family:'Outfit',sans-serif;
 
   <div class="c rl ch" style="background:rgba(255,255,255,.02);color:var(--sl);font-size:10px;">Metric</div>
   <div class="c ch zh">① Zillow<br>$70K · 5.99% Perm<br><span style="font-size:9px;opacity:.7">3.066 pts = $12,019</span></div>
-  <div class="c ch c1h">② CFM<br>$70K · 5.99% Perm<br><span style="font-size:9px;opacity:.7">2.09 pts = $8,193</span></div>
-  <div class="c ch c2h">③ CFM Hybrid<br>$53K · Perm 5.99%+1-0<br><span style="font-size:9px;opacity:.7">2.09 pts ($8,548) + temp buydown</span></div>
+  <div class="c ch c1h">② CFM<br>$70K · 5.99% Perm<br><span style="font-size:9px;opacity:.7">2.2 pts = $8,624</span></div>
+  <div class="c ch c2h">③ CFM<br>$70K · Perm 5.99%+1-0<br><span style="font-size:9px;opacity:.7">2.2 pts + temp buydown</span></div>
   <div class="c ch c3h">④ CFM<br>$53K · 2-1 Only<br><span style="font-size:9px;opacity:.7">No perm points</span></div>
 
   <!-- LOAN STRUCTURE -->
@@ -298,18 +316,18 @@ html,body{background:var(--ink);color:var(--ow);font-family:'Outfit',sans-serif;
   <div class="c zc sb"></div><div class="c c1c sb"></div><div class="c c2c sb"></div><div class="c c3c sb"></div>
 
   <div class="c rl">Down Payment</div>
-  <div class="c rv nm zc">$70,000</div><div class="c rv nm c1c">$70,000</div><div class="c rv nm c2c">$53,000</div><div class="c rv nm c3c">$53,000</div>
+  <div class="c rv nm zc">$70,000</div><div class="c rv nm c1c">$70,000</div><div class="c rv nm c2c">$70,000</div><div class="c rv nm c3c">$53,000</div>
 
   <div class="c rl">Loan Amount</div>
-  <div class="c rv nm zc">$392,000</div><div class="c rv nm c1c">$392,000</div><div class="c rv nm c2c">$409,000</div><div class="c rv nm c3c">$409,000</div>
+  <div class="c rv nm zc">$392,000</div><div class="c rv nm c1c">$392,000</div><div class="c rv nm c2c">$392,000</div><div class="c rv nm c3c">$409,000</div>
 
   <div class="c rl">LTV</div>
-  <div class="c rv zc">84.8%</div><div class="c rv c1c">84.8%</div><div class="c rv c2c">88.5%</div><div class="c rv c3c">88.5%</div>
+  <div class="c rv zc">84.8%</div><div class="c rv c1c">84.8%</div><div class="c rv c2c">84.8%</div><div class="c rv c3c">88.5%</div>
 
   <div class="c rl">Permanent Note Rate</div>
   <div class="c rv zc nm" style="color:var(--gt)">5.990%</div>
   <div class="c rv c1c nm" style="color:var(--gt)">5.990%</div>
-  <div class="c rv c2c nm" style="color:var(--gt)">5.990% <span class="pill pg">&#x2193; from 6.49%</span></div>
+  <div class="c rv c2c nm" style="color:var(--gt)">5.990%</div>
   <div class="c rv c3c nm">6.490%</div>
 
   <div class="c rl">Year 1 Effective Rate</div>
@@ -324,18 +342,18 @@ html,body{background:var(--ink);color:var(--ow);font-family:'Outfit',sans-serif;
   <div class="c rv c3c" style="color:var(--gold2)">5.490% <span class="pill pa">temp yr 2</span></div>
 
   <div class="c rl">Year 3–30 Rate</div>
-  <div class="c rv zc">5.990%</div><div class="c rv c1c">5.990%</div><div class="c rv c2c">5.990% <span class="pill pg">perm</span></div><div class="c rv c3c">6.490%</div>
+  <div class="c rv zc">5.990%</div><div class="c rv c1c">5.990%</div><div class="c rv c2c">5.990%</div><div class="c rv c3c">6.490%</div>
 
   <div class="c rl">Points Paid to Achieve Rate</div>
   <div class="c rv nm zc worst">$12,019 <span class="pill pr">3.066%</span></div>
-  <div class="c rv nm c1c" style="color:var(--gt)">$8,193 <span class="pill pg">2.090%</span></div>
-  <div class="c rv nm c2c" style="color:var(--gold2)">$8,548 <span class="pill pa">2.090%</span></div>
+  <div class="c rv nm c1c" style="color:var(--gt)">$8,624 <span class="pill pg">2.200%</span></div>
+  <div class="c rv nm c2c" style="color:var(--gt)">$8,624 <span class="pill pg">2.200%</span></div>
   <div class="c rv nm c3c best">$0 <span class="pill pg">none</span></div>
 
   <div class="c rl" style="color:var(--gt)">Points Savings vs Zillow</div>
   <div class="c rc zc"><span class="pill pz">Baseline</span></div>
-  <div class="c rv nm c1c best">$3,826 less</div>
-  <div class="c rv nm c2c" style="color:var(--gold2)">$3,471 less</div>
+  <div class="c rv nm c1c best">$3,395 less</div>
+  <div class="c rv nm c2c" style="color:var(--gt)">$3,395 less</div>
   <div class="c rv nm c3c best">$12,019 less</div>
 
   <!-- MONTHLY PAYMENTS -->
@@ -345,22 +363,21 @@ html,body{background:var(--ink);color:var(--ow);font-family:'Outfit',sans-serif;
   <div class="c rl">P&amp;I — Year 1</div>
   <div class="c rv nm zc">$2,347.72</div>
   <div class="c rv nm c1c match">$2,347.72</div>
-  <div class="c rv nm c2c" style="color:var(--gt)">$2,193.10</div>
+  <div class="c rv nm c2c" style="color:var(--gt)">$2,101.95</div>
   <div class="c rv nm c3c" style="color:var(--gt)">$2,069.91</div>
 
   <div class="c rl">P&amp;I — Year 2</div>
   <div class="c rv nm zc">$2,347.72</div><div class="c rv nm c1c">$2,347.72</div>
-  <div class="c rv nm c2c">$2,449.53</div><div class="c rv nm c3c">$2,319.69</div>
+  <div class="c rv nm c2c">$2,347.72</div><div class="c rv nm c3c">$2,319.69</div>
 
   <div class="c rl">P&amp;I — Year 3+ (full rate)</div>
   <div class="c rv nm zc" style="color:var(--gt)">$2,347.72</div>
   <div class="c rv nm c1c" style="color:var(--gt)">$2,347.72</div>
-  <div class="c rv nm c2c" style="color:var(--gt)">$2,449.53</div>
+  <div class="c rv nm c2c" style="color:var(--gt)">$2,347.72</div>
   <div class="c rv nm c3c">$2,582.47</div>
 
   <div class="c rl">PMI <span style="font-size:10px;color:var(--sl)">(0.12% annual)</span></div>
-  <div class="c rv nm zc">$39.20</div><div class="c rv nm c1c">$39.20</div>
-  <div class="c rv nm c2c" style="color:var(--rt)">$40.90 †</div>
+  <div class="c rv nm zc">$39.20</div><div class="c rv nm c1c">$39.20</div><div class="c rv nm c2c">$39.20</div>
   <div class="c rv nm c3c" style="color:var(--rt)">$40.90 †</div>
 
   <div class="c rl">Property Tax / Month</div>
@@ -378,19 +395,19 @@ html,body{background:var(--ink);color:var(--ow);font-family:'Outfit',sans-serif;
   <div class="c rl bld" style="color:var(--gold2)">TRUE ALL-IN — Year 1</div>
   <div class="c rv nm bld zc" style="color:var(--zil)">$2,983.72</div>
   <div class="c rv nm bld c1c match">$2,983.72</div>
-  <div class="c rv nm bld c2c">$2,830.80</div>
+  <div class="c rv nm bld c2c best">$2,737.95</div>
   <div class="c rv nm bld c3c best">$2,707.61</div>
 
   <div class="c rl bld" style="color:var(--gold2)">TRUE ALL-IN — Year 2</div>
   <div class="c rv nm zc">$2,983.72</div>
   <div class="c rv nm c1c">$2,983.72</div>
-  <div class="c rv nm c2c">$3,087.23</div>
+  <div class="c rv nm c2c">$2,983.72</div>
   <div class="c rv nm c3c" style="color:var(--gold2)">$2,957.39</div>
 
   <div class="c rl bld" style="color:var(--gold2)">TRUE ALL-IN — Year 3+</div>
   <div class="c rv nm zc best">$2,983.72</div>
   <div class="c rv nm c1c best">$2,983.72</div>
-  <div class="c rv nm c2c">$3,087.23</div>
+  <div class="c rv nm c2c best">$2,983.72</div>
   <div class="c rv nm c3c">$3,220.17</div>
 
   <!-- CLOSING COSTS -->
@@ -405,8 +422,8 @@ html,body{background:var(--ink);color:var(--ow);font-family:'Outfit',sans-serif;
 
   <div class="c rl ind">A. Discount Points</div>
   <div class="c rv nm zc" style="color:var(--rt)">$12,019</div>
-  <div class="c rv nm c1c" style="color:var(--gold2)">$8,193</div>
-  <div class="c rv nm c2c" style="color:var(--gold2)">$8,548</div>
+  <div class="c rv nm c1c" style="color:var(--gold2)">$8,624</div>
+  <div class="c rv nm c2c" style="color:var(--gold2)">$8,624</div>
   <div class="c rv nm c3c" style="color:var(--gt)">$0</div>
 
   <div class="c rl ind">A. Processing / VOE</div>
@@ -442,7 +459,7 @@ html,body{background:var(--ink);color:var(--ow);font-family:'Outfit',sans-serif;
   <div class="c rl ind">F. Prepaid Interest (28 days)</div>
   <div class="c rv nm zc">$1,801</div>
   <div class="c rv nm c1c">$1,801</div>
-  <div class="c rv nm c2c">$1,879</div>
+  <div class="c rv nm c2c">$1,801</div>
   <div class="c rv nm c3c">$2,036</div>
 
   <div class="c rl ind">G. Initial Escrow (3mo HO + 3mo tax)</div>
@@ -454,13 +471,13 @@ html,body{background:var(--ink);color:var(--ow);font-family:'Outfit',sans-serif;
   <div class="c rl ind">Buydown Subsidy</div>
   <div class="c rc zc"><span style="color:var(--sl)">—</span></div>
   <div class="c rc c1c"><span style="color:var(--sl)">—</span></div>
-  <div class="c rv nm c2c" style="color:var(--gold2)">$3,077 <span class="pill pa">1-0 temp</span></div>
+  <div class="c rv nm c2c" style="color:var(--gold2)">$2,949 <span class="pill pa">1-0</span></div>
   <div class="c rv nm c3c" style="color:var(--gt)">$9,304 <span class="pill pg">seller funded</span></div>
 
   <div class="c rl bld" style="color:var(--gold2)">Total Closing + Buydown</div>
   <div class="c rv nm bld worst zc">$23,843</div>
-  <div class="c rv nm bld c1c" style="color:var(--gold2)">$19,221</div>
-  <div class="c rv nm bld c2c">$22,731</div>
+  <div class="c rv nm bld c1c" style="color:var(--gold2)">$19,652</div>
+  <div class="c rv nm bld c2c">$22,601</div>
   <div class="c rv nm bld c3c" style="color:var(--gt)">$20,568</div>
 
   <div class="c rl ind">Seller Concessions ($12,000)</div>
@@ -476,21 +493,21 @@ html,body{background:var(--ink);color:var(--ow);font-family:'Outfit',sans-serif;
   <div class="c rv nm c3c" style="color:var(--gt)">-$5,000</div>
 
   <div class="c rl ind">Seller Concessions Remaining</div>
-  <div class="c rv nm zc" style="color:var(--rt)">-$19 short</div>
-  <div class="c rv nm c1c" style="color:var(--gt)">$3,807 surplus</div>
-  <div class="c rv nm c2c" style="color:var(--gt)">$375 surplus</div>
+  <div class="c rv nm zc"><span style="color:var(--sl)">—</span></div>
+  <div class="c rv nm c1c" style="color:var(--gt)">$348 surplus</div>
+  <div class="c rv nm c2c" style="color:var(--rt)">-$601 short ‡</div>
   <div class="c rv nm c3c" style="color:var(--gt)">$2,696 surplus</div>
 
   <div class="c rl bld" style="color:var(--gold2)">Estimated Cash to Close</div>
   <div class="c rv nm bld worst zc">$76,843</div>
-  <div class="c rv nm bld c1c" style="color:var(--gt)">$72,221</div>
-  <div class="c rv nm bld c2c" style="color:var(--gold2)">$58,731</div>
+  <div class="c rv nm bld c1c" style="color:var(--gt)">$72,652</div>
+  <div class="c rv nm bld c2c" style="color:var(--gold2)">$75,601</div>
   <div class="c rv nm bld c3c best">$56,568</div>
 
   <div class="c rl bld" style="color:var(--gold2)">Saves vs Zillow at Closing</div>
   <div class="c rc zc"><span class="pill pz">Baseline</span></div>
-  <div class="c rv nm bld c1c" style="color:var(--gt)">$4,622 less</div>
-  <div class="c rv nm bld c2c" style="color:var(--gt)">$18,112 less</div>
+  <div class="c rv nm bld c1c" style="color:var(--gt)">$4,191 less</div>
+  <div class="c rv nm bld c2c" style="color:var(--gold2)">$1,242 less</div>
   <div class="c rv nm bld c3c best">$20,275 less</div>
 
 </div><!-- /cg -->
@@ -500,25 +517,25 @@ html,body{background:var(--ink);color:var(--ow);font-family:'Outfit',sans-serif;
 <div class="sc-grid">
 
   <div class="sc-card sc-same">
-    <div class="sn" style="color:var(--bt2)">② CFM — $70K / 5.99% Perm (2.09 pts)</div>
+    <div class="sn" style="color:var(--bt2)">② CFM — $70K / 5.99% Perm (2.2 pts)</div>
     <div class="mv">$0/mo difference</div>
     <div class="ml">Identical Year 1 payment to Zillow</div>
-    <div class="yv">$4,622 less at close</div>
-    <div class="yl">Saves $3,826 in discount points vs Zillow</div>
-    <div class="sd">Same rate. Same payment. Same loan. Cornerstone achieves 5.99% at 2.09 points vs Zillow's 3.066 — saving $3,826 upfront. Seller concessions cover all closing costs with a $3,807 surplus.</div>
+    <div class="yv">$4,191 less at close</div>
+    <div class="yl">Saves $3,395 in discount points vs Zillow</div>
+    <div class="sd">Same rate. Same payment. Same loan. Cornerstone achieves 5.99% at 2.2 points vs Zillow's 3.066 — saving $3,395 upfront. Seller concessions nearly cover all closing costs, leaving a $348 surplus.</div>
   </div>
 
   <div class="sc-card sc-neu">
-    <div class="sn" style="color:var(--gold2)">③ CFM Hybrid — $53K / Perm 5.99% + 1-0 Temp</div>
-    <div class="mv">-$153/mo</div>
+    <div class="sn" style="color:var(--gold2)">③ CFM — $70K / Perm 5.99% + 1-0</div>
+    <div class="mv">-$246/mo</div>
     <div class="ml">Less expensive than Zillow — Year 1</div>
-    <div class="yv">-$1,835</div>
+    <div class="yv">-$2,949</div>
     <div class="yl">Saved over 12 months vs Zillow</div>
-    <div class="sd">$53K down, permanent buydown 6.49%→5.99% (2.09 pts = $8,548) plus 1-0 temporary buydown to 4.99% Year 1 ($3,077 seller-funded). Total buydown $11,625 — covered by seller concessions with $375 to spare.</div>
+    <div class="sd">Year 1 at 4.99% saves $245.77/mo. Year 2+ reverts to 5.99% permanent — same as Zillow long-term. ‡ Total costs exceed $12K seller credit by ~$601; Ryan covers the difference.</div>
   </div>
 
   <div class="sc-card sc-win">
-    <div class="sn" style="color:var(--gt)">④ CFM — $53K / 2-1 Temporary Buydown Only ★</div>
+    <div class="sn" style="color:var(--gt)">④ CFM — $53K / 2-1 Buydown Only ★</div>
     <div class="mv">-$276/mo</div>
     <div class="ml">Less expensive than Zillow — Year 1</div>
     <div class="yv">-$3,313</div>
@@ -548,7 +565,7 @@ html,body{background:var(--ink);color:var(--ow);font-family:'Outfit',sans-serif;
       <td class="tc" style="font-weight:700;">$35,808</td>
     </tr>
     <tr class="c1r">
-      <td class="rl" style="color:var(--bt2);font-weight:700;">② CFM $70K 5.99% (2.09 pts)<br><span style="color:var(--sl);font-size:10px;font-weight:400;">All-in / month</span></td>
+      <td class="rl" style="color:var(--bt2);font-weight:700;">② CFM $70K 5.99% (2.2 pts)<br><span style="color:var(--sl);font-size:10px;font-weight:400;">All-in / month</span></td>
       <td>$2,984</td><td>$2,984</td><td>$2,984</td><td>$2,984</td><td>$2,984</td><td>$2,984</td>
       <td>$2,984</td><td>$2,984</td><td>$2,984</td><td>$2,984</td><td>$2,984</td><td>$2,984</td>
       <td class="tc" style="font-weight:700;">$35,808</td>
@@ -557,19 +574,19 @@ html,body{background:var(--ink);color:var(--ow);font-family:'Outfit',sans-serif;
       <td class="rl" style="color:var(--bt2);font-size:11px;">② vs Zillow (cumulative)</td>
       <td class="even">$0</td><td class="even">$0</td><td class="even">$0</td><td class="even">$0</td><td class="even">$0</td><td class="even">$0</td>
       <td class="even">$0</td><td class="even">$0</td><td class="even">$0</td><td class="even">$0</td><td class="even">$0</td><td class="even">$0</td>
-      <td class="tc even">$0 (saves $4,622 at closing)</td>
+      <td class="tc even">$0 (saves $4,191 at closing)</td>
     </tr>
     <tr class="c2r">
-      <td class="rl" style="color:var(--gold2);font-weight:700;">③ CFM Hybrid $53K Perm+1-0<br><span style="color:var(--sl);font-size:10px;font-weight:400;">All-in Yr1 / month</span></td>
-      <td>$2,831</td><td>$2,831</td><td>$2,831</td><td>$2,831</td><td>$2,831</td><td>$2,831</td>
-      <td>$2,831</td><td>$2,831</td><td>$2,831</td><td>$2,831</td><td>$2,831</td><td>$2,831</td>
-      <td class="tc" style="font-weight:700;">$33,972</td>
+      <td class="rl" style="color:var(--gold2);font-weight:700;">③ CFM $70K Perm+1-0<br><span style="color:var(--sl);font-size:10px;font-weight:400;">All-in Yr1 / month</span></td>
+      <td>$2,738</td><td>$2,738</td><td>$2,738</td><td>$2,738</td><td>$2,738</td><td>$2,738</td>
+      <td>$2,738</td><td>$2,738</td><td>$2,738</td><td>$2,738</td><td>$2,738</td><td>$2,738</td>
+      <td class="tc" style="font-weight:700;">$32,856</td>
     </tr>
     <tr class="c2r cumr">
       <td class="rl" style="color:var(--gold2);font-size:11px;">③ vs Zillow (cumulative)</td>
-      <td class="good">-$153</td><td class="good">-$306</td><td class="good">-$459</td><td class="good">-$612</td><td class="good">-$765</td><td class="good">-$918</td>
-      <td class="good">-$1,071</td><td class="good">-$1,224</td><td class="good">-$1,377</td><td class="good">-$1,530</td><td class="good">-$1,683</td><td class="good">-$1,836</td>
-      <td class="tc good">-$1,836</td>
+      <td class="good">-$246</td><td class="good">-$492</td><td class="good">-$738</td><td class="good">-$984</td><td class="good">-$1,230</td><td class="good">-$1,476</td>
+      <td class="good">-$1,722</td><td class="good">-$1,968</td><td class="good">-$2,214</td><td class="good">-$2,460</td><td class="good">-$2,706</td><td class="good">-$2,952</td>
+      <td class="tc good">-$2,952</td>
     </tr>
     <tr class="c3r">
       <td class="rl" style="color:var(--gt);font-weight:700;">④ CFM $53K 2-1 Only ★<br><span style="color:var(--sl);font-size:10px;font-weight:400;">All-in Yr1 / month</span></td>
@@ -613,8 +630,8 @@ html,body{background:var(--ink);color:var(--ow);font-family:'Outfit',sans-serif;
   </div>
 
   <div class="cc c1c2">
-    <div class="cl" style="color:var(--bt2)">② CFM — $70K / 5.99% (2.09 pts)</div>
-    <div class="cr"><span class="l">A. Discount Points (2.090%)</span><span class="v" style="color:var(--gold2)">$8,193</span></div>
+    <div class="cl" style="color:var(--bt2)">② CFM — $70K / 5.99% (2.2 pts)</div>
+    <div class="cr"><span class="l">A. Discount Points (2.200%)</span><span class="v" style="color:var(--gold2)">$8,624</span></div>
     <div class="cr"><span class="l">A. Origination Fee</span><span class="v" style="color:var(--gt)">$0</span></div>
     <div class="cr"><span class="l">A. Processing + VOE</span><span class="v">$1,104</span></div>
     <div class="cr"><span class="l">B. Appraisal</span><span class="v">$649</span></div>
@@ -625,41 +642,41 @@ html,body{background:var(--ink);color:var(--ow);font-family:'Outfit',sans-serif;
     <div class="cr"><span class="l">F. Prepaid Int (28 days)</span><span class="v">$1,801</span></div>
     <div class="cr"><span class="l">G. Initial Escrow (3+3 mo)</span><span class="v">$1,685</span></div>
     <div class="cr"><span class="l">H. Owner's Title</span><span class="v">$1,958</span></div>
-    <div class="cc-tot"><span style="color:var(--bt2)">Total Closing Costs</span><span style="color:var(--gold2)">$19,221</span></div>
+    <div class="cc-tot"><span style="color:var(--bt2)">Total Closing Costs</span><span style="color:var(--gold2)">$19,652</span></div>
     <div class="cc-sub">
       <div class="cr"><span class="l">Down Payment</span><span class="v">$70,000</span></div>
       <div class="cr"><span class="l">Less: Seller Concessions</span><span class="v" style="color:var(--gt)">-$12,000</span></div>
       <div class="cr"><span class="l">Less: Earnest Deposit</span><span class="v" style="color:var(--gt)">-$5,000</span></div>
-      <div class="cc-tot"><span style="color:var(--bt2)">Cash to Close</span><span style="color:var(--gt)">$72,221</span></div>
-      <div style="margin-top:6px;font-size:11px;color:var(--gt)">Saves $4,622 vs Zillow · $3,826 less in points</div>
+      <div class="cc-tot"><span style="color:var(--bt2)">Cash to Close</span><span style="color:var(--gt)">$72,652</span></div>
+      <div style="margin-top:6px;font-size:11px;color:var(--gt)">Saves $4,191 vs Zillow · $3,395 less in points</div>
     </div>
   </div>
 
   <div class="cc c2c2">
-    <div class="cl" style="color:var(--gold2)">③ CFM Hybrid — $53K / Perm 5.99% + 1-0 Temp</div>
-    <div class="cr"><span class="l">A. Discount Points (2.090%)</span><span class="v" style="color:var(--gold2)">$8,548</span></div>
+    <div class="cl" style="color:var(--gold2)">③ CFM — $70K / Perm 5.99% + 1-0</div>
+    <div class="cr"><span class="l">A. Discount Points (2.200%)</span><span class="v" style="color:var(--gold2)">$8,624</span></div>
     <div class="cr"><span class="l">A. Processing + VOE</span><span class="v">$1,104</span></div>
     <div class="cr"><span class="l">B. Appraisal</span><span class="v">$649</span></div>
     <div class="cr"><span class="l">B. Credit Report</span><span class="v">$299</span></div>
     <div class="cr"><span class="l">C. Title Services</span><span class="v">$1,480</span></div>
     <div class="cr"><span class="l">E. Gov. Fees</span><span class="v">$132</span></div>
     <div class="cr"><span class="l">F. HO Ins (12 mo @ $160)</span><span class="v">$1,920</span></div>
-    <div class="cr"><span class="l">F. Prepaid Int (28 days)</span><span class="v">$1,879</span></div>
+    <div class="cr"><span class="l">F. Prepaid Int (28 days)</span><span class="v">$1,801</span></div>
     <div class="cr"><span class="l">G. Initial Escrow (3+3 mo)</span><span class="v">$1,685</span></div>
     <div class="cr"><span class="l">H. Owner's Title</span><span class="v">$1,958</span></div>
-    <div class="cr"><span class="l">1-0 Temporary Buydown Subsidy</span><span class="v" style="color:var(--gold2)">$3,077</span></div>
-    <div class="cc-tot"><span style="color:var(--gold2)">Total + Buydown</span><span style="color:var(--gold2)">$22,731</span></div>
+    <div class="cr"><span class="l">1-0 Buydown Subsidy</span><span class="v" style="color:var(--gold2)">$2,949</span></div>
+    <div class="cc-tot"><span style="color:var(--gold2)">Total + Buydown</span><span style="color:var(--rt)">$22,601</span></div>
     <div class="cc-sub">
-      <div class="cr"><span class="l">Down Payment</span><span class="v">$53,000</span></div>
+      <div class="cr"><span class="l">Down Payment</span><span class="v">$70,000</span></div>
       <div class="cr"><span class="l">Less: Seller Concessions</span><span class="v" style="color:var(--gt)">-$12,000</span></div>
       <div class="cr"><span class="l">Less: Earnest Deposit</span><span class="v" style="color:var(--gt)">-$5,000</span></div>
-      <div class="cc-tot"><span style="color:var(--gold2)">Cash to Close</span><span style="color:var(--gold2)">$58,731</span></div>
-      <div style="margin-top:6px;font-size:11px;color:var(--sl2)">Total buydown ($11,625) — $375 under the $12K seller credit</div>
+      <div class="cc-tot"><span style="color:var(--gold2)">Cash to Close</span><span style="color:var(--gold2)">$75,601</span></div>
+      <div style="margin-top:6px;font-size:11px;color:var(--sl2)">‡ Concessions ~$601 short of covering all costs</div>
     </div>
   </div>
 
   <div class="cc c3c2">
-    <div class="cl" style="color:var(--gt)">④ CFM — $53K / 2-1 Temporary Buydown ★</div>
+    <div class="cl" style="color:var(--gt)">④ CFM — $53K / 2-1 Buydown ★</div>
     <div class="cr"><span class="l">A. Discount Points</span><span class="v" style="color:var(--gt)">$0</span></div>
     <div class="cr"><span class="l">A. Processing + VOE</span><span class="v">$1,104</span></div>
     <div class="cr"><span class="l">B. Appraisal</span><span class="v">$649</span></div>
@@ -689,7 +706,7 @@ html,body{background:var(--ink);color:var(--ow);font-family:'Outfit',sans-serif;
   <div class="nb warn">
     <div class="nh">⚠ Zillow Points Cost Comparison</div>
     <ul>
-      <li><strong style="color:#fff">Zillow charges 3.066 pts ($12,019) + $1,500 origination</strong> to achieve 5.99%. Cornerstone achieves the <em>same 5.99% rate</em> at <strong style="color:#fff">2.09 pts ($8,193) with no origination fee</strong> — saving $4,622 on identical loans.</li>
+      <li><strong style="color:#fff">Zillow charges 3.066 pts ($12,019) + $1,500 origination</strong> to achieve 5.99%. Cornerstone achieves the <em>same 5.99% rate</em> at <strong style="color:#fff">2.2 pts ($8,624) with no origination fee</strong> — saving $4,894 on identical loans.</li>
       <li style="margin-top:4px;"><strong style="color:#fff">Zillow's $750 appraisal</strong> vs Cornerstone's $649 — additional $101 savings.</li>
       <li style="margin-top:4px;">All four scenarios now use identical prepaids, escrow, and deposit structure for a true apples-to-apples comparison.</li>
     </ul>
@@ -726,6 +743,51 @@ html,body{background:var(--ink);color:var(--ow);font-family:'Outfit',sans-serif;
 </div>
 
 </div><!-- /page -->
+
+
+<!-- LOOM VIDEO WALKTHROUGH -->
+<div class="loom-section" id="loom-section" style="display:none;">
+  <div class="loom-card">
+    <div class="loom-header">
+      <div class="loom-icon">&#9654;</div>
+      <div class="loom-hd">
+        <div class="loom-title">Personal Video Walkthrough</div>
+        <div class="loom-sub">Dean walks you through each scenario and explains the key tradeoffs</div>
+      </div>
+      <div class="loom-badge">From Dean</div>
+    </div>
+    <div class="loom-embed">
+      <iframe id="loom-iframe" src="" allowfullscreen allow="autoplay"></iframe>
+    </div>
+    <div class="loom-footer">
+      <div class="loom-note">Questions after watching? <strong>Call or text Dean: 866-815-1803</strong></div>
+      <a class="loom-open" id="loom-open-link" href="#" target="_blank" rel="noopener">Open in Loom &rarr;</a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // Extract Loom video ID from URL and build embed
+  var loomUrl = document.currentScript && document.currentScript.getAttribute('data-loom');
+  // Fallback: check meta tag
+  var meta = document.querySelector('meta[name="loom-url"]');
+  if (meta) loomUrl = meta.getAttribute('content');
+  if (!loomUrl) return;
+
+  // Parse Loom URL — handles share, embed, and direct formats
+  var id = null;
+  var m = loomUrl.match(/loom\.com\/(?:share|embed)\/([a-f0-9]+)/i);
+  if (m) id = m[1];
+  if (!id) return;
+
+  var embedSrc = 'https://www.loom.com/embed/' + id + '?hide_owner=true&hide_share=true&hide_title=true&hideEmbedTopBar=true';
+  document.getElementById('loom-iframe').src = embedSrc;
+  document.getElementById('loom-open-link').href = 'https://www.loom.com/share/' + id;
+  document.getElementById('loom-section').style.display = 'block';
+})();
+</script>
+
 
 <!-- FOOTER -->
 <div class="footer">
