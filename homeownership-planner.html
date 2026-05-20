@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XDH58ZTMJB"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XDH58ZTMJB');
+  </script>
+  <!-- Microsoft Clarity -->
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "wnp7lswd3l");
+  </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homeownership Path Finder | The Handy Lender</title>
+<meta name="description" content="Every buyer's path looks different. Tell me where you are and I'll show you which paths are realistic, including ones most lenders never mention.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:#f5f1eb;color:#1c1c2a;min-height:100vh;}
+:root{
+  --navy:#0d2137;--navy-mid:#163354;--navy-light:#1e4168;
+  --brass:#a08055;--brass-light:#bfa070;--brass-pale:#f0e5d0;
+  --cream:#f5f1eb;--warm-white:#faf8f5;--stone:#ede8df;
+  --teal:#0f6e56;--teal-light:#e1f5ee;--teal-mid:#1a9070;
+  --amber:#b85c00;--amber-light:#fef3e2;
+  --red:#8b2020;--red-light:#fdf0f0;
+  --blue:#185fa5;--blue-light:#e6f1fb;
+  --purple:#3c3489;--purple-light:#eeedfe;
+  --green:#166534;--green-light:#dcfce7;
+  --text:#1c1c2a;--text-muted:#72737e;--text-faint:#a0a1ab;
+  --border:rgba(13,33,55,0.08);--border-mid:rgba(13,33,55,0.13);
+}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(13,33,55,0.97);backdrop-filter:blur(16px);padding:0 2.5rem;height:62px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);}
+.nav-logo img{height:28px;width:auto;display:block;opacity:0.92;}
+.nav-right{display:flex;align-items:center;gap:2rem;}
+.nav-right a{color:rgba(255,255,255,0.5);text-decoration:none;font-size:12.5px;transition:color 0.2s;}
+.nav-right a:hover{color:rgba(255,255,255,0.85);}
+.nav-back{border-bottom:1px solid rgba(255,255,255,0.15);padding-bottom:1px;}
+
+/* INTAKE */
+#intake-screen{position:fixed;inset:0;z-index:150;background:var(--cream);display:flex;flex-direction:column;padding-top:62px;overflow-y:auto;}
+.intake-inner{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:2.5rem 1.5rem 5rem;}
+.intake-card{background:white;border-radius:20px;padding:2.75rem;max-width:740px;width:100%;box-shadow:0 24px 64px rgba(13,33,55,0.1);}
+.intake-eyebrow{font-size:10px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--brass);display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;}
+.intake-eyebrow::before{content:'';width:24px;height:1px;background:var(--brass);}
+.intake-headline{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,3.5vw,2.6rem);font-weight:400;line-height:1.1;color:var(--navy);margin-bottom:0.75rem;letter-spacing:-0.01em;}
+.intake-headline em{font-style:italic;color:var(--brass);font-weight:300;}
+.intake-sub{font-size:14px;font-weight:300;color:var(--text-muted);line-height:1.75;margin-bottom:2rem;}
+
+/* Step indicator */
+.step-indicator{display:flex;align-items:center;margin-bottom:2rem;}
+.si-step{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:500;color:var(--text-faint);transition:color 0.3s;}
+.si-step.active{color:var(--navy);}
+.si-step.done{color:var(--teal);}
+.si-dot{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border-mid);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;transition:all 0.3s;}
+.si-step.active .si-dot{background:var(--navy);border-color:var(--navy);color:white;}
+.si-step.done .si-dot{background:var(--teal);border-color:var(--teal);color:white;}
+.si-line{flex:1;height:1px;background:var(--border-mid);margin:0 4px;}
+.si-line.done{background:var(--teal);}
+.si-label{display:none;}
+
+/* Panels */
+.intake-panel{display:none;}
+.intake-panel.active{display:block;animation:fadeIn 0.25s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.panel-question{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:var(--navy);margin-bottom:0.4rem;line-height:1.3;}
+.panel-sub{font-size:13px;color:var(--text-muted);margin-bottom:1.25rem;line-height:1.6;}
+
+/* Range fields */
+.range-field{margin-bottom:1.5rem;}
+.range-field label{display:block;font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);margin-bottom:8px;}
+.range-field input[type=range]{width:100%;accent-color:var(--navy);margin-bottom:4px;}
+.range-display{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:500;color:var(--navy);line-height:1;}
+.range-sub{font-size:11.5px;color:var(--text-faint);margin-top:3px;}
+
+/* Option grids */
+.opt-grid{display:grid;gap:8px;margin-bottom:1.25rem;}
+.opt-grid-2{grid-template-columns:1fr 1fr;}
+.opt-grid-3{grid-template-columns:repeat(3,1fr);}
+.opt{padding:11px 14px;border:1.5px solid var(--border-mid);border-radius:10px;cursor:pointer;transition:all 0.15s;background:var(--warm-white);-webkit-tap-highlight-color:transparent;}
+.opt:hover{border-color:var(--brass);background:white;}
+.opt.selected{border-color:var(--navy);background:var(--navy);}
+.opt-icon{font-size:18px;margin-bottom:5px;}
+.opt-title{font-size:13px;font-weight:500;color:var(--text);line-height:1.3;margin-bottom:2px;}
+.opt.selected .opt-title{color:white;}
+.opt-sub{font-size:11.5px;color:var(--text-muted);line-height:1.4;}
+.opt.selected .opt-sub{color:rgba(255,255,255,0.5);}
+
+/* Profile highlight */
+.profile-note{display:none;background:var(--teal-light);border:1px solid rgba(15,110,86,0.2);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--teal);line-height:1.6;margin-bottom:1rem;}
+.profile-note.show{display:block;}
+
+/* Nav */
+.intake-nav{display:flex;align-items:center;justify-content:space-between;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);}
+.btn-back{background:none;border:1px solid var(--border-mid);color:var(--text-muted);padding:10px 20px;border-radius:8px;font-size:13.5px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+.btn-back:hover{border-color:var(--text-muted);color:var(--text);}
+.btn-next{background:var(--navy);color:white;border:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;}
+.btn-next:hover{background:var(--navy-mid);}
+.btn-next:disabled{opacity:0.4;cursor:not-allowed;}
+.step-counter{font-size:12px;color:var(--text-faint);}
+.intake-trust{text-align:center;font-size:11.5px;color:var(--text-faint);margin-top:1.25rem;line-height:1.6;}
+.intake-trust a{color:var(--navy);}
+
+/* RESULTS */
+#results-screen{display:none;padding-top:62px;}
+.results-hero{background:var(--navy);padding:3rem 2.5rem 2.5rem;position:relative;overflow:hidden;}
+.results-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 60%,rgba(160,128,85,0.07) 0%,transparent 55%);pointer-events:none;}
+.topo-bg{position:absolute;right:-40px;top:50%;transform:translateY(-50%);width:300px;height:300px;opacity:0.03;pointer-events:none;}
+.rh-inner{max-width:1060px;margin:0 auto;position:relative;z-index:2;}
+.dean-voice{display:flex;align-items:flex-start;gap:14px;}
+.dean-av{width:42px;height:42px;border-radius:50%;background:var(--brass);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500;color:var(--navy);}
+.dean-bubble{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:0 12px 12px 12px;padding:1rem 1.25rem;flex:1;}
+.dean-bubble p{font-size:14px;font-weight:300;color:rgba(255,255,255,0.78);line-height:1.7;}
+.dean-bubble p strong{color:var(--brass-light);font-weight:500;}
+.dean-name{font-size:10.5px;color:rgba(255,255,255,0.3);margin-top:5px;letter-spacing:0.04em;}
+
+.results-body{max-width:1060px;margin:0 auto;padding:2rem 2.5rem 6rem;}
+
+/* Summary bar */
+.summary-bar{background:white;border:1px solid var(--border-mid);border-radius:12px;padding:1.1rem 1.5rem;margin-bottom:1.75rem;display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;}
+.sb-item{font-size:12.5px;color:var(--text-muted);}
+.sb-item strong{color:var(--text);font-weight:500;}
+.sb-divider{width:1px;height:14px;background:var(--border-mid);flex-shrink:0;}
+.sb-profile{font-size:11.5px;font-weight:500;padding:3px 10px;border-radius:100px;margin-left:4px;}
+.sb-edit{margin-left:auto;font-size:12px;color:var(--brass);cursor:pointer;border:none;background:none;font-family:'DM Sans',sans-serif;text-decoration:underline;}
+
+.section-label{font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-faint);margin-bottom:1rem;display:flex;align-items:center;gap:10px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* PATH CARDS */
+.paths-stack{display:flex;flex-direction:column;gap:14px;margin-bottom:2rem;}
+.path-card{background:white;border:1px solid var(--border-mid);border-radius:14px;overflow:hidden;transition:box-shadow 0.2s;}
+.path-card:hover{box-shadow:0 8px 32px rgba(13,33,55,0.07);}
+.path-card.best{border:2px solid var(--teal);}
+.path-card.specialty{border:2px solid var(--purple);}
+.path-card.not-ready{border-color:rgba(139,32,32,0.2);background:#fffaf9;}
+
+.path-header{padding:1.25rem 1.5rem;display:flex;align-items:flex-start;gap:14px;cursor:pointer;}
+.path-card.best .path-header{background:rgba(15,110,86,0.03);}
+.path-card.specialty .path-header{background:rgba(60,52,137,0.03);}
+
+.path-rank{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.rank-1{background:var(--teal);color:white;}
+.rank-2{background:var(--navy);color:white;}
+.rank-3{background:var(--stone);color:var(--text-muted);}
+.rank-sp{background:var(--purple);color:white;font-size:14px;}
+.rank-no{background:var(--red-light);color:var(--red);}
+
+.path-badge{font-size:9.5px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:6px;}
+.badge-best{background:var(--teal-light);color:var(--teal);}
+.badge-strong{background:var(--blue-light);color:var(--blue);}
+.badge-specialty{background:var(--purple-light);color:var(--purple);}
+.badge-viable{background:var(--stone);color:var(--text-muted);}
+.badge-possible{background:var(--amber-light);color:var(--amber);}
+.badge-notready{background:var(--red-light);color:var(--red);}
+
+.path-name{font-size:15px;font-weight:500;color:var(--text);margin-bottom:3px;}
+.path-tagline{font-size:12.5px;color:var(--text-muted);line-height:1.5;}
+
+/* Ownership feel */
+.ownership-feel{display:flex;align-items:center;gap:8px;padding:0.7rem 1.5rem;background:var(--warm-white);border-top:1px solid var(--border);}
+.of-label{font-size:10px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);}
+.of-pill{font-size:12px;font-weight:500;padding:3px 10px;border-radius:100px;}
+.of-note{font-size:12px;color:var(--text-muted);margin-left:2px;}
+
+.path-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);}
+.pm-cell{background:var(--warm-white);padding:1rem 1.25rem;}
+.pm-label{font-size:10px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;}
+.pm-val{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:500;color:var(--navy);line-height:1;}
+.pm-sub{font-size:11px;color:var(--text-faint);margin-top:2px;line-height:1.3;}
+
+.path-expand-btn{width:100%;background:none;border:none;border-top:1px solid var(--border);padding:0.75rem 1.5rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--text-faint);font-size:12.5px;transition:background 0.15s;}
+.path-expand-btn:hover{background:var(--warm-white);}
+
+.path-detail{display:none;border-top:1px solid var(--border);}
+.path-detail.open{display:block;}
+.path-detail-inner{padding:1.5rem;}
+.pd-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.25rem;}
+.pd-col-label{font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);margin-bottom:0.75rem;}
+.pd-items{display:flex;flex-direction:column;gap:6px;}
+.pd-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text-muted);line-height:1.5;}
+.pd-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.dot-green{background:var(--teal);}
+.dot-amber{background:var(--amber);}
+.dot-purple{background:var(--purple);}
+.pd-dean{background:var(--stone);border-radius:10px;padding:1rem 1.25rem;margin-top:1rem;}
+.pd-dean-label{font-size:9.5px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-faint);margin-bottom:6px;}
+.pd-dean-text{font-size:13.5px;font-weight:300;color:var(--text-muted);line-height:1.7;font-style:italic;font-family:'Cormorant Garamond',serif;}
+
+/* Not ready */
+.not-ready-body{padding:1.5rem;}
+.nr-milestones{display:flex;flex-direction:column;gap:8px;margin-bottom:1.25rem;}
+.nr-milestone{display:flex;align-items:flex-start;gap:12px;background:var(--warm-white);border-radius:10px;padding:1rem;border:1px solid var(--border);}
+.nr-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;}
+.nr-icon.needs{background:var(--red-light);color:var(--red);}
+.nr-icon.good{background:var(--teal-light);color:var(--teal);}
+.nr-milestone-text strong{display:block;font-size:13.5px;font-weight:500;color:var(--text);margin-bottom:2px;}
+.nr-milestone-text span{font-size:12.5px;color:var(--text-muted);line-height:1.5;}
+.nr-timeline{background:var(--navy);border-radius:10px;padding:1.25rem;display:flex;align-items:center;gap:1rem;}
+.nr-timeline-label{font-size:12px;color:rgba(255,255,255,0.45);}
+.nr-timeline-val{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:500;color:white;margin-left:auto;}
+
+/* Next move */
+.next-move{background:var(--navy);border-radius:14px;padding:2rem;margin-top:1.5rem;}
+.nm-eyebrow{font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:rgba(191,160,112,0.6);margin-bottom:0.75rem;}
+.nm-headline{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;color:white;margin-bottom:1.25rem;line-height:1.2;}
+.nm-steps{display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem;}
+.nm-step{display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,0.05);border-radius:10px;padding:1rem 1.25rem;}
+.nm-num{width:22px;height:22px;border-radius:50%;background:var(--brass);color:var(--navy);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.nm-step p{font-size:13.5px;color:rgba(255,255,255,0.65);line-height:1.6;}
+.nm-step p strong{color:white;font-weight:500;}
+.nm-cta{display:flex;gap:10px;flex-wrap:wrap;}
+.btn-brass{background:var(--brass);color:var(--navy);border:none;padding:12px 22px;border-radius:8px;font-size:13.5px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;display:inline-flex;align-items:center;transition:background 0.2s;}
+.btn-brass:hover{background:var(--brass-light);}
+.btn-ghost{background:transparent;color:rgba(255,255,255,0.55);border:1px solid rgba(255,255,255,0.18);padding:12px 22px;border-radius:8px;font-size:13.5px;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;display:inline-flex;align-items:center;transition:all 0.2s;}
+.btn-ghost:hover{color:white;border-color:rgba(255,255,255,0.38);}
+
+.disclosure{background:white;border:1px solid var(--border-mid);border-radius:10px;padding:14px 18px;margin-top:1.5rem;}
+.disclosure p{font-size:10px;color:var(--text-faint);line-height:1.9;}
+.site-footer{background:var(--navy);border-top:1px solid rgba(255,255,255,0.06);padding:16px 2.5rem;display:flex;align-items:center;justify-content:space-between;margin-top:2rem;}
+.site-footer img{height:24px;opacity:0.7;}
+.footer-right{font-size:10px;color:rgba(255,255,255,0.28);text-align:right;line-height:1.7;}
+
+@media(max-width:768px){
+  nav{padding:0 1.25rem;}
+  .nav-links-group{display:none;}
+  .intake-card{padding:1.75rem 1.25rem;}
+  .path-metrics{grid-template-columns:1fr 1fr;}
+  .pd-grid{grid-template-columns:1fr;}
+  .opt-grid-3{grid-template-columns:1fr 1fr;}
+  .results-body{padding:1.5rem 1rem 5rem;}
+  .results-hero{padding:2rem 1.25rem 1.75rem;}
+  .summary-bar{gap:0.75rem;}
+  .sb-divider{display:none;}
+  .site-footer{flex-direction:column;gap:1rem;padding:1.5rem;}
+  .ownership-feel{flex-wrap:wrap;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/"><img src="HL_Logo_Horizontal_White.png" alt="The Handy Lender" style="height:48px;width:auto;display:block;opacity:0.9;"></a>
+  <div class="nav-right">
+    <span class="nav-links-group" style="display:flex;gap:2rem;">
+      <a href="/#tools">Tools</a>
+      <a href="/#about">About</a>
+      <a href="/#contact">Contact</a>
+    </span>
+    <a href="/" class="nav-back">← Home</a>
+  </div>
+</nav>
+
+<!-- ══ INTAKE ══ -->
+<div id="intake-screen">
+  <div class="intake-inner">
+    <div class="intake-card">
+      <div class="intake-eyebrow">The Handy Lender · Homeownership Path Finder</div>
+      <h1 class="intake-headline">Every buyer's path<br>looks <em>different.</em></h1>
+      <p class="intake-sub">Answer a few honest questions and I'll show you every path that's realistic for your situation, including options most lenders never bring up.</p>
+
+      <div class="step-indicator" id="step-indicator"></div>
+
+      <!-- PANEL 0: Profile -->
+      <div class="intake-panel active" id="panel-0">
+        <div class="panel-question">First, does any of this describe your situation?</div>
+        <div class="panel-sub">This one question changes which paths are available to you. Select everything that applies.</div>
+        <div class="opt-grid opt-grid-2">
+          <div class="opt" onclick="toggleProfile('va',this)">
+            <div class="opt-icon">&#127894;</div>
+            <div class="opt-title">Veteran or active duty military</div>
+            <div class="opt-sub">VA loan eligibility, often the strongest option available</div>
+          </div>
+          <div class="opt" onclick="toggleProfile('doctor',this)">
+            <div class="opt-icon">&#129658;</div>
+            <div class="opt-title">Medical or legal professional</div>
+            <div class="opt-sub">MD, DO, DDS, PharmD, JD, and other qualifying designations</div>
+          </div>
+          <div class="opt" onclick="toggleProfile('selfemployed',this)">
+            <div class="opt-icon">&#128188;</div>
+            <div class="opt-title">Self-employed, aggressive write-offs</div>
+            <div class="opt-sub">Tax returns show low income despite strong cash flow</div>
+          </div>
+          <div class="opt" onclick="toggleProfile('sellFirst',this)">
+            <div class="opt-icon">&#128273;</div>
+            <div class="opt-title">I own a home I need to sell first</div>
+            <div class="opt-sub">Can't carry two payments, need a bridge or buy-before-you-sell</div>
+          </div>
+          <div class="opt selected" onclick="toggleProfile('none',this)" id="opt-none">
+            <div class="opt-icon">&#10003;</div>
+            <div class="opt-title">None of these apply</div>
+            <div class="opt-sub">Standard buyer, let's look at all conventional paths</div>
+          </div>
+        </div>
+        <div class="profile-note" id="profile-note"></div>
+      </div>
+
+      <!-- PANEL 1: Purchase price -->
+      <div class="intake-panel" id="panel-1">
+        <div class="panel-question">What price range are you targeting?</div>
+        <div class="panel-sub">If you're not sure yet, use your best estimate. You can always adjust.</div>
+        <div class="range-field">
+          <label>Target purchase price</label>
+          <input type="range" id="q-price" min="150000" max="2000000" step="10000" value="500000" oninput="updateRange('price')">
+          <div class="range-display" id="price-display">$500,000</div>
+          <div class="range-sub" id="price-sub">Mid-range Colorado home</div>
+        </div>
+      </div>
+
+      <!-- PANEL 2: Savings -->
+      <div class="intake-panel" id="panel-2">
+        <div class="panel-question">How much do you have saved for a down payment?</div>
+        <div class="panel-sub">Include checking, savings, and investment accounts you'd consider using. Don't include retirement funds you can't easily access.</div>
+        <div class="range-field">
+          <label>Your own savings available</label>
+          <input type="range" id="q-savings" min="0" max="400000" step="1000" value="25000" oninput="updateRange('savings')">
+          <div class="range-display" id="savings-display">$25,000</div>
+          <div class="range-sub" id="savings-sub">Calculating as % of target price...</div>
+        </div>
+        <div class="panel-question" style="margin-top:1.25rem;font-size:1.1rem;">Gift funds available?</div>
+        <div class="panel-sub">Family contributions that can be documented as a gift, not a loan.</div>
+        <div class="opt-grid opt-grid-3">
+          <div class="opt" onclick="selectOpt(this,'gift','none')" data-val="none"><div class="opt-title">No gift funds</div></div>
+          <div class="opt" onclick="selectOpt(this,'gift','some')" data-val="some"><div class="opt-title">Some available</div><div class="opt-sub">$5k–$20k range</div></div>
+          <div class="opt" onclick="selectOpt(this,'gift','significant')" data-val="significant"><div class="opt-title">Significant</div><div class="opt-sub">$20k+ available</div></div>
+        </div>
+      </div>
+
+      <!-- PANEL 3: Credit -->
+      <div class="intake-panel" id="panel-3">
+        <div class="panel-question">What's your estimated credit score?</div>
+        <div class="panel-sub">Being honest here matters, the paths change meaningfully by score range. Free check at Credit Karma or your bank app if you're not sure.</div>
+        <div class="opt-grid opt-grid-2">
+          <div class="opt" onclick="selectOpt(this,'credit','760+')" data-val="760+"><div class="opt-title">760 or above</div><div class="opt-sub">Excellent, best rates available</div></div>
+          <div class="opt" onclick="selectOpt(this,'credit','720-759')" data-val="720-759"><div class="opt-title">720 – 759</div><div class="opt-sub">Very good, strong options</div></div>
+          <div class="opt" onclick="selectOpt(this,'credit','680-719')" data-val="680-719"><div class="opt-title">680 – 719</div><div class="opt-sub">Good, most programs available</div></div>
+          <div class="opt" onclick="selectOpt(this,'credit','640-679')" data-val="640-679"><div class="opt-title">640 – 679</div><div class="opt-sub">Fair, solid options still available</div></div>
+          <div class="opt" onclick="selectOpt(this,'credit','580-639')" data-val="580-639"><div class="opt-title">580 – 639</div><div class="opt-sub">Lower, limited but not impossible</div></div>
+          <div class="opt" onclick="selectOpt(this,'credit','below580')" data-val="below580"><div class="opt-title">Below 580</div><div class="opt-sub">Most programs not available yet</div></div>
+        </div>
+      </div>
+
+      <!-- PANEL 4: Income & Debt -->
+      <div class="intake-panel" id="panel-4">
+        <div class="panel-question" id="income-question">What's your annual household income?</div>
+        <div class="panel-sub" id="income-sub-text">Combined if purchasing with a partner. Before taxes.</div>
+        <div class="range-field">
+          <label id="income-label">Annual household income</label>
+          <input type="range" id="q-income" min="30000" max="600000" step="5000" value="110000" oninput="updateRange('income')">
+          <div class="range-display" id="income-display">$110,000</div>
+          <div class="range-sub" id="income-sub">Gross annual, before taxes</div>
+        </div>
+        <div class="panel-question" style="margin-top:1.25rem;font-size:1.1rem;">Monthly debt obligations?</div>
+        <div class="panel-sub" id="debt-sub-text">Car payments, student loans, minimum credit card payments. Not utilities or rent.</div>
+        <div class="range-field">
+          <label>Total monthly debt payments</label>
+          <input type="range" id="q-debts" min="0" max="5000" step="50" value="350" oninput="updateRange('debts')">
+          <div class="range-display" id="debts-display">$350</div>
+          <div class="range-sub" id="debts-sub">Monthly committed payments</div>
+        </div>
+      </div>
+
+      <!-- PANEL 5: Profile finish -->
+      <div class="intake-panel" id="panel-5">
+        <div class="panel-question">First-time homebuyer?</div>
+        <div class="panel-sub">Generally defined as not having owned a primary residence in the past 3 years.</div>
+        <div class="opt-grid opt-grid-2" style="margin-bottom:1.5rem;">
+          <div class="opt" onclick="selectOpt(this,'ftb','yes')" data-val="yes"><div class="opt-title">Yes, first-time buyer</div><div class="opt-sub">Haven't owned in 3+ years</div></div>
+          <div class="opt" onclick="selectOpt(this,'ftb','no')" data-val="no"><div class="opt-title">I've owned before</div><div class="opt-sub">Previous homeowner</div></div>
+        </div>
+        <div class="panel-question" style="font-size:1.1rem;">Colorado county?</div>
+        <div class="panel-sub">Affects property tax estimates and some program availability.</div>
+        <select id="q-county" style="width:100%;padding:11px 12px;border:1.5px solid var(--border-mid);border-radius:8px;font-size:14px;color:var(--text);background:var(--warm-white);font-family:'DM Sans',sans-serif;outline:none;margin-bottom:0.5rem;">
+          <option value="denver">Denver / Metro (0.55%)</option>
+          <option value="boulder">Boulder County (0.52%)</option>
+          <option value="el-paso">El Paso County (0.50%)</option>
+          <option value="jefferson">Jefferson County (0.50%)</option>
+          <option value="arapahoe">Arapahoe County (0.57%)</option>
+          <option value="douglas">Douglas County (0.53%)</option>
+          <option value="larimer">Larimer County (0.55%)</option>
+          <option value="adams">Adams County (0.58%)</option>
+          <option value="weld">Weld County (0.55%)</option>
+        </select>
+      </div>
+
+      <div class="intake-nav">
+        <button class="btn-back" id="btn-back" onclick="prevStep()" style="visibility:hidden;">← Back</button>
+        <span class="step-counter" id="step-counter">Step 1 of 6</span>
+        <button class="btn-next" id="btn-next" onclick="nextStep()">Continue →</button>
+      </div>
+      <p class="intake-trust">No personal information required. Educational purposes only. <a href="/#contact">Talk to Dean</a> for a precise assessment.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ RESULTS ══ -->
+<div id="results-screen">
+  <div class="results-hero">
+    <svg class="topo-bg" viewBox="0 0 300 300" fill="none">
+      <ellipse cx="150" cy="150" rx="138" ry="56" stroke="white" stroke-width="1.5"/>
+      <ellipse cx="150" cy="150" rx="108" ry="43" stroke="white" stroke-width="1.5"/>
+      <ellipse cx="150" cy="150" rx="78" ry="30" stroke="white" stroke-width="1.5"/>
+      <ellipse cx="150" cy="150" rx="48" ry="18" stroke="white" stroke-width="1.5"/>
+    </svg>
+    <div class="rh-inner">
+      <div class="dean-voice">
+        <div class="dean-av">D</div>
+        <div>
+          <div class="dean-bubble">
+            <p id="dean-message">Based on everything you shared, here's how I see your situation...</p>
+            <div class="dean-name">,  Dean Reiber, The Handy Lender</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="results-body">
+    <div class="summary-bar" id="summary-bar">
+      <span class="sb-item" id="sb-price">, </span>
+      <div class="sb-divider"></div>
+      <span class="sb-item" id="sb-savings">, </span>
+      <div class="sb-divider"></div>
+      <span class="sb-item" id="sb-credit">, </span>
+      <div class="sb-divider"></div>
+      <span class="sb-item" id="sb-income">, </span>
+      <div class="sb-divider"></div>
+      <span class="sb-item" id="sb-profile">, </span>
+      <button class="sb-edit" onclick="resetTool()">Edit answers</button>
+    </div>
+
+    <div class="section-label">Your homeownership paths, ranked by fit</div>
+    <div class="paths-stack" id="paths-stack"></div>
+
+    <div class="next-move">
+      <div class="nm-eyebrow">Your next best move</div>
+      <h3 class="nm-headline" id="nm-headline">Here's what I'd do first.</h3>
+      <div class="nm-steps" id="nm-steps"></div>
+      <div class="nm-cta">
+        <a href="/#contact" class="btn-brass">Talk through your options with Dean →</a>
+        <a href="/ownership-cost-planner" class="btn-ghost">See the real monthly cost</a>
+      </div>
+    </div>
+
+    <div class="disclosure">
+      <p><strong>Important:</strong> All figures are estimates for educational purposes only. VA loan eligibility requires Certificate of Eligibility and lender approval. Doctor/professional loan programs vary by lender and designation. Bank statement loan programs require 12–24 months statements and vary by lender. Bridge loan and buy-before-you-sell programs have specific equity, income, and property requirements. Down payment assistance programs have income limits and eligibility requirements that change. Rates shown are approximate. This tool does not constitute a loan commitment or pre-approval. Dean Reiber NMLS #2463805 · Cornerstone First Mortgage NMLS #173855 · Equal Housing Lender.</p>
+    </div>
+  </div>
+
+  <div class="site-footer">
+    <img src="HL_Logo_Horizontal_White.png" alt="The Handy Lender">
+    <div class="footer-right" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;"><img src="Housing_lender_icon_wt.png" alt="Equal Housing Lender" style="height:36px;width:auto;opacity:0.6;filter:invert(1);vertical-align:middle;margin-right:10px;"><span style="font-size:10px;color:rgba(255,255,255,0.3);line-height:1.7;">Dean Reiber &middot; NMLS #2463805 &middot; Cornerstone First Mortgage, LLC &middot; NMLS #173855<br>&copy;2026 Cornerstone First Mortgage, LLC supports Equal Housing Opportunity. NMLS ID# 173855. This is informational only and is not an offer of credit or commitment to lend. Interest rates, products, and loan terms are subject to change without notice and may not be available at the time of loan application or loan lock-in. Contact Cornerstone First Mortgage, LLC to learn more about your eligibility for its mortgage products. Loans are subject to buyer, builder, and property qualification. Cash reserves may be required. Cornerstone First Mortgage, LLC is not acting on behalf of or at the direction of HUD/FHA or the Federal Government. (<a href="https://www.nmlsconsumeraccess.org" target="_blank" rel="noopener">www.nmlsconsumeraccess.org</a>)</span></div>
+  </div>
+</div>
+
+<script>
+// ── STATE ──
+var currentStep = 0;
+var totalSteps = 5;
+var profiles = {}; // multi-select
+var answers = {price:500000, savings:25000, gift:'', credit:'', income:110000, debts:350, ftb:'', county:'denver'};
+var TAX = {'denver':0.0055,'boulder':0.0052,'el-paso':0.0050,'jefferson':0.0050,'arapahoe':0.0057,'douglas':0.0053,'larimer':0.0055,'adams':0.0058,'weld':0.0055};
+var RATE = 7.125;
+
+function fmt(v){return '$'+Math.round(v).toLocaleString();}
+function fmtPct(v){return (v*100).toFixed(1)+'%';}
+function pmt(rate,n,pv){if(rate===0||n===0)return 0;var r=rate/12;return pv*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);}
+
+// ── PROFILE MULTI-SELECT ──
+function toggleProfile(key, el) {
+  if(key === 'none') {
+    // Clear all others, select none
+    profiles = {};
+    document.querySelectorAll('#panel-0 .opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('profile-note').className = 'profile-note';
+    return;
+  }
+  // Deselect "none"
+  document.getElementById('opt-none').classList.remove('selected');
+  el.classList.toggle('selected');
+  if(el.classList.contains('selected')) {
+    profiles[key] = true;
+  } else {
+    delete profiles[key];
+  }
+  // If nothing selected, re-select none
+  if(Object.keys(profiles).length === 0) {
+    document.getElementById('opt-none').classList.add('selected');
+  }
+  updateProfileNote();
+  // Adapt panel 4 for self-employed
+  if(profiles.selfemployed) {
+    document.getElementById('income-question').textContent = 'What does your business actually generate?';
+    document.getElementById('income-sub-text').textContent = 'We\'ll look at bank statement income, not what your tax returns show. Enter your real annual cash flow.';
+    document.getElementById('income-label').textContent = 'Annual business revenue / cash flow';
+    document.getElementById('debt-sub-text').textContent = 'Business debts and personal obligations. Student loans excluded if they\'re business-related.';
+  }
+}
+
+function updateProfileNote() {
+  var note = document.getElementById('profile-note');
+  var msgs = [];
+  if(profiles.va) msgs.push('&#127894; <strong>VA eligible:</strong> $0 down, no mortgage insurance, often the strongest path available.');
+  if(profiles.doctor) msgs.push('&#129658; <strong>Professional loan:</strong> Up to 100% financing, no MI, up to $2M, student debt excluded from qualification.');
+  if(profiles.selfemployed) msgs.push('&#128188; <strong>Bank statement path:</strong> We qualify you on real cash flow, not what the IRS sees.');
+  if(profiles.sellFirst) msgs.push('&#128273; <strong>Bridge / Buy Before You Sell:</strong> You don\'t have to sell first and rent, there are programs built for this.');
+  if(msgs.length > 0) {
+    note.innerHTML = msgs.join('<br>');
+    note.className = 'profile-note show';
+  } else {
+    note.className = 'profile-note';
+  }
+}
+
+function selectOpt(el, field, val) {
+  el.closest('.opt-grid').querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  answers[field] = val;
+  validateStep();
+}
+
+function updateRange(field) {
+  var v = parseInt(document.getElementById('q-'+field).value);
+  answers[field] = v;
+  if(field==='price') {
+    document.getElementById('price-display').textContent = fmt(v);
+    document.getElementById('price-sub').textContent = v < 300000 ? 'More affordable end of Colorado market' : v < 500000 ? 'Mid-range Colorado home' : v < 800000 ? 'Upper mid-range Colorado market' : v < 1200000 ? 'Luxury Colorado market' : 'Jumbo territory, specialty financing applies';
+    var pct = (answers.savings/v*100).toFixed(1);
+    document.getElementById('savings-sub').textContent = fmt(answers.savings) + ' = ' + pct + '% of target price';
+  }
+  if(field==='savings') {
+    document.getElementById('savings-display').textContent = fmt(v);
+    var pct = (v/answers.price*100).toFixed(1);
+    document.getElementById('savings-sub').textContent = fmt(v) + ' = ' + pct + '% of ' + fmt(answers.price);
+  }
+  if(field==='income') {
+    document.getElementById('income-display').textContent = fmt(v);
+    document.getElementById('income-sub').textContent = fmt(Math.round(v/12)) + '/mo gross';
+  }
+  if(field==='debts') {
+    document.getElementById('debts-display').textContent = fmt(v);
+    document.getElementById('debts-sub').textContent = v === 0 ? 'No recurring debt obligations' : 'Monthly committed payments';
+  }
+}
+
+// ── STEP LOGIC ──
+function buildStepIndicator() {
+  var labels = ['Profile','Price','Savings','Credit','Income','Details'];
+  var html = '';
+  labels.forEach((l,i) => {
+    var cls = i < currentStep ? 'done' : i === currentStep ? 'active' : '';
+    var dot = i < currentStep ? '&#10003;' : (i+1);
+    html += `<div class="si-step ${cls}"><div class="si-dot">${dot}</div></div>`;
+    if(i < labels.length-1) html += `<div class="si-line ${i < currentStep ? 'done' : ''}"></div>`;
+  });
+  document.getElementById('step-indicator').innerHTML = html;
+  document.getElementById('step-counter').textContent = 'Step ' + (currentStep+1) + ' of ' + (totalSteps+1);
+}
+
+function validateStep() {
+  var ok = true;
+  if(currentStep === 2) ok = answers.gift !== '';
+  if(currentStep === 3) ok = answers.credit !== '';
+  if(currentStep === 5) ok = answers.ftb !== '';
+  document.getElementById('btn-next').disabled = !ok;
+}
+
+function nextStep() {
+  if(currentStep <= totalSteps) {
+    document.getElementById('panel-'+currentStep).classList.remove('active');
+    if(currentStep < totalSteps) {
+      currentStep++;
+      document.getElementById('panel-'+currentStep).classList.add('active');
+      document.getElementById('btn-back').style.visibility = 'visible';
+      document.getElementById('btn-next').textContent = currentStep === totalSteps ? 'Show my paths →' : 'Continue →';
+      validateStep();
+      buildStepIndicator();
+      window.scrollTo(0,0);
+    } else {
+      showResults();
+    }
+  }
+}
+
+function prevStep() {
+  if(currentStep > 0) {
+    document.getElementById('panel-'+currentStep).classList.remove('active');
+    currentStep--;
+    document.getElementById('panel-'+currentStep).classList.add('active');
+    document.getElementById('btn-back').style.visibility = currentStep === 0 ? 'hidden' : 'visible';
+    document.getElementById('btn-next').textContent = 'Continue →';
+    document.getElementById('btn-next').disabled = false;
+    buildStepIndicator();
+  }
+}
+
+function resetTool() {
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('intake-screen').style.display = 'flex';
+  currentStep = 5;
+  document.getElementById('panel-5').classList.add('active');
+  buildStepIndicator();
+  window.scrollTo(0,0);
+}
+
+// ── SCORING ENGINE ──
+function scorePaths() {
+  var a = answers;
+  var p = profiles;
+  var creditScore = {'760+':780,'720-759':740,'680-719':700,'640-679':660,'580-639':610,'below580':555}[a.credit] || 0;
+  var giftAmt = a.gift==='significant'?30000:a.gift==='some'?10000:0;
+  var totalSavings = a.savings + giftAmt;
+  var dpPct = totalSavings / a.price;
+  var monthlyIncome = a.income / 12;
+  var taxRate = TAX[a.county] || 0.0055;
+  var taxes = (a.price * taxRate) / 12;
+  var insurance = (a.price * 0.005) / 12;
+
+  function calcPmt(loanAmt, rate, mipRate) {
+    var pi = pmt(rate/100, 360, loanAmt);
+    var mip = mipRate ? loanAmt * mipRate / 12 : 0;
+    return {pi, mip, total: pi + mip + taxes + insurance};
+  }
+
+  function feelLabel(dti) {
+    if(dti < 0.28) return {label:'Comfortable', color:'var(--teal)', bg:'var(--teal-light)', note:'Payment leaves real breathing room'};
+    if(dti < 0.36) return {label:'Solid footing', color:'var(--teal)', bg:'var(--teal-light)', note:'Manageable with some cushion'};
+    if(dti < 0.43) return {label:'Stretch, but workable', color:'var(--amber)', bg:'var(--amber-light)', note:'Tight some months, worth having reserves'};
+    return {label:'Higher monthly pressure', color:'var(--red)', bg:'var(--red-light)', note:'Payment will dominate the budget'};
+  }
+
+  var paths = [];
+
+  // ── VA LOAN ──
+  if(p.va) {
+    var vaLoan = a.price;
+    var vaFee = creditScore >= 680 ? 0.0215 : 0.0230; // funding fee
+    var vaLoanTotal = vaLoan * (1 + vaFee);
+    var vaC = calcPmt(vaLoanTotal, RATE, 0);
+    var vaDTI = (vaC.pi + a.debts) / monthlyIncome;
+    var vaScore = 95; // VA is always the top path for eligible buyers
+    paths.push({
+      id:'va', score:vaScore, specialty:true,
+      name:'VA Loan, $0 Down',
+      tagline:'No down payment. No mortgage insurance. Ever. The most powerful loan available to those who\'ve earned it.',
+      badge:'Best fit', badgeClass:'badge-best',
+      downAmt:0, downPct:0, cashNeeded:Math.round(a.price*0.02),
+      payment:vaC, loanAmt:vaLoanTotal,
+      feel:feelLabel(vaDTI), dti:vaDTI,
+      pros:['$0 down payment required','No mortgage insurance, ever','Competitive rates, often lower than conventional','VA funding fee can be rolled into the loan','Seller can pay up to 4% of closing costs'],
+      cons:['VA funding fee applies (~2.15–2.30% first use, waived for disabled veterans)','Property must meet VA minimum standards','Some sellers may not accept VA offers (less common now)','Certificate of Eligibility required'],
+      deanNote:'VA is almost always the strongest path for eligible veterans and active duty. No down payment, no mortgage insurance, competitive rates, it\'s one of the most powerful financial benefits available. The funding fee is real but manageable, and can be waived entirely for veterans with a service-connected disability.',
+      meetsCredit:creditScore >= 580, meetsDp:true
+    });
+  }
+
+  // ── DOCTOR / PROFESSIONAL LOAN ──
+  if(p.doctor) {
+    var docDP = Math.min(dpPct, 0.10); // most doc loans: 0-10% down
+    var docLoan = a.price * (1 - docDP);
+    var docC = calcPmt(docLoan, RATE + 0.125, 0); // slight premium rate, no MI
+    var docDTI = (docC.pi + a.debts) / monthlyIncome; // student debt typically excluded
+    var docScore = 90;
+    paths.push({
+      id:'doctor', score:docScore, specialty:true,
+      name:'Professional Loan, Up to 100% Financing',
+      tagline:'Built for high-income professionals whose student debt would disqualify them elsewhere. No mortgage insurance. Up to $2M.',
+      badge:'Specialty program', badgeClass:'badge-specialty',
+      downAmt:a.price * docDP, downPct:docDP,
+      cashNeeded:Math.round(a.price*docDP + a.price*0.02),
+      payment:docC, loanAmt:docLoan,
+      feel:feelLabel(docDTI), dti:docDTI,
+      pros:['0–10% down depending on loan amount','No mortgage insurance, even at 0% down','Student loans excluded from debt calculation','Available up to $2M','Income from residency, fellowship, or new employment accepted'],
+      cons:['Slightly higher rate than conventional with 20% down','Limited to qualifying professions (MD, DO, DDS, DMD, PharmD, JD, and others)','Some programs require employment letter vs. history','Requires strong credit profile'],
+      deanNote:'Most medical and legal professionals are told they can\'t buy because of student debt. That\'s simply not true with the right program. Your student debt doesn\'t count against you here, and you can get into a home with minimal down payment while preserving cash for the life you\'ve been building toward. This is one of the most underutilized programs available.',
+      meetsCredit:creditScore >= 700, meetsDp:true
+    });
+  }
+
+  // ── BANK STATEMENT LOAN ──
+  if(p.selfemployed) {
+    var bsDP = Math.max(dpPct, 0.10); // typically 10%+ down
+    var bsLoan = a.price * (1 - bsDP);
+    var bsRate = RATE + 0.75; // premium for bank statement
+    var bsC = calcPmt(bsLoan, bsRate, 0.005);
+    var bsDTI = (bsC.pi + a.debts) / monthlyIncome;
+    var bsScore = 85;
+    paths.push({
+      id:'bankstatement', score:bsScore, specialty:true,
+      name:'Bank Statement Loan',
+      tagline:'Qualified on real cash flow, not what your tax returns show. Built for self-employed buyers who write off aggressively.',
+      badge:'Specialty program', badgeClass:'badge-specialty',
+      downAmt:a.price * bsDP, downPct:bsDP,
+      cashNeeded:Math.round(a.price*bsDP + a.price*0.025),
+      payment:bsC, loanAmt:bsLoan,
+      feel:feelLabel(bsDTI), dti:bsDTI,
+      pros:['Income based on 12–24 months bank statements, not tax returns','Preserves your tax strategy','Both personal and business bank statements accepted','Available for primary, second home, and investment properties','Loan amounts up to $3M+'],
+      cons:['Rate is typically 0.5–1% higher than conventional','Larger down payment required (typically 10–20%)','Strong credit profile needed (usually 680+)','More documentation required upfront','Slight mortgage insurance may apply below 20% down'],
+      deanNote:'Your accountant is doing exactly what they should, minimizing your tax burden. The problem is that the same write-offs that save you money on taxes make it look like you don\'t earn enough to buy a home. A bank statement loan looks at what actually hits your account, not what the IRS sees. Your tax strategy is smart. It shouldn\'t cost you a home.',
+      meetsCredit:creditScore >= 680, meetsDp:totalSavings >= a.price * 0.10
+    });
+  }
+
+  // ── BRIDGE / BUY BEFORE YOU SELL ──
+  if(p.sellFirst) {
+    paths.push({
+      id:'bridge', score:88, specialty:true,
+      name:'Bridge Loan / Buy Before You Sell',
+      tagline:'You don\'t have to sell first and rent, or make a contingent offer. Programs exist to let you buy your next home before your current one sells.',
+      badge:'Specialty program', badgeClass:'badge-specialty',
+      downAmt:0, downPct:0, cashNeeded:0,
+      payment:{pi:0, mip:0, total:0}, loanAmt:0,
+      feel:{label:'Depends on equity', color:'var(--brass)', bg:'var(--brass-pale)', note:'Your current equity is the key variable'},
+      dti:0,
+      pros:['Buy your next home before selling, no contingency needed','Move on your timeline, not the market\'s','Avoid double moves and temporary rentals','Competitive non-contingent offers','Some programs (like Calque) have no interest on the bridge portion'],
+      cons:['Requires sufficient equity in your current home (typically 70–80% LTV)','Two mortgage payments temporarily, managed differently by program','Some programs charge a fee rather than interest','Your current home must be listed or sellable','Program availability varies'],
+      deanNote:'Most people assume they have to sell their current home first, then rent while they find the next one, or make a contingent offer that sellers hate. Neither is necessary. Bridge programs let you use your existing equity to buy before you sell, so you can move on your terms. The equity in your current home is doing the heavy lifting. Let\'s look at what you have to work with.',
+      meetsCredit:creditScore >= 640, meetsDp:true
+    });
+  }
+
+  // ── CONVENTIONAL 20%+ ──
+  var conv20Score = 0;
+  if(creditScore >= 680) conv20Score += 30;
+  if(creditScore >= 740) conv20Score += 20;
+  if(dpPct >= 0.20) conv20Score += 40;
+  if(dpPct >= 0.25) conv20Score += 10;
+  var c20 = calcPmt(a.price*0.80, RATE, 0);
+  var dti20 = (c20.pi + a.debts) / monthlyIncome;
+  if(dti20 < 0.43) conv20Score += 20;
+  if(!p.va && !p.doctor && !p.selfemployed && !p.sellFirst) conv20Score += 10;
+  paths.push({
+    id:'conv20', score:conv20Score, specialty:false,
+    name:'Conventional, 20% Down',
+    tagline:'No mortgage insurance. Lowest monthly cost. Strongest position in any market.',
+    badge:conv20Score>=70?'Best fit':'Viable', badgeClass:conv20Score>=70?'badge-best':'badge-viable',
+    downAmt:a.price*0.20, downPct:0.20,
+    cashNeeded:Math.round(a.price*0.20 + a.price*0.025),
+    payment:c20, loanAmt:a.price*0.80,
+    feel:feelLabel(dti20), dti:dti20,
+    pros:['No mortgage insurance, ever','Best rates at any savings level','Strongest offer in competitive markets','Lowest total monthly payment'],
+    cons:['Requires significant upfront savings','May take longer to accumulate','Opportunity cost of cash not invested'],
+    deanNote:'This is the cleanest path financially when the savings are there. No mortgage insurance, no premiums, just your payment. At 20% down your offer is also among the strongest in any market, which matters in Colorado.',
+    meetsCredit:creditScore>=680, meetsDp:dpPct>=0.20
+  });
+
+  // ── CONVENTIONAL 5-19% ──
+  var dpActual = Math.min(0.19, Math.max(0.05, dpPct));
+  var pmiRate = creditScore>=740?0.004:creditScore>=700?0.006:0.009;
+  var loanC5 = a.price*(1-dpActual);
+  var c5 = calcPmt(loanC5, RATE, 0);
+  var pmiMo = loanC5*pmiRate/12;
+  var dti5 = (c5.pi + pmiMo + a.debts) / monthlyIncome;
+  var conv5Score = 0;
+  if(creditScore>=620) conv5Score += 25;
+  if(creditScore>=680) conv5Score += 20;
+  if(dpPct>=0.05 && dpPct<0.20) conv5Score += 40;
+  if(dpPct>=0.10) conv5Score += 10;
+  if(dti5 < 0.43) conv5Score += 20;
+  if(!p.va && !p.doctor && !p.selfemployed) conv5Score += 5;
+  paths.push({
+    id:'conv5', score:conv5Score, specialty:false,
+    name:'Conventional, ' + Math.round(dpActual*100) + '% Down',
+    tagline:'Get in sooner with less saved. The insurance cost disappears once you\'ve built equity.',
+    badge:conv5Score>=55?'Strong option':'Viable', badgeClass:conv5Score>=55?'badge-strong':'badge-viable',
+    downAmt:a.price*dpActual, downPct:dpActual,
+    cashNeeded:Math.round(a.price*dpActual + a.price*0.025),
+    payment:{pi:c5.pi, mip:pmiMo, total:c5.pi+pmiMo+taxes+insurance}, loanAmt:loanC5,
+    feel:feelLabel(dti5), dti:dti5,
+    pros:['Get into a home sooner with less cash','Insurance drops automatically at 20% equity','Flexible down payment (5–19%)','No upfront insurance premium added to loan'],
+    cons:['Mortgage insurance adds ' + fmt(Math.round(pmiMo)) + '/mo until 20% equity','Slightly higher rate than 20% down','Insurance cost depends on credit score'],
+    deanNote:'Conventional with ' + Math.round(dpActual*100) + '% down is a solid, flexible choice. The insurance isn\'t forever, most buyers reach 20% equity within 5–7 years through payments and appreciation. At that point it drops automatically and your payment drops with it.',
+    meetsCredit:creditScore>=620, meetsDp:dpPct>=0.05
+  });
+
+  // ── FHA ──
+  var loanFHA = a.price * 0.965;
+  var cFHA = calcPmt(loanFHA*(1.0175), RATE+0.25, 0.0055);
+  var dtiFHA = (cFHA.pi + cFHA.mip + a.debts) / monthlyIncome;
+  var fhaScore = 0;
+  if(creditScore>=580) fhaScore += 35;
+  if(creditScore>=640) fhaScore += 15;
+  if(dpPct>=0.035) fhaScore += 25;
+  if(dtiFHA<0.50) fhaScore += 20;
+  if(a.ftb==='yes') fhaScore += 5;
+  if(!p.va && !p.doctor && !p.selfemployed) fhaScore += 5;
+  paths.push({
+    id:'fha', score:fhaScore, specialty:false,
+    name:'FHA Loan, 3.5% Down',
+    tagline:'Lower credit threshold. More flexible qualification. A well-worn path into homeownership.',
+    badge:fhaScore>=60?'Strong option':'Viable', badgeClass:fhaScore>=60?'badge-strong':'badge-viable',
+    downAmt:a.price*0.035, downPct:0.035,
+    cashNeeded:Math.round(a.price*0.035 + a.price*0.025),
+    payment:cFHA, loanAmt:loanFHA,
+    feel:feelLabel(dtiFHA), dti:dtiFHA,
+    pros:['Only 3.5% down required','Accessible to buyers with lower credit scores','More flexible monthly debt allowances','Gift funds from family fully accepted'],
+    cons:['A one-time insurance premium added to loan balance (1.75%)','Monthly insurance stays for life of loan in most cases','Slightly higher rate than conventional','Property must meet government condition standards'],
+    deanNote:'FHA is the most accessible path for buyers earlier in their credit or savings journey. The insurance cost is real but manageable, and refinancing into a conventional loan later, once equity builds, can eliminate it.',
+    meetsCredit:creditScore>=580, meetsDp:dpPct>=0.035
+  });
+
+  // ── DPA ──
+  var incomeQ = a.income <= 140000;
+  var loanDPA = a.price * 0.965;
+  var cDPA = calcPmt(loanDPA*(1.0175), 6.625, 0.0055);
+  var dtiDPA = (cDPA.pi + cDPA.mip + a.debts) / monthlyIncome;
+  var dpaScore = 0;
+  if(a.ftb==='yes') dpaScore += 25;
+  if(incomeQ) dpaScore += 20;
+  if(creditScore>=640) dpaScore += 20;
+  if(dpPct<0.05) dpaScore += 30;
+  if(a.price<=600000) dpaScore += 15;
+  if(dtiDPA<0.50) dpaScore += 10;
+  if(!p.va && !p.doctor && !p.selfemployed) dpaScore += 5;
+  paths.push({
+    id:'dpa', score:dpaScore, specialty:false,
+    name:'FHA + Down Payment Assistance',
+    tagline:'Down payment covered by Colorado programs. Minimal cash to close.',
+    badge:dpaScore>=60?'Strong fit':'Possible', badgeClass:dpaScore>=60?'badge-best':'badge-possible',
+    downAmt:0, downPct:0.035,
+    cashNeeded:Math.round(2500),
+    payment:cDPA, loanAmt:loanDPA,
+    feel:feelLabel(dtiDPA), dti:dtiDPA,
+    pros:['Down payment covered, you bring minimal cash to close','Multiple Colorado programs available','Some programs fully forgiven after 3 years','Income limits allow up to ~$140k household'],
+    cons:['Slightly higher monthly payment than standard FHA','Income limits apply','First-time buyers preferred in some programs','Not all properties eligible'],
+    deanNote:a.ftb==='yes' && incomeQ ? 'With your first-time buyer status and income level, DPA programs are genuinely worth exploring. The Arrive Home and metroDPA programs can cover your down payment, sometimes entirely. This isn\'t charity, it\'s a program built specifically for buyers in your position.' : 'DPA programs have income limits and first-time buyer preferences. Eligibility may be limited based on what you\'ve shared, but program rules change, worth confirming directly.',
+    meetsCredit:creditScore>=640, meetsDp:true
+  });
+
+  // ── NOT READY YET ──
+  var milestones = [];
+  var monthsNeeded = 0;
+  var hasSpecialty = p.va || p.doctor || p.selfemployed || p.sellFirst;
+
+  if(creditScore < 580 && !hasSpecialty) {
+    milestones.push({issue:true, title:'Credit score needs work', detail:'580 is the minimum for most accessible programs. From ' + creditScore + ', focused effort can move your score meaningfully in 6–12 months.'});
+    monthsNeeded = Math.max(monthsNeeded, 9);
+  }
+  if(dpPct < 0.035 && totalSavings < 5000 && !p.va && !p.dpa && a.gift === 'none') {
+    var needed = Math.round(a.price*0.035) - totalSavings;
+    var mos = Math.ceil(needed/800);
+    milestones.push({issue:true, title:'Savings gap', detail:'Need ' + fmt(Math.round(a.price*0.035)) + ' minimum (3.5%). You\'re ' + fmt(needed) + ' short. At $800/mo saved: ~' + mos + ' months.'});
+    monthsNeeded = Math.max(monthsNeeded, mos);
+  }
+  if(a.debts > monthlyIncome * 0.22 && !hasSpecialty) {
+    milestones.push({issue:true, title:'Debt load is high', detail:'Monthly debts are ' + fmtPct(a.debts/monthlyIncome) + ' of income. Getting below 15% meaningfully improves what you qualify for.'});
+    monthsNeeded = Math.max(monthsNeeded, 6);
+  }
+  if(creditScore >= 620) milestones.push({issue:false, title:'Credit score in range', detail:'You meet the threshold for FHA and some conventional programs.'});
+  if(totalSavings >= a.price*0.035) milestones.push({issue:false, title:'Down payment threshold met', detail:fmt(totalSavings) + ' covers the 3.5% FHA minimum at this price.'});
+
+  var notReady = !hasSpecialty && (creditScore < 580 || (dpPct < 0.025 && a.gift === 'none') || dtiFHA > 0.58);
+  paths.push({
+    id:'notready', score:notReady?999:-1, specialty:false,
+    name:'Building toward readiness', tagline:'Not quite yet, but here\'s exactly what to change and how long it realistically takes.',
+    badge:'notready', milestones, monthsNeeded, isNotReady:notReady
+  });
+
+  var ranked = paths.filter(p=>p.id!=='notready').sort((a,b)=>b.score-a.score);
+  if(notReady) ranked.push(paths.find(p=>p.id==='notready'));
+
+  return {ranked, creditScore, dpPct, totalSavings, monthlyIncome, taxes, insurance, notReady, hasSpecialty};
+}
+
+// ── RENDER ──
+function showResults() {
+  document.getElementById('intake-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'block';
+  window.scrollTo(0,0);
+
+  var a = answers;
+  var p = profiles;
+  var r = scorePaths();
+
+  // Summary bar
+  document.getElementById('sb-price').innerHTML = '<strong>Target:</strong> ' + fmt(a.price);
+  document.getElementById('sb-savings').innerHTML = '<strong>Saved:</strong> ' + fmt(a.savings) + (a.gift!=='none'?' + gifts':'');
+  document.getElementById('sb-credit').innerHTML = '<strong>Credit:</strong> ' + a.credit;
+  document.getElementById('sb-income').innerHTML = '<strong>Income:</strong> ' + fmt(a.income) + '/yr';
+  var profileLabels = {va:'&#127894; VA eligible', doctor:'&#129658; Professional loan', selfemployed:'&#128188; Self-employed', sellFirst:'&#128273; Has current home'};
+  var pKeys = Object.keys(p);
+  document.getElementById('sb-profile').innerHTML = pKeys.length ? pKeys.map(k=>profileLabels[k]||k).join(' · ') : 'Standard buyer';
+
+  // Dean message
+  var top = r.ranked[0];
+  var msg = '';
+  if(p.va) msg = '<strong>Your VA benefit is one of the most powerful financial tools available</strong>, $0 down, no mortgage insurance, competitive rates. Most veterans don\'t fully understand what they\'ve earned. Let\'s make sure you use it correctly.';
+  else if(p.doctor) msg = 'Most lenders would look at your student debt and turn you away. <strong>The right program doesn\'t count that debt against you</strong>, and can get you into a home with minimal down payment while your cash stays working for you.';
+  else if(p.selfemployed) msg = 'Your accountant is doing their job. The problem is that write-offs that save you tax dollars make it look like you don\'t qualify for a mortgage. <strong>A bank statement loan looks at what actually hits your account</strong>, not what the IRS sees.';
+  else if(p.sellFirst) msg = 'You don\'t have to sell first and rent, or make a contingent offer that sellers push back on. <strong>Your current equity is the key to buying before you sell</strong>, there are programs built exactly for this situation.';
+  else if(r.notReady) msg = 'I want to be direct, <strong>the timing isn\'t quite right yet</strong>. But that\'s not permanent. I can see exactly what needs to change, and most buyers get there faster than they expect with a clear plan.';
+  else if(top.id==='conv20') msg = 'Your financial picture is strong. <strong>With ' + fmtPct(r.dpPct) + ' toward a down payment and a ' + a.credit + ' credit score</strong>, the cleanest path, 20% down, no insurance, strongest offer, is within reach.';
+  else if(top.id==='dpa') msg = '<strong>Colorado\'s down payment assistance programs may cover your entire down payment</strong>. That changes the question from "can I afford to buy?" to "which program fits me best?"';
+  else msg = 'You\'re in a solid position with clear paths forward. <strong>' + top.name + ' is your strongest fit</strong> based on your full picture. Here\'s how each option compares.';
+  document.getElementById('dean-message').innerHTML = msg;
+
+  // Render path cards
+  var html = '';
+  r.ranked.forEach((path, i) => {
+    if(path.id==='notready') {
+      if(!r.notReady) return;
+      html += renderNotReady(path);
+      return;
+    }
+    var isTop = i === 0;
+    var rankNum = i+1;
+    var rankClass = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank-alt';
+    if(path.specialty && isTop) rankClass = 'rank-sp';
+    var cardClass = path.specialty && isTop ? 'path-card specialty' : isTop ? 'path-card best' : i>=3 ? 'path-card' : 'path-card';
+    var badgeLabel = isTop ? (path.specialty ? 'Best fit, specialty program' : 'Best match for your situation') : path.badge;
+    var badgeClass = isTop ? (path.specialty ? 'badge-specialty' : 'badge-best') : path.badgeClass;
+    var dtiFlag = path.dti > 0.43 ? ' <span style="color:var(--amber);font-size:11px;">· Monthly payment may feel heavier than ideal</span>' : '';
+    var notQualified = !path.meetsCredit || !path.meetsDp;
+
+    // Special bridge card
+    if(path.id==='bridge') {
+      html += renderBridgeCard(path, rankNum, rankClass, cardClass, badgeLabel, badgeClass, isTop);
+      return;
+    }
+
+    html += `<div class="${cardClass}">
+      <div class="path-header" onclick="togglePath(this)">
+        <div class="path-rank ${rankClass}">${rankNum}</div>
+        <div style="flex:1;">
+          <span class="path-badge ${badgeClass}">${badgeLabel}</span>
+          <div class="path-name">${path.name}${notQualified?'<span style="color:var(--amber);font-size:12px;margin-left:8px;">· May not qualify as shown</span>':''}</div>
+          <div class="path-tagline">${path.tagline}${dtiFlag}</div>
+        </div>
+      </div>
+      ${path.feel ? `<div class="ownership-feel"><span class="of-label">Ownership feel</span><span class="of-pill" style="background:${path.feel.bg};color:${path.feel.color};">${path.feel.label}</span><span class="of-note">,  ${path.feel.note}</span></div>` : ''}
+      <div class="path-metrics">
+        <div class="pm-cell"><div class="pm-label">Down payment</div><div class="pm-val">${path.id==='dpa'?'Covered':fmt(path.downAmt)}</div><div class="pm-sub">${path.id==='dpa'?'By assistance program':fmtPct(path.downPct)+' of purchase price'}</div></div>
+        <div class="pm-cell"><div class="pm-label">Upfront cash needed</div><div class="pm-val">~${fmt(path.cashNeeded)}</div><div class="pm-sub">Down payment + closing costs</div></div>
+        <div class="pm-cell"><div class="pm-label">Core monthly payment</div><div class="pm-val">${fmt(Math.round(path.payment.pi+(path.payment.mip||0)))}</div><div class="pm-sub">Before taxes ~${fmt(Math.round(r.taxes))} & ins ~${fmt(Math.round(r.insurance))}</div></div>
+        <div class="pm-cell"><div class="pm-label">True monthly total</div><div class="pm-val">${fmt(Math.round(path.payment.total))}</div><div class="pm-sub">Including all loan costs, taxes & insurance</div></div>
+      </div>
+      <button class="path-expand-btn" onclick="toggleExpand(this)"><span>See requirements & Dean's take</span><span>+</span></button>
+      <div class="path-detail">
+        <div class="path-detail-inner">
+          <div class="pd-grid">
+            <div><div class="pd-col-label">What works in your favor</div><div class="pd-items">${path.pros.map(p=>`<div class="pd-item"><div class="pd-dot dot-green"></div><span>${p}</span></div>`).join('')}</div></div>
+            <div><div class="pd-col-label">Things to understand going in</div><div class="pd-items">${path.cons.map(c=>`<div class="pd-item"><div class="pd-dot dot-amber"></div><span>${c}</span></div>`).join('')}</div></div>
+          </div>
+          ${!path.meetsCredit?`<div style="background:var(--red-light);border-radius:8px;padding:10px 14px;font-size:12.5px;color:var(--red);margin-bottom:1rem;"><strong>Credit score gap:</strong> This path works best at ${path.id==='conv20'?'680':path.id==='conv5'?'620':'580'}+. Your estimated score is ~${r.creditScore}. Closeable with focused effort.</div>`:''}
+          ${!path.meetsDp&&path.id!=='dpa'&&path.id!=='va'?`<div style="background:var(--amber-light);border-radius:8px;padding:10px 14px;font-size:12.5px;color:var(--amber);margin-bottom:1rem;"><strong>Savings gap:</strong> ${fmt(Math.round(path.downAmt))} needed, you have ${fmt(r.totalSavings)} available.</div>`:''}
+          <div class="pd-dean"><div class="pd-dean-label">Dean's take</div><div class="pd-dean-text">"${path.deanNote}"</div></div>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  document.getElementById('paths-stack').innerHTML = html;
+  buildNextMove(r);
+}
+
+function renderBridgeCard(path, rankNum, rankClass, cardClass, badgeLabel, badgeClass, isTop) {
+  return `<div class="${isTop?'path-card specialty':'path-card'}">
+    <div class="path-header" onclick="togglePath(this)">
+      <div class="path-rank ${rankClass}">${rankNum}</div>
+      <div style="flex:1;">
+        <span class="path-badge ${badgeClass}">${badgeLabel}</span>
+        <div class="path-name">${path.name}</div>
+        <div class="path-tagline">${path.tagline}</div>
+      </div>
+    </div>
+    <div class="ownership-feel"><span class="of-label">Ownership feel</span><span class="of-pill" style="background:${path.feel.bg};color:${path.feel.color};">${path.feel.label}</span><span class="of-note">,  ${path.feel.note}</span></div>
+    <div class="path-metrics">
+      <div class="pm-cell"><div class="pm-label">Down payment</div><div class="pm-val">From equity</div><div class="pm-sub">Your current home funds the next</div></div>
+      <div class="pm-cell"><div class="pm-label">Cash to close</div><div class="pm-val">Varies</div><div class="pm-sub">Depends on equity & program</div></div>
+      <div class="pm-cell"><div class="pm-label">Bridge period</div><div class="pm-val">30–180 days</div><div class="pm-sub">Typical window to sell current home</div></div>
+      <div class="pm-cell"><div class="pm-label">Key requirement</div><div class="pm-val">Equity</div><div class="pm-sub">Typically 20–30% in current home</div></div>
+    </div>
+    <button class="path-expand-btn" onclick="toggleExpand(this)"><span>See how this works & Dean's take</span><span>+</span></button>
+    <div class="path-detail">
+      <div class="path-detail-inner">
+        <div class="pd-grid">
+          <div><div class="pd-col-label">What works in your favor</div><div class="pd-items">${path.pros.map(p=>`<div class="pd-item"><div class="pd-dot dot-green"></div><span>${p}</span></div>`).join('')}</div></div>
+          <div><div class="pd-col-label">Things to understand going in</div><div class="pd-items">${path.cons.map(c=>`<div class="pd-item"><div class="pd-dot dot-amber"></div><span>${c}</span></div>`).join('')}</div></div>
+        </div>
+        <div style="background:var(--purple-light);border-radius:8px;padding:10px 14px;font-size:12.5px;color:var(--purple);margin-bottom:1rem;"><strong>Three program options exist:</strong><br>1. <strong>Bridge loan</strong>, short-term loan against current equity, repaid when home sells<br>2. <strong>Buy Before You Sell (e.g. Calque)</strong>, company guarantees your home purchase while you sell<br>3. <strong>Sell and rent-back</strong>, sell first, negotiate rent-back period to buy time</div>
+        <div class="pd-dean"><div class="pd-dean-label">Dean's take</div><div class="pd-dean-text">"${path.deanNote}"</div></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderNotReady(path) {
+  var mHtml = path.milestones.map(m=>`
+    <div class="nr-milestone">
+      <div class="nr-icon ${m.issue?'needs':'good'}">${m.issue?'!':'&#10003;'}</div>
+      <div class="nr-milestone-text"><strong>${m.title}</strong><span>${m.detail}</span></div>
+    </div>`).join('');
+  var tl = path.monthsNeeded > 0 ? `<div class="nr-timeline"><div><div class="nr-timeline-label">Realistic readiness timeline</div></div><div class="nr-timeline-val">${path.monthsNeeded<12?path.monthsNeeded+' months':Math.ceil(path.monthsNeeded/12)+' year'+(path.monthsNeeded>12?'s':'')}</div></div>` : '';
+  return `<div class="path-card not-ready">
+    <div class="path-header"><div class="path-rank rank-no">!</div><div style="flex:1;"><span class="path-badge badge-notready">Not quite yet</span><div class="path-name">${path.name}</div><div class="path-tagline">${path.tagline}</div></div></div>
+    <div class="path-detail open"><div class="not-ready-body">${mHtml}${tl}</div></div>
+  </div>`;
+}
+
+function togglePath(headerEl) {
+  var card = headerEl.closest('.path-card');
+  var detail = card.querySelector('.path-detail');
+  var btn = card.querySelector('.path-expand-btn');
+  if(!detail) return;
+  detail.classList.toggle('open');
+  if(btn) btn.querySelector('span:last-child').textContent = detail.classList.contains('open') ? '−' : '+';
+}
+
+function toggleExpand(btn) {
+  var card = btn.closest('.path-card');
+  var detail = card.querySelector('.path-detail');
+  detail.classList.toggle('open');
+  btn.querySelector('span:last-child').textContent = detail.classList.contains('open') ? '−' : '+';
+}
+
+function buildNextMove(r) {
+  var top = r.ranked[0];
+  var p = profiles;
+  var steps = [];
+  var headline = '';
+
+  if(p.va) {
+    headline = 'Your VA benefit is ready to use. Here\'s the sequence.';
+    steps = [
+      {text:'<strong>Get your Certificate of Eligibility (COE).</strong> You can request it through the VA website, or Dean can pull it directly through the lender system, often faster.'},
+      {text:'<strong>Get a VA pre-approval.</strong> This confirms your eligibility, loan limit, and what you\'re qualified for, all before you make an offer.'},
+      {text:'<strong>Understand the funding fee.</strong> It varies by down payment and prior use. If you have a service-connected disability rating, it may be waived entirely.'}
+    ];
+  } else if(p.doctor) {
+    headline = 'Your professional status opens doors most buyers don\'t have.';
+    steps = [
+      {text:'<strong>Confirm your designation qualifies.</strong> MD, DO, DDS, DMD, PharmD, JD, and several others qualify, Dean can confirm quickly based on your specific credentials.'},
+      {text:'<strong>Get pre-approved before you search.</strong> Professional loan pre-approvals move fast and knowing your real ceiling changes how you look at the market.'},
+      {text:'<strong>Decide on down payment strategy.</strong> 0–10% down is available, but putting more down if you have it may improve your rate. Worth modeling both scenarios.'}
+    ];
+  } else if(p.selfemployed) {
+    headline = 'Your cash flow tells the real story. Let\'s use it.';
+    steps = [
+      {text:'<strong>Gather 12–24 months of bank statements.</strong> Both personal and business accounts. The more consistent and clean the deposits, the stronger the qualification.'},
+      {text:'<strong>Talk to Dean before changing anything.</strong> Some self-employed buyers inadvertently make their bank statement picture worse by moving money around. A quick conversation first saves headaches.'},
+      {text:'<strong>Expect a slightly higher rate, plan for it.</strong> Bank statement loans carry a small rate premium. Running the true monthly cost through the Cost Planner helps confirm the payment still works for your life.'}
+    ];
+  } else if(p.sellFirst) {
+    headline = 'Your current equity is the key. Here\'s how to use it.';
+    steps = [
+      {text:'<strong>Know your current home\'s equity position.</strong> Bridge programs typically require 20–30% equity. A quick valuation gives you the number you need to start.'},
+      {text:'<strong>Talk to Dean about which bridge structure fits.</strong> Traditional bridge loan, a Buy Before You Sell program, or a guaranteed buyout, each has different costs and timelines.'},
+      {text:'<strong>Get pre-approved for the new purchase simultaneously.</strong> You want both approvals in hand so you can move quickly when the right home comes along.'}
+    ];
+  } else if(r.notReady) {
+    headline = 'Here\'s your roadmap to readiness.';
+    steps = [
+      {text:'<strong>Get a free credit review.</strong> Understanding exactly where your score stands, and why, is the starting point for everything. Dean can point you to the right resources.'},
+      {text:'<strong>Set a savings target and automate it.</strong> Even $500/month consistently changes the timeline meaningfully. Treat it like a bill.'},
+      {text:'<strong>Stay in touch.</strong> Your picture can change significantly in a few months. Dean can re-evaluate when you\'re ready, no pressure, no cost.'}
+    ];
+  } else if(top.id==='conv20') {
+    headline = 'You\'re in a strong position. Here\'s the sequence.';
+    steps = [
+      {text:'<strong>Get a Loan Estimate.</strong> Real numbers based on your actual credit profile, rate, costs, and payment, before you make any decisions.'},
+      {text:'<strong>Confirm your down payment is documentable.</strong> Lenders verify where funds came from. Bank statements 60 days back is the standard ask.'},
+      {text:'<strong>Don\'t make major financial moves before closing.</strong> No new credit, large purchases, or job changes between pre-approval and closing.'}
+    ];
+  } else {
+    headline = 'A solid path forward. Here\'s what to do next.';
+    steps = [
+      {text:'<strong>Get a Loan Estimate from Dean.</strong> Real numbers based on your actual credit profile, not estimates.'},
+      {text:'<strong>Run the full cost picture.</strong> Use the Homeownership Cost Planner to see what ownership actually feels like month to month, including taxes, insurance, utilities, and maintenance.'},
+      {text:'<strong>Start the pre-approval conversation.</strong> Pre-approval doesn\'t commit you to anything, but it tells you exactly where you stand and gives you real confidence when you find the right home.'}
+    ];
+  }
+
+  document.getElementById('nm-headline').textContent = headline;
+  document.getElementById('nm-steps').innerHTML = steps.map((s,i)=>
+    `<div class="nm-step"><div class="nm-num">${i+1}</div><p>${s.text}</p></div>`
+  ).join('');
+}
+
+// ── INIT ──
+buildStepIndicator();
+document.getElementById('btn-next').disabled = false;
+updateRange('price');
+updateRange('savings');
+updateRange('income');
+updateRange('debts');
+</script>
+</body>
+</html>
