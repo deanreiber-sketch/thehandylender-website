@@ -291,12 +291,12 @@ select.finput option{background:var(--navy2)}
 // DATA
 // ═══════════════════════════════════════════════════════════
 const DEFAULT_PROPS = [
-  {id:'ca',  addr:'31852 Via Faisan',   city:'Coto de Caza, CA',  type:'I', val:1800000, bal:1109250.24, rate:0.0600, pi:6690.98,  hoi:178.00, tax:776.67,  hoa:245.00, helocBal:160000,  helocRate:0.100,  rent:8000, schedE:2541.67, sellCost:0.06, listed:false},
-  {id:'sky', addr:'17951 Sky Pilot Ln', city:'Parker, CO',         type:'I', val:635500,  bal:413064.00,  rate:0.05125,pi:3827.14,  hoi:250.50, tax:719.20,  hoa:100.00, helocBal:0,       helocRate:0,      rent:3900, schedE:2789.67, sellCost:0.06, listed:false},
-  {id:'blf', addr:'10213 Bluffmont Dr', city:'Lone Tree, CO',      type:'I', val:1100000, bal:708739.93,  rate:0.03625,pi:3511.60,  hoi:591.58, tax:887.08,  hoa:247.00, helocBal:43700,   helocRate:0.1179, rent:4100, schedE:3764.33, sellCost:0.06, listed:false},
-  {id:'sw1', addr:'3598 Swabuck Pl',    city:'Castle Rock, CO',    type:'I', val:657500,  bal:123006.78,  rate:0.04125,pi:726.97,   hoi:221.58, tax:401.92,  hoa:71.67,  helocBal:248975,  helocRate:0.1200, rent:3575, schedE:2376.67, sellCost:0.06, listed:true},
-  {id:'sw2', addr:'3426 Swabuck Pl',    city:'Castle Rock CO',     type:'I', val:688100,  bal:346759.32,  rate:0.0300, pi:1656.90,  hoi:211.17, tax:400.50,  hoa:71.67,  helocBal:154860,  helocRate:0.0899, rent:3400, schedE:2400.00, sellCost:0.06, listed:false},
-  {id:'md',  addr:'11902 Northpark Dr', city:'North Bethesda, MD', type:'P', val:1380000, bal:949600.00,  rate:0.0725, pi:7566.03,  hoi:123.25, tax:771.83,  hoa:193.00, helocBal:0,       helocRate:0,      rent:0,    schedE:0,       sellCost:0.06, listed:false}
+  {id:'ca',  addr:'31852 Via Faisan',   city:'Coto de Caza, CA',  type:'I', val:1800000, bal:1109250.24, rate:0.0600, pi:6690.98,  hoi:178.00, tax:776.67,  hoa:245.00, helocBal:160000,  helocRate:0.100,  rent:8000, schedE:6000.0, leaseEnd:'2027-07-31', sellCost:0.06, listed:false},
+  {id:'sky', addr:'17951 Sky Pilot Ln', city:'Parker, CO',         type:'I', val:635500,  bal:413064.00,  rate:0.05125,pi:3827.14,  hoi:250.50, tax:719.20,  hoa:100.00, helocBal:0,       helocRate:0,      rent:3900, schedE:2925.0, leaseEnd:'2026-06-30', sellCost:0.06, listed:false},
+  {id:'blf', addr:'10213 Bluffmont Dr', city:'Lone Tree, CO',      type:'I', val:1100000, bal:708739.93,  rate:0.03625,pi:3511.60,  hoi:591.58, tax:887.08,  hoa:247.00, helocBal:43700,   helocRate:0.1179, rent:4100, schedE:3075.0, leaseEnd:'2027-01-14', sellCost:0.06, listed:false},
+  {id:'sw1', addr:'3598 Swabuck Pl',    city:'Castle Rock, CO',    type:'I', val:657500,  bal:123006.78,  rate:0.04125,pi:726.97,   hoi:221.58, tax:401.92,  hoa:71.67,  helocBal:248975,  helocRate:0.1200, rent:3575, schedE:2681.25, leaseEnd:'2026-06-30', sellCost:0.06, listed:true},
+  {id:'sw2', addr:'3426 Swabuck Pl',    city:'Castle Rock CO',     type:'I', val:688100,  bal:346759.32,  rate:0.0300, pi:1656.90,  hoi:211.17, tax:400.50,  hoa:71.67,  helocBal:154860,  helocRate:0.0899, rent:3400, schedE:2550.00, leaseEnd:'2026-09-30', sellCost:0.06, listed:false},
+  {id:'md',  addr:'11902 Northpark Dr', city:'North Bethesda, MD', type:'P', val:1380000, bal:949600.00,  rate:0.0725, pi:7566.03,  hoi:123.25, tax:771.83,  hoa:193.00, helocBal:0,       helocRate:0,      rent:0,    schedE:0,       leaseEnd:'',   sellCost:0.06, listed:false}
 ];
 const DEFAULT_OTHER = [
   {id:'apple',name:'Apple Card',    pmt:503},
@@ -311,18 +311,48 @@ const DEFAULT_REFI   = {rate:6.5, term:30, cashout:0, useRefi:true};
 // ── State (loaded from localStorage or defaults) ──────────
 let P, OD, INC, REFI, SOLD, ALLOCS, ASSETS, ASSET_LIQ, ASSET_ALLOCS;
 
+const DATA_VERSION = 5; // increment when DEFAULT_PROPS data changes
+
 function loadState(){
   try{
     const s=JSON.parse(localStorage.getItem('sg_tool')||'{}');
-    P           = s.props        ? s.props        : DEFAULT_PROPS.map(x=>({...x}));
-    OD          = s.otherDebts   ? s.otherDebts   : DEFAULT_OTHER.map(x=>({...x}));
-    INC         = s.income       ? s.income       : {...DEFAULT_INCOME};
-    REFI        = s.refi         ? s.refi         : {...DEFAULT_REFI};
-    SOLD        = s.sold         ? s.sold         : {};
-    ALLOCS      = s.allocs       ? s.allocs       : {};
-    ASSETS      = s.assets       ? s.assets       : [];
-    ASSET_LIQ   = s.assetLiq     ? s.assetLiq     : {};  // {assetId: pct 0-100}
-    ASSET_ALLOCS= s.assetAllocs  ? s.assetAllocs  : {};  // {assetId: {debtId: amount}}
+    const savedVer = s.version || 0;
+
+    if(savedVer < DATA_VERSION){
+      // Data version changed — always reload property defaults
+      // but preserve user-specific state (sold flags, allocs, assets, income, refi)
+      P     = DEFAULT_PROPS.map(x=>({...x}));
+      OD    = DEFAULT_OTHER.map(x=>({...x}));
+      // Merge saved user property edits (val, bal, etc.) into fresh defaults
+      // by matching on id — preserves manual edits to non-data fields
+      if(s.props){
+        s.props.forEach(saved=>{
+          const def=P.find(x=>x.id===saved.id);
+          if(def){
+            // Keep user-edited fields but always use latest defaults for
+            // schedE, leaseEnd, hoi, tax, hoa, rate, pi (data fields)
+            // User-editable fields to preserve: val, bal, helocBal, helocRate, rent
+            def.val      = saved.val      ?? def.val;
+            def.bal      = saved.bal      ?? def.bal;
+            def.helocBal = saved.helocBal ?? def.helocBal;
+            def.helocRate= saved.helocRate?? def.helocRate;
+            def.rent     = saved.rent     ?? def.rent;
+          }
+        });
+      }
+    } else {
+      // Same version — load everything from storage
+      P  = s.props      ? s.props.map(x=>({...x})) : DEFAULT_PROPS.map(x=>({...x}));
+      OD = s.otherDebts ? s.otherDebts              : DEFAULT_OTHER.map(x=>({...x}));
+    }
+
+    INC         = s.income      ? s.income      : {...DEFAULT_INCOME};
+    REFI        = s.refi        ? s.refi        : {...DEFAULT_REFI};
+    SOLD        = s.sold        ? s.sold        : {};
+    ALLOCS      = s.allocs      ? s.allocs      : {};
+    ASSETS      = s.assets      ? s.assets      : [];
+    ASSET_LIQ   = s.assetLiq    ? s.assetLiq    : {};
+    ASSET_ALLOCS= s.assetAllocs ? s.assetAllocs : {};
   }catch(e){resetState()}
 }
 function resetState(){
@@ -336,7 +366,7 @@ function resetAllocs(){
   recalc();
 }
 function saveAll(){
-  localStorage.setItem('sg_tool',JSON.stringify({props:P,otherDebts:OD,income:INC,refi:REFI,sold:SOLD,allocs:ALLOCS,assets:ASSETS,assetLiq:ASSET_LIQ,assetAllocs:ASSET_ALLOCS}));
+  localStorage.setItem('sg_tool',JSON.stringify({version:DATA_VERSION,props:P,otherDebts:OD,income:INC,refi:REFI,sold:SOLD,allocs:ALLOCS,assets:ASSETS,assetLiq:ASSET_LIQ,assetAllocs:ASSET_ALLOCS}));
   const n=document.getElementById('save-note');
   n.textContent='Saved '+new Date().toLocaleTimeString();
   setTimeout(()=>n.textContent='',4000);
@@ -404,11 +434,14 @@ function effectiveHelocPmt(p){
 
 // Rental income credit at 75% (Schedule E method)
 function rentalCredit(p){
+  // Per Fannie Mae conventional: use Schedule E gross rent vs PITIA (no HELOC).
+  // HELOC is a separate debt obligation captured in investDebt.
+  // Positive net: 75% credited to qualifying income.
+  // Negative net: loss is NOT double-added here — investDebt already carries all costs.
   if(SOLD[p.id])return 0;
-  const helocPmt=effectiveHelocPmt(p);
-  const pitia=p.pi+p.hoi+p.tax+p.hoa+helocPmt;
+  const pitia=p.pi+p.hoi+p.tax+p.hoa; // PITIA only — HELOC excluded
   const net=p.schedE-pitia;
-  return net>0?net*0.75:net;
+  return net>0?net*0.75:0; // losses: return 0 (costs already in investDebt)
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -419,8 +452,10 @@ function calcDTI(){
   const salary=INC.salary, bonus=INC.bonus, deferred=INC.deferred;
   let rentalSum=0;
   P.filter(p=>p.type==='I').forEach(p=>{ rentalSum+=rentalCredit(p); });
-  const qualIncome=salary+bonus+deferred+(rentalSum>0?rentalSum:0);
-  const rentalLoss=rentalSum<0?Math.abs(rentalSum):0;
+  // rentalCredit returns 0 for loss properties — costs already in investDebt
+  // Only add positive rental income (at 75% of net) to qualifying income
+  const qualIncome=salary+bonus+deferred+rentalSum;
+  const rentalLoss=0; // no double-count — investDebt carries all property costs
 
   // --- Primary PITIA ---
   const md=P.find(p=>p.id==='md');
@@ -437,7 +472,7 @@ function calcDTI(){
   // --- Other debts (cards etc.) ---
   const otherDebt=OD.reduce((a,d)=>a+d.pmt,0);
 
-  const totalDebt=mdPITIA+investDebt+otherDebt+rentalLoss;
+  const totalDebt=mdPITIA+investDebt+otherDebt;
   const dti=totalDebt/qualIncome*100;
 
   return{dti,qualIncome,totalDebt,mdPITIA,mdPI,investDebt,otherDebt,
@@ -532,6 +567,7 @@ function renderOverview(r){
         <div style="flex:1">
           <div style="font-size:12px;font-weight:600;color:var(--text)">${p.addr}</div>
           <div style="font-size:10px;color:var(--text3)">${p.city}${p.listed?' · <span style="color:var(--gold)">Listed for sale</span>':''}</div>
+          ${p.leaseEnd?`<div style="font-size:10px;margin-top:2px">Lease: <b style="color:${leaseUrgency(p.leaseEnd).color}">${formatLeaseDate(p.leaseEnd)}</b></div>`:''}
           <div style="margin-top:7px;font-size:10px;color:var(--text3)">
             <div>Sale price: <b style="color:var(--text)">${fmt(Math.round(p.val*(1-p.sellCost)))}</b></div>
             <div>− 1st mtg payoff: <b style="color:var(--red)">(${fmt(Math.round(sp.payoff1st))})</b></div>
@@ -935,9 +971,7 @@ function renderIncome(r){
     html+=`<div class="row"><span class="rn">${p.addr}<span class="rsub"> PITIA + HELOC</span></span><span class="rv neg">${fmt(Math.round(pitia))}/mo</span></div>`;
   });
   OD.forEach(d=>{ html+=`<div class="row"><span class="rn">${d.name}</span><span class="rv neg">${fmt(Math.round(d.pmt))}/mo</span></div>`; });
-  if(r.rentalLoss>0){
-    html+=`<div class="row"><span class="rn">Net rental losses (added to DTI)</span><span class="rv neg">${fmt(Math.round(r.rentalLoss))}/mo</span></div>`;
-  }
+  // No rental loss double-count — all property costs captured in investDebt above
 
   html+=`<div class="total-row"><span class="tr-lbl">Total obligations</span><span class="tr-val danger">${fmt(Math.round(r.totalDebt))}/mo</span></div>
     <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
@@ -953,6 +987,27 @@ function renderIncome(r){
   </div>`;
 
   document.getElementById('panel-income').innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════════
+// LEASE HELPERS
+// ═══════════════════════════════════════════════════════════
+function formatLeaseDate(d){
+  if(!d)return'';
+  const [y,m,day]=d.split('-');
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return months[parseInt(m)-1]+' '+parseInt(day)+', '+y;
+}
+function leaseUrgency(d){
+  if(!d)return{color:'var(--text3)',bg:'var(--navy3)',label:''};
+  const today=new Date();
+  const lease=new Date(d);
+  const diffDays=(lease-today)/(1000*60*60*24);
+  if(diffDays<0)  return{color:'var(--red)',  bg:'var(--red-bg)',  label:'Expired'};
+  if(diffDays<90) return{color:'var(--red)',  bg:'var(--red-bg)',  label:'< 90 days'};
+  if(diffDays<180)return{color:'var(--gold)', bg:'var(--gold-bg)', label:'< 6 months'};
+  if(diffDays<365)return{color:'var(--amber)',bg:'var(--amber-bg)',label:'< 1 year'};
+  return{color:'var(--green)',bg:'var(--green-bg)',label:'1yr+'};
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -980,6 +1035,7 @@ function renderProps(){
         <div>
           <div class="pa">${p.addr}</div>
           <div class="pc">${p.city}</div>
+          ${p.type==='I'&&p.leaseEnd?`<div style="font-size:11px;color:var(--text3);margin-top:2px">Lease ends: <b style="color:${leaseUrgency(p.leaseEnd).color}">${formatLeaseDate(p.leaseEnd)}</b> <span style="font-size:10px;background:${leaseUrgency(p.leaseEnd).bg};color:${leaseUrgency(p.leaseEnd).color};padding:1px 6px;border-radius:10px;margin-left:4px">${leaseUrgency(p.leaseEnd).label}</span></div>`:''}
           <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:5px">
             ${p.type==='P'?'<span class="badge bb">Primary Residence</span>':'<span class="badge bt">Investment</span>'}
             ${p.listed?'<span class="badge bo">Listed for Sale</span>':''}
@@ -993,7 +1049,9 @@ function renderProps(){
         <div class="field"><label>Mortgage balance ($)</label><input class="finput" type="text" value="${fmtN(Math.round(p.bal))}" onchange="P.find(x=>x.id==='${p.id}').bal=parseN(this.value);recalc()"></div>
         <div class="field"><label>Rate (%)</label><input class="finput" type="number" step="0.001" value="${(p.rate*100).toFixed(3)}" onchange="P.find(x=>x.id==='${p.id}').rate=+this.value/100;recalc()"></div>
         <div class="field"><label>P&I payment ($)</label><input class="finput" type="text" value="${fmtN(p.pi,2)}" onchange="P.find(x=>x.id==='${p.id}').pi=parseN(this.value);recalc()"></div>
-        ${p.type==='I'?`<div class="field"><label>Monthly rent ($)</label><input class="finput" type="text" value="${fmtN(p.rent)}" onchange="P.find(x=>x.id==='${p.id}').rent=parseN(this.value);recalc()"></div>`:''}
+        ${p.type==='I'?`<div class="field"><label>Monthly rent ($) <span style="font-size:10px;color:var(--text3)">(market)</span></label><input class="finput" type="text" value="${fmtN(p.rent)}" onchange="P.find(x=>x.id==='${p.id}').rent=parseN(this.value);recalc()"></div>
+        <div class="field"><label>Schedule E gross rent ($) <span style="font-size:10px;color:var(--teal)">(used for DTI)</span></label><input class="finput" type="text" value="${fmtN(p.schedE,2)}" onchange="P.find(x=>x.id==='${p.id}').schedE=parseN(this.value);recalc()" style="border-color:var(--teal2)"></div>
+        <div class="field"><label>Lease end date</label><input class="finput" type="date" value="${p.leaseEnd||''}" onchange="P.find(x=>x.id==='${p.id}').leaseEnd=this.value;recalc()"></div>`:''}
         ${p.helocBal>0||p.type==='I'?`
         <div class="field"><label>HELOC balance ($)</label><input class="finput" type="text" value="${fmtN(Math.round(p.helocBal))}" onchange="const pp=P.find(x=>x.id==='${p.id}');pp.helocBal=parseN(this.value);pp.helocPmt=pp.helocBal*pp.helocRate/12;recalc()"></div>
         <div class="field"><label>HELOC rate (%)</label><input class="finput" type="number" step="0.01" value="${(p.helocRate*100).toFixed(2)}" onchange="const pp=P.find(x=>x.id==='${p.id}');pp.helocRate=+this.value/100;recalc()"></div>
