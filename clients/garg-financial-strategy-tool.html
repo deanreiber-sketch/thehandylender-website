@@ -134,7 +134,7 @@ select.finput option{background:var(--navy2)}
 /* ── PROP CARDS ── */
 .pcard{background:var(--navy2);border:1px solid var(--border);border-radius:var(--rl);padding:1.25rem;margin-bottom:.75rem;transition:.2s}
 .pcard.listed{border-color:var(--gold)}
-.pcard.sold{opacity:.35;pointer-events:none}
+.pcard.sold .pcard-body{opacity:.35;pointer-events:none}
 .pcard.primary{border-color:var(--blue2,#3b82f6)}
 .ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:11px;gap:8px;flex-wrap:wrap}
 .pa{font-size:15px;font-weight:500}.pc{font-size:11px;color:var(--text3);margin-top:2px}
@@ -205,6 +205,10 @@ select.finput option{background:var(--navy2)}
 .footer-bottom{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:.75rem}
 .ehl-icon{height:48px;width:auto;flex-shrink:0;mix-blend-mode:screen;filter:brightness(1.15)}
 .footer-legal{font-size:10px;color:var(--text3);line-height:1.7}
+
+.pool-over{background:var(--red-bg);border:1px solid var(--red);border-radius:var(--r);padding:8px 12px;font-size:12px;color:var(--red);margin-top:8px;display:none}
+.pool-over.show{display:block}
+.ar-inp.over{border-color:var(--red);background:rgba(248,113,113,.08)}
 </style>
 </head>
 <body>
@@ -326,6 +330,11 @@ function resetState(){
   INC={...DEFAULT_INCOME};REFI={...DEFAULT_REFI};
   SOLD={};ALLOCS={};ASSETS=[];ASSET_LIQ={};ASSET_ALLOCS={};
 }
+function resetAllocs(){
+  if(!confirm('Reset all allocations to $0?'))return;
+  ALLOCS={};
+  recalc();
+}
 function saveAll(){
   localStorage.setItem('sg_tool',JSON.stringify({props:P,otherDebts:OD,income:INC,refi:REFI,sold:SOLD,allocs:ALLOCS,assets:ASSETS,assetLiq:ASSET_LIQ,assetAllocs:ASSET_ALLOCS}));
   const n=document.getElementById('save-note');
@@ -336,6 +345,12 @@ function saveAll(){
 // ═══════════════════════════════════════════════════════════
 // HELPERS
 // ═══════════════════════════════════════════════════════════
+const fmtN=(n,d=0)=>{
+  // For input display: commas, no $ sign
+  if(n===undefined||n===null||isNaN(n))return'';
+  return Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+};
+const parseN=(s)=>parseFloat(String(s).replace(/,/g,''))||0;
 const fmt=(n,d=0)=>{
   if(n===undefined||n===null||isNaN(n))return'—';
   const abs=Math.abs(n);
@@ -592,7 +607,11 @@ function renderProceeds(r){
     html+=`<div><b>${p.addr}</b>: sale ${fmt(Math.round(p.val*(1-p.sellCost)))} − 1st (${fmt(Math.round(sp.payoff1st))})${sp.payoffHeloc>0?' − HELOC ('+fmt(Math.round(sp.payoffHeloc))+')':''} = <b style="color:var(--teal)">${fmt(Math.round(sp.net))}</b></div>`;
   });
   if(assetCash>0) html+=`<div><b>Asset liquidations:</b> <span style="color:var(--gold)">${fmt(Math.round(assetCash))}</span></div>`;
-  html+=`<div style="margin-top:6px">Allocated: <b style="color:var(--gold)">${fmt(Math.round(allocated))}</b> &nbsp;|&nbsp; Remaining / reserves: <b style="color:${remaining<0?'var(--red)':'var(--green)'}">${fmt(Math.round(remaining))}</b></div>
+  html+=`<div style="margin-top:6px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <span>Allocated: <b style="color:var(--gold)">${fmt(Math.round(allocated))}</b> &nbsp;|&nbsp; Remaining / reserves: <b style="color:${remaining<0?'var(--red)':'var(--green)'}">${fmt(Math.round(remaining))}</b></span>
+        ${remaining<0?`<span style="background:var(--red-bg);color:var(--red);font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500">⚠ Over-allocated by ${fmt(Math.round(-remaining))}</span>`:''}
+        <button onclick="resetAllocs()" style="background:none;color:var(--text3);border:1px solid var(--border);border-radius:6px;padding:3px 10px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;">↺ Reset all</button>
+      </div>
       </div>
     </div>
   </div>`;
@@ -605,7 +624,8 @@ function renderProceeds(r){
   OD.forEach(d=>targets.push({id:d.id, name:d.name, bal:0, rate:0, pmt:d.pmt, type:'card'}));
   targets.sort((a,b)=>b.rate-a.rate);
 
-  html+=`<div class="card">
+  html+=`${remaining<0?`<div style="background:var(--red-bg);border:1px solid var(--red);border-radius:var(--r);padding:10px 14px;margin-bottom:10px;font-size:12px;color:var(--red)"><b>⚠ Over-allocated by ${fmt(Math.round(-remaining))}</b> — reduce allocations below or sell additional properties to cover.</div>`:''}
+  <div class="card">
     <div class="ctitle"><span class="ctitle-accent">◈</span> Allocate proceeds — payoff targets <span style="font-size:10px;color:var(--text3);font-weight:400;text-transform:none">(sorted by rate — highest first)</span></div>
     <div style="display:grid;grid-template-columns:1fr auto auto 110px;gap:8px;align-items:center;padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:4px">
       <span style="font-size:10px;color:var(--text3);text-transform:uppercase">Obligation</span>
@@ -626,7 +646,7 @@ function renderProceeds(r){
       </div>
       <div style="font-size:12px;min-width:80px;text-align:right;color:var(--text2)">${t.bal>0?fmt(Math.round(t.bal)):'revolving'}</div>
       <div style="min-width:55px;text-align:center">${t.rate>0?`<span class="ar-rate ${rateClass}">${pct(rc,2)}</span>`:'—'}</div>
-      <input class="ar-inp" type="number" min="0" value="${allocVal||''}" placeholder="$0"
+      <input class="ar-inp ${allocVal>0&&remaining<0?'over':''}" type="number" min="0" value="${allocVal||''}" placeholder="$0"
         onchange="ALLOCS['${t.id}']=Math.min(+this.value,${t.bal>0?t.bal:9999999});recalc()">
     </div>`;
   });
@@ -690,7 +710,7 @@ function renderAssets(r){
       html+=`<tr>
         <td><div style="font-weight:500">${a.name}</div>${a.notes?`<div style="font-size:10px;color:var(--text3)">${a.notes}</div>`:''}</td>
         <td><span class="badge atype-${a.type}">${a.type}</span></td>
-        <td><input class="finput sm" type="number" value="${a.bal}" style="width:110px" onchange="ASSETS.find(x=>x.id==='${a.id}').bal=+this.value;recalc()"></td>
+        <td><input class="finput sm" type="text" value="${fmtN(a.bal)}" style="width:110px" onchange="ASSETS.find(x=>x.id==='${a.id}').bal=parseN(this.value);recalc()"></td>
         <td>
           <div class="liq-wrap">
             <input type="range" min="0" max="100" step="5" value="${ASSET_LIQ[a.id]||0}"
@@ -815,13 +835,13 @@ function renderRefi(r){
       <div><div class="mlbl">Current PITIA</div><div style="font-size:18px;font-weight:600;color:var(--text)">${fmt(Math.round(curPITIA))}/mo</div></div>
     </div>
     <div class="g4" style="margin-bottom:14px">
-      <div class="field"><label>New rate (%)</label><input class="finput" type="number" step="0.125" value="${REFI.rate}" onchange="REFI.rate=+this.value;recalc()"></div>
+      <div class="field"><label>New rate (%)</label><input class="finput" type="number" step="0.125" value="${REFI.rate}" onchange="REFI.rate=parseFloat(this.value)||0;recalc()"></div>
       <div class="field"><label>Term (years)</label>
         <select class="finput" onchange="REFI.term=+this.value;recalc()">
           ${[10,15,20,25,30].map(t=>`<option value="${t}" ${REFI.term===t?'selected':''}>${t}-year</option>`).join('')}
         </select>
       </div>
-      <div class="field"><label>Cash-out ($)</label><input class="finput" type="number" step="5000" value="${REFI.cashout}" onchange="REFI.cashout=+this.value;recalc()"></div>
+      <div class="field"><label>Cash-out ($)</label><input class="finput" type="text" value="${fmtN(REFI.cashout)}" onchange="REFI.cashout=parseN(this.value);recalc()"></div>
       <div class="field"><label>Apply refi in DTI</label>
         <select class="finput" onchange="REFI.useRefi=this.value==='true';recalc()">
           <option value="true" ${REFI.useRefi?'selected':''}>Yes — refi rate</option>
@@ -882,9 +902,9 @@ function renderIncome(r){
   let html=`<div class="card">
     <div class="ctitle"><span class="ctitle-accent">◈</span> Qualifying income</div>
     <div class="g4" style="margin-bottom:12px">
-      <div class="field"><label>Base salary (monthly)</label><input class="finput" type="number" value="${INC.salary}" onchange="INC.salary=+this.value;recalc()"></div>
-      <div class="field"><label>Bonus (monthly avg)</label><input class="finput" type="number" value="${INC.bonus}" onchange="INC.bonus=+this.value;recalc()"></div>
-      <div class="field"><label>Deferred comp (monthly)</label><input class="finput" type="number" value="${INC.deferred}" onchange="INC.deferred=+this.value;recalc()"></div>
+      <div class="field"><label>Base salary (monthly)</label><input class="finput" type="text" value="${fmtN(INC.salary,2)}" onchange="INC.salary=parseN(this.value);recalc()"></div>
+      <div class="field"><label>Bonus (monthly avg)</label><input class="finput" type="text" value="${fmtN(INC.bonus,2)}" onchange="INC.bonus=parseN(this.value);recalc()"></div>
+      <div class="field"><label>Deferred comp (monthly)</label><input class="finput" type="text" value="${fmtN(INC.deferred,2)}" onchange="INC.deferred=parseN(this.value);recalc()"></div>
     </div>
     <div style="background:var(--amber-bg);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--amber);margin-bottom:12px">⚠ Deferred comp set to $0 — conventional guidelines require 3-year continuance; ~2 years remain on this income.</div>
     <div class="row"><span class="rn">Base salary</span><span class="rv pos">${fmt(Math.round(r.salary))}/mo</span></div>
@@ -949,7 +969,13 @@ function renderProps(){
     const ltv=p.bal/p.val*100;
     const isSold=SOLD[p.id];
 
-    html+=`<div class="pcard ${isSold?'sold':''} ${p.listed?'listed':''} ${p.type==='P'?'primary':''}">
+    html+=`<div class="pcard ${p.listed?'listed':''} ${p.type==='P'?'primary':''}">
+      ${p.type==='I'?`<div style="display:flex;justify-content:flex-end;margin-bottom:6px">
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--text2)">
+          <input type="checkbox" ${isSold?'checked':''} onchange="SOLD['${p.id}']=this.checked;recalc()" style="accent-color:var(--teal);cursor:pointer"> Mark sold
+        </label>
+      </div>`:''}
+      <div class="pcard-body ${isSold?'sold':''}">
       <div class="ph">
         <div>
           <div class="pa">${p.addr}</div>
@@ -957,23 +983,21 @@ function renderProps(){
           <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:5px">
             ${p.type==='P'?'<span class="badge bb">Primary Residence</span>':'<span class="badge bt">Investment</span>'}
             ${p.listed?'<span class="badge bo">Listed for Sale</span>':''}
+            ${isSold?'<span class="badge bo">Marked as Sold</span>':''}
             ${cashflow!==null?`<span class="badge ${cashflow>=0?'bg':'br'}">${cashflow>=0?'+':''}${fmt(Math.round(cashflow))}/mo cash flow</span>`:''}
           </div>
         </div>
-        ${p.type==='I'?`<label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--text2)">
-          <input type="checkbox" ${isSold?'checked':''} onchange="SOLD['${p.id}']=this.checked;recalc()" style="accent-color:var(--teal)"> Mark sold
-        </label>`:''}
       </div>
       <div class="g4">
-        <div class="field"><label>Est. value ($)</label><input class="finput" type="number" value="${p.val}" onchange="P.find(x=>x.id==='${p.id}').val=+this.value;recalc()"></div>
-        <div class="field"><label>Mortgage balance ($)</label><input class="finput" type="number" value="${Math.round(p.bal)}" onchange="P.find(x=>x.id==='${p.id}').bal=+this.value;recalc()"></div>
+        <div class="field"><label>Est. value ($)</label><input class="finput" type="text" value="${fmtN(p.val)}" onchange="P.find(x=>x.id==='${p.id}').val=parseN(this.value);recalc()"></div>
+        <div class="field"><label>Mortgage balance ($)</label><input class="finput" type="text" value="${fmtN(Math.round(p.bal))}" onchange="P.find(x=>x.id==='${p.id}').bal=parseN(this.value);recalc()"></div>
         <div class="field"><label>Rate (%)</label><input class="finput" type="number" step="0.001" value="${(p.rate*100).toFixed(3)}" onchange="P.find(x=>x.id==='${p.id}').rate=+this.value/100;recalc()"></div>
-        <div class="field"><label>P&I payment ($)</label><input class="finput" type="number" value="${p.pi.toFixed(2)}" onchange="P.find(x=>x.id==='${p.id}').pi=+this.value;recalc()"></div>
-        ${p.type==='I'?`<div class="field"><label>Monthly rent ($)</label><input class="finput" type="number" value="${p.rent}" onchange="P.find(x=>x.id==='${p.id}').rent=+this.value;recalc()"></div>`:''}
+        <div class="field"><label>P&I payment ($)</label><input class="finput" type="text" value="${fmtN(p.pi,2)}" onchange="P.find(x=>x.id==='${p.id}').pi=parseN(this.value);recalc()"></div>
+        ${p.type==='I'?`<div class="field"><label>Monthly rent ($)</label><input class="finput" type="text" value="${fmtN(p.rent)}" onchange="P.find(x=>x.id==='${p.id}').rent=parseN(this.value);recalc()"></div>`:''}
         ${p.helocBal>0||p.type==='I'?`
-        <div class="field"><label>HELOC balance ($)</label><input class="finput" type="number" value="${Math.round(p.helocBal)}" onchange="const pp=P.find(x=>x.id==='${p.id}');pp.helocBal=+this.value;pp.helocPmt=pp.helocBal*pp.helocRate/12;recalc()"></div>
+        <div class="field"><label>HELOC balance ($)</label><input class="finput" type="text" value="${fmtN(Math.round(p.helocBal))}" onchange="const pp=P.find(x=>x.id==='${p.id}');pp.helocBal=parseN(this.value);pp.helocPmt=pp.helocBal*pp.helocRate/12;recalc()"></div>
         <div class="field"><label>HELOC rate (%)</label><input class="finput" type="number" step="0.01" value="${(p.helocRate*100).toFixed(2)}" onchange="const pp=P.find(x=>x.id==='${p.id}');pp.helocRate=+this.value/100;recalc()"></div>
-        <div class="field"><label>HELOC pmt (I/O) ($)</label><input class="finput" type="number" value="${hpmt.toFixed(2)}" onchange="P.find(x=>x.id==='${p.id}').helocPmt=+this.value;recalc()"></div>
+        <div class="field"><label>HELOC pmt (I/O) ($)</label><input class="finput" type="text" value="${fmtN(hpmt,2)}" onchange="P.find(x=>x.id==='${p.id}').helocPmt=parseN(this.value);recalc()"></div>
         `:''}
       </div>
       <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:16px;font-size:11px;color:var(--text3)">
@@ -982,6 +1006,7 @@ function renderProps(){
         ${p.type==='I'?`<span>Total PITIA+HELOC: <b>${fmt(Math.round(pitia))}/mo</b></span>
         <span>Schedule E income: <b>${fmt(Math.round(p.schedE))}/mo</b></span>`:''}
         ${p.type==='I'&&p.helocBal>0?`<span style="color:var(--amber)">If sold: pays off 1st (${fmt(Math.round(sp.payoff1st))}) + HELOC (${fmt(Math.round(sp.payoffHeloc))}) → net proceeds ${fmt(Math.round(sp.net))}</span>`:''}
+      </div>
       </div>
     </div>`;
   });
