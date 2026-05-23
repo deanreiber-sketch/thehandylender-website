@@ -247,6 +247,7 @@ select.finput option{background:var(--navy2)}
   <button class="ntab" onclick="showTab('refi',this)">Refi Modeler</button>
   <button class="ntab" onclick="showTab('income',this)">Income &amp; DTI</button>
   <button class="ntab" onclick="showTab('props',this)">Properties</button>
+  <button class="ntab" onclick="showTab('cashflow',this)">Cash Flow</button>
   <button class="ntab" onclick="showTab('advisory',this)">Advisory</button>
 </nav>
 
@@ -257,6 +258,7 @@ select.finput option{background:var(--navy2)}
   <div id="panel-refi" class="panel"></div>
   <div id="panel-income" class="panel"></div>
   <div id="panel-props" class="panel"></div>
+  <div id="panel-cashflow" class="panel"></div>
   <div id="panel-advisory" class="panel"></div>
 </main>
 
@@ -291,12 +293,44 @@ select.finput option{background:var(--navy2)}
 // DATA
 // ═══════════════════════════════════════════════════════════
 const DEFAULT_PROPS = [
-  {id:'ca',  addr:'31852 Via Faisan',   city:'Coto de Caza, CA',  type:'I', val:1800000, bal:1109250.24, rate:0.0600, pi:6690.98,  hoi:178.00, tax:776.67,  hoa:245.00, helocBal:160000,  helocRate:0.100,  rent:8000, schedE:6000.0, leaseEnd:'2027-07-31', sellCost:0.06, listed:false},
-  {id:'sky', addr:'17951 Sky Pilot Ln', city:'Parker, CO',         type:'I', val:635500,  bal:413064.00,  rate:0.05125,pi:3827.14,  hoi:250.50, tax:719.20,  hoa:100.00, helocBal:0,       helocRate:0,      rent:3900, schedE:2925.0, leaseEnd:'2026-06-30', sellCost:0.06, listed:false},
-  {id:'blf', addr:'10213 Bluffmont Dr', city:'Lone Tree, CO',      type:'I', val:1100000, bal:708739.93,  rate:0.03625,pi:3511.60,  hoi:591.58, tax:887.08,  hoa:247.00, helocBal:43700,   helocRate:0.1179, rent:4100, schedE:3075.0, leaseEnd:'2027-01-14', sellCost:0.06, listed:false},
-  {id:'sw1', addr:'3598 Swabuck Pl',    city:'Castle Rock, CO',    type:'I', val:657500,  bal:123006.78,  rate:0.04125,pi:726.97,   hoi:221.58, tax:401.92,  hoa:71.67,  helocBal:248975,  helocRate:0.1200, rent:3575, schedE:2681.25, leaseEnd:'2026-06-30', sellCost:0.06, listed:true},
-  {id:'sw2', addr:'3426 Swabuck Pl',    city:'Castle Rock CO',     type:'I', val:688100,  bal:346759.32,  rate:0.0300, pi:1656.90,  hoi:211.17, tax:400.50,  hoa:71.67,  helocBal:154860,  helocRate:0.0899, rent:3400, schedE:2550.00, leaseEnd:'2026-09-30', sellCost:0.06, listed:false},
-  {id:'md',  addr:'11902 Northpark Dr', city:'North Bethesda, MD', type:'P', val:1380000, bal:949600.00,  rate:0.0725, pi:7566.03,  hoi:123.25, tax:771.83,  hoa:193.00, helocBal:0,       helocRate:0,      rent:0,    schedE:0,       leaseEnd:'',   sellCost:0.06, listed:false}
+  // ── All values sourced directly from Refi_Eval.xlsx ──────────────────────
+  // HOI and Tax stored as monthly (annual ÷ 12). schedE = rent × 75%.
+  {id:'ca',  addr:'31852 Via Faisan',   city:'Coto de Caza, CA',  type:'I',
+   val:1800000,  bal:1109250.24, rate:0.0600,  pi:6690.98,
+   hoi:178.00,   tax:776.67,    hoa:245.00,   mi:0,
+   helocBal:160000,  helocRate:0.100,  helocPmt:1333.33,
+   rent:8000,  leaseEnd:'2027-07-31', schedE:6000.00,
+   sellCost:0.06, listed:false},
+  {id:'sky', addr:'17951 Sky Pilot Ln', city:'Parker, CO',         type:'I',
+   val:635500,   bal:413064.00,  rate:0.05125, pi:3827.14,
+   hoi:250.50,   tax:719.20,    hoa:100.00,   mi:0,
+   helocBal:0,       helocRate:0,      helocPmt:0,
+   rent:3900,  leaseEnd:'2026-06-30', schedE:2925.00,
+   sellCost:0.06, listed:false},
+  {id:'blf', addr:'10213 Bluffmont Dr', city:'Lone Tree, CO',      type:'I',
+   val:1100000,  bal:708739.93,  rate:0.03625, pi:3511.60,
+   hoi:591.58,   tax:887.08,    hoa:247.00,   mi:0,
+   helocBal:43700,   helocRate:0.1179, helocPmt:429.35,
+   rent:4100,  leaseEnd:'2027-01-14', schedE:3075.00,
+   sellCost:0.06, listed:false},
+  {id:'sw1', addr:'3598 Swabuck Pl',    city:'Castle Rock, CO',    type:'I',
+   val:657500,   bal:123006.78,  rate:0.04125, pi:726.97,
+   hoi:221.58,   tax:401.92,    hoa:71.67,    mi:0,
+   helocBal:248975,  helocRate:0.1200, helocPmt:2489.75,
+   rent:3575,  leaseEnd:'2026-06-30', schedE:2681.25,
+   sellCost:0.06, listed:true},
+  {id:'sw2', addr:'3426 Swabuck Pl',    city:'Castle Rock, CO',    type:'I',
+   val:688100,   bal:346759.32,  rate:0.0300,  pi:1656.90,
+   hoi:211.17,   tax:400.50,    hoa:71.67,    mi:0,
+   helocBal:154860,  helocRate:0.0899, helocPmt:1160.16,
+   rent:3400,  leaseEnd:'2026-09-30', schedE:2550.00,
+   sellCost:0.06, listed:false},
+  {id:'md',  addr:'11902 Northpark Dr', city:'North Bethesda, MD', type:'P',
+   val:1380000,  bal:949600.00,  rate:0.0725,  pi:7566.03,
+   hoi:123.25,   tax:771.83,    hoa:193.00,   mi:0,
+   helocBal:0,       helocRate:0,      helocPmt:0,
+   rent:0,     leaseEnd:'',    schedE:0,
+   sellCost:0.06, listed:false}
 ];
 const DEFAULT_OTHER = [
   {id:'apple',name:'Apple Card',    pmt:503},
@@ -307,11 +341,15 @@ const DEFAULT_OTHER = [
 ];
 const DEFAULT_INCOME = {salary:25001.60, bonus:6500, deferred:0};
 const DEFAULT_REFI   = {rate:6.5, term:30, cashout:0, useRefi:true};
+// Per-property refi scenarios (investment properties)
+const DEFAULT_PROP_REFIS = () => Object.fromEntries(
+  ['ca','sky','blf','sw1','sw2'].map(id=>[id,{enabled:false,rate:6.5,term:30}])
+);
 
 // ── State (loaded from localStorage or defaults) ──────────
-let P, OD, INC, REFI, SOLD, ALLOCS, ASSETS, ASSET_LIQ, ASSET_ALLOCS;
+let P, OD, INC, REFI, PROP_REFIS, SOLD, ALLOCS, ASSETS, ASSET_LIQ, ASSET_ALLOCS;
 
-const DATA_VERSION = 5; // increment when DEFAULT_PROPS data changes
+const DATA_VERSION = 7; // increment when DEFAULT_PROPS data changes
 
 function loadState(){
   try{
@@ -350,6 +388,7 @@ function loadState(){
     REFI        = s.refi        ? s.refi        : {...DEFAULT_REFI};
     SOLD        = s.sold        ? s.sold        : {};
     ALLOCS      = s.allocs      ? s.allocs      : {};
+    PROP_REFIS  = s.propRefis   ? s.propRefis   : DEFAULT_PROP_REFIS();
     ASSETS      = s.assets      ? s.assets      : [];
     ASSET_LIQ   = s.assetLiq    ? s.assetLiq    : {};
     ASSET_ALLOCS= s.assetAllocs ? s.assetAllocs : {};
@@ -357,7 +396,7 @@ function loadState(){
 }
 function resetState(){
   P=DEFAULT_PROPS.map(x=>({...x}));OD=DEFAULT_OTHER.map(x=>({...x}));
-  INC={...DEFAULT_INCOME};REFI={...DEFAULT_REFI};
+  INC={...DEFAULT_INCOME};REFI={...DEFAULT_REFI};PROP_REFIS=DEFAULT_PROP_REFIS();
   SOLD={};ALLOCS={};ASSETS=[];ASSET_LIQ={};ASSET_ALLOCS={};
 }
 function resetAllocs(){
@@ -366,7 +405,7 @@ function resetAllocs(){
   recalc();
 }
 function saveAll(){
-  localStorage.setItem('sg_tool',JSON.stringify({version:DATA_VERSION,props:P,otherDebts:OD,income:INC,refi:REFI,sold:SOLD,allocs:ALLOCS,assets:ASSETS,assetLiq:ASSET_LIQ,assetAllocs:ASSET_ALLOCS}));
+  localStorage.setItem('sg_tool',JSON.stringify({version:DATA_VERSION,props:P,otherDebts:OD,income:INC,refi:REFI,propRefis:PROP_REFIS,sold:SOLD,allocs:ALLOCS,assets:ASSETS,assetLiq:ASSET_LIQ,assetAllocs:ASSET_ALLOCS}));
   const n=document.getElementById('save-note');
   n.textContent='Saved '+new Date().toLocaleTimeString();
   setTimeout(()=>n.textContent='',4000);
@@ -434,14 +473,32 @@ function effectiveHelocPmt(p){
 
 // Rental income credit at 75% (Schedule E method)
 function rentalCredit(p){
-  // Per Fannie Mae conventional: use Schedule E gross rent vs PITIA (no HELOC).
-  // HELOC is a separate debt obligation captured in investDebt.
-  // Positive net: 75% credited to qualifying income.
-  // Negative net: loss is NOT double-added here — investDebt already carries all costs.
   if(SOLD[p.id])return 0;
-  const pitia=p.pi+p.hoi+p.tax+p.hoa; // PITIA only — HELOC excluded
+  const pr=PROP_REFIS&&PROP_REFIS[p.id];
+  const propPI=(pr&&pr.enabled)?calcPI(p.bal,pr.rate/100,pr.term):p.pi;
+  const pitia=propPI+p.hoi+p.tax+p.hoa;
   const net=p.schedE-pitia;
-  return net>0?net*0.75:0; // losses: return 0 (costs already in investDebt)
+  return net>0?net*0.75:0;
+}
+
+// Full cash flow breakdown for a property (used by cash flow tab)
+function propCashFlow(p){
+  if(SOLD[p.id])return null;
+  const pr=PROP_REFIS&&PROP_REFIS[p.id];
+  const propPI=(pr&&pr.enabled)?calcPI(p.bal,pr.rate/100,pr.term):p.pi;
+  const pitia=propPI+p.hoi+p.tax+p.hoa;
+  const helocPmt=effectiveHelocPmt(p);
+  const totalObligation=pitia+helocPmt;
+  const grossRent=p.rent;
+  const schedE=p.schedE;
+  const netVsPITIA=schedE-pitia;                   // for DTI calc
+  const netCashFlow=grossRent-totalObligation;      // actual pocket cash flow
+  const dtiCredit=netVsPITIA>0?netVsPITIA*0.75:0;
+  const dtiDebt=netVsPITIA<0?Math.abs(netVsPITIA):0;
+  const breakEvenRent=totalObligation;              // rent needed to cover all costs
+  const breakEvenSchedE=pitia;                      // schedE needed to be DTI-neutral
+  return{propPI,pitia,helocPmt,totalObligation,grossRent,schedE,
+         netVsPITIA,netCashFlow,dtiCredit,dtiDebt,breakEvenRent,breakEvenSchedE};
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -459,14 +516,25 @@ function calcDTI(){
 
   // --- Primary PITIA ---
   const md=P.find(p=>p.id==='md');
-  const mdBal=md.bal+REFI.cashout;
+  const primaryPaydown=+(ALLOCS['primary_paydown']||0); // proceeds applied to reduce balance
+  const mdBal=Math.max(0, md.bal - primaryPaydown + REFI.cashout);
   const mdPI=REFI.useRefi?calcPI(mdBal,REFI.rate/100,REFI.term):md.pi;
   const mdPITIA=mdPI+md.hoi+md.tax+md.hoa;
 
-  // --- Investment property obligations ---
+  // --- Investment property obligations (Fannie Mae B3-3.1-08) ---
+  // Positive net cash flow: 75% of net credited to income. HELOC = separate obligation.
+  // Negative net cash flow: net LOSS added to debt side. HELOC = separate obligation.
+  // The full PITIA is NOT double-counted on the debt side — it is netted against schedE.
   let investDebt=0;
   P.filter(p=>p.type==='I'&&!SOLD[p.id]).forEach(p=>{
-    investDebt+=p.pi+p.hoi+p.tax+p.hoa+effectiveHelocPmt(p);
+    const pr=PROP_REFIS&&PROP_REFIS[p.id];
+    const propPI=(pr&&pr.enabled)?calcPI(p.bal,pr.rate/100,pr.term):p.pi;
+    const pitia=propPI+p.hoi+p.tax+p.hoa;
+    const net=p.schedE-pitia;
+    // Only net loss (not full PITIA) goes on debt side
+    if(net<0) investDebt+=Math.abs(net);
+    // HELOC is always a separate monthly obligation
+    investDebt+=effectiveHelocPmt(p);
   });
 
   // --- Other debts (cards etc.) ---
@@ -475,8 +543,8 @@ function calcDTI(){
   const totalDebt=mdPITIA+investDebt+otherDebt;
   const dti=totalDebt/qualIncome*100;
 
-  return{dti,qualIncome,totalDebt,mdPITIA,mdPI,investDebt,otherDebt,
-         rentalSum,rentalLoss,salary,bonus,deferred};
+  return{dti,qualIncome,totalDebt,mdPITIA,mdPI,mdBal,investDebt,otherDebt,
+         rentalSum,rentalLoss,salary,bonus,deferred,primaryPaydown};
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -517,6 +585,7 @@ function renderAll(){
   else if(id==='refi') renderRefi(r);
   else if(id==='income') renderIncome(r);
   else if(id==='props') renderProps();
+  else if(id==='cashflow') renderCashFlow(r);
   else if(id==='advisory') renderAdvisory(r);
 }
 
@@ -659,6 +728,10 @@ function renderProceeds(r){
   });
   OD.forEach(d=>targets.push({id:d.id, name:d.name, bal:0, rate:0, pmt:d.pmt, type:'card'}));
   targets.sort((a,b)=>b.rate-a.rate);
+  // Add primary paydown as a special target (shown last — not a payoff, reduces refi balance)
+  const md=P.find(p=>p.id==='md');
+  targets.push({id:'primary_paydown', name:'11902 Northpark Dr — Apply to refi balance', bal:md.bal, rate:REFI.rate/100, pmt:0, type:'paydown',
+    note:'Reduces the principal balance before refinancing, lowering the new P&I payment.'});
 
   html+=`${remaining<0?`<div style="background:var(--red-bg);border:1px solid var(--red);border-radius:var(--r);padding:10px 14px;margin-bottom:10px;font-size:12px;color:var(--red)"><b>⚠ Over-allocated by ${fmt(Math.round(-remaining))}</b> — reduce allocations below or sell additional properties to cover.</div>`:''}
   <div class="card">
@@ -672,19 +745,39 @@ function renderProceeds(r){
 
   targets.forEach(t=>{
     const allocVal=+(ALLOCS[t.id]||0);
-    const isFullPayoff=t.bal>0&&allocVal>=t.bal;
+    const isFullPayoff=t.type!=='paydown'&&t.bal>0&&allocVal>=t.bal;
     const rc=t.rate*100;
     const rateClass=rc>=10?'high':rc>=5?'mid':'low';
-    html+=`<div class="alloc-row">
-      <div class="ar-info">
-        <div class="ar-name">${t.name} ${isFullPayoff?'<span style="background:var(--green-bg);color:var(--green);font-size:10px;padding:1px 7px;border-radius:20px;font-weight:600">✓ paid off</span>':''}</div>
-        <div class="ar-meta">Current pmt: ${fmt(Math.round(t.pmt))}/mo ${isFullPayoff?'→ <span style="color:var(--green)">$0/mo after payoff</span>':''}</div>
-      </div>
-      <div style="font-size:12px;min-width:80px;text-align:right;color:var(--text2)">${t.bal>0?fmt(Math.round(t.bal)):'revolving'}</div>
-      <div style="min-width:55px;text-align:center">${t.rate>0?`<span class="ar-rate ${rateClass}">${pct(rc,2)}</span>`:'—'}</div>
-      <input class="ar-inp ${allocVal>0&&remaining<0?'over':''}" type="number" min="0" value="${allocVal||''}" placeholder="$0"
-        onchange="ALLOCS['${t.id}']=Math.min(+this.value,${t.bal>0?t.bal:9999999});recalc()">
-    </div>`;
+    if(t.type==='paydown'){
+      // Special row: primary refi balance reduction
+      const md2=P.find(p=>p.id==='md');
+      const newBal=Math.max(0,md2.bal-allocVal);
+      const newPI=REFI.useRefi?calcPI(newBal,REFI.rate/100,REFI.term):md2.pi;
+      const curPI=REFI.useRefi?calcPI(md2.bal,REFI.rate/100,REFI.term):md2.pi;
+      const saving=curPI-newPI;
+      html+=`<div class="alloc-row" style="background:rgba(45,212,191,.04);border-radius:8px;padding:8px;margin-top:4px;border:1px solid var(--teal2)">
+        <div class="ar-info">
+          <div class="ar-name" style="color:var(--teal)">⬇ ${t.name}</div>
+          <div class="ar-meta">${t.note}</div>
+          ${allocVal>0?`<div class="ar-meta" style="color:var(--teal)">New balance: ${fmt(Math.round(newBal))} → saves ${fmt(Math.round(saving))}/mo on P&I</div>`:''}
+        </div>
+        <div style="font-size:12px;min-width:80px;text-align:right;color:var(--text2)">${fmt(Math.round(md2.bal))}</div>
+        <div style="min-width:55px;text-align:center"><span class="ar-rate low">${pct(REFI.rate,3)}</span></div>
+        <input class="ar-inp ${allocVal>0&&remaining<0?'over':''}" type="number" min="0" value="${allocVal||''}" placeholder="$0"
+          onchange="ALLOCS['primary_paydown']=Math.min(+this.value,${md.bal});recalc()">
+      </div>`;
+    } else {
+      html+=`<div class="alloc-row">
+        <div class="ar-info">
+          <div class="ar-name">${t.name} ${isFullPayoff?'<span style="background:var(--green-bg);color:var(--green);font-size:10px;padding:1px 7px;border-radius:20px;font-weight:600">✓ paid off</span>':''}</div>
+          <div class="ar-meta">Current pmt: ${fmt(Math.round(t.pmt))}/mo ${isFullPayoff?'→ <span style="color:var(--green)">$0/mo after payoff</span>':''}</div>
+        </div>
+        <div style="font-size:12px;min-width:80px;text-align:right;color:var(--text2)">${t.bal>0?fmt(Math.round(t.bal)):'revolving'}</div>
+        <div style="min-width:55px;text-align:center">${t.rate>0?`<span class="ar-rate ${rateClass}">${pct(rc,2)}</span>`:'—'}</div>
+        <input class="ar-inp ${allocVal>0&&remaining<0?'over':''}" type="number" min="0" value="${allocVal||''}" placeholder="$0"
+          onchange="ALLOCS['${t.id}']=Math.min(+this.value,${t.bal>0?t.bal:9999999});recalc()">
+      </div>`;
+    }
   });
   html+=`</div>`;
 
@@ -853,22 +946,22 @@ function deleteAsset(id){
 // ═══════════════════════════════════════════════════════════
 function renderRefi(r){
   const md=P.find(p=>p.id==='md');
-  const newBal=md.bal+REFI.cashout;
+  const primaryPaydown=+(ALLOCS['primary_paydown']||0);
+  const newBal=Math.max(0, md.bal - primaryPaydown + REFI.cashout);
   const newPI=calcPI(newBal,REFI.rate/100,REFI.term);
   const newPITIA=newPI+md.hoi+md.tax+md.hoa;
   const curPITIA=md.pi+md.hoi+md.tax+md.hoa;
   const saving=curPITIA-newPITIA;
   const ltv=newBal/md.val*100;
-  // DTI without refi
   const prevUse=REFI.useRefi;REFI.useRefi=false;const dtiOld=calcDTI();REFI.useRefi=prevUse;
 
   let html=`<div class="card highlight">
     <div class="ctitle"><span class="ctitle-accent">◈</span> Primary residence — 11902 Northpark Dr, MD</div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)">
-      <div><div class="mlbl">Current rate</div><div style="font-size:18px;font-weight:600;color:var(--text)">${pct(md.rate*100,3)}</div></div>
-      <div><div class="mlbl">Current balance</div><div style="font-size:18px;font-weight:600;color:var(--text)">${fmt(Math.round(md.bal))}</div></div>
-      <div><div class="mlbl">Current P&I</div><div style="font-size:18px;font-weight:600;color:var(--text)">${fmt(Math.round(md.pi))}/mo</div></div>
-      <div><div class="mlbl">Current PITIA</div><div style="font-size:18px;font-weight:600;color:var(--text)">${fmt(Math.round(curPITIA))}/mo</div></div>
+      <div><div class="mlbl">Current rate</div><div style="font-size:18px;font-weight:600">${pct(md.rate*100,3)}</div></div>
+      <div><div class="mlbl">Current balance</div><div style="font-size:18px;font-weight:600">${fmt(Math.round(md.bal))}</div></div>
+      <div><div class="mlbl">Current P&I</div><div style="font-size:18px;font-weight:600">${fmt(Math.round(md.pi))}/mo</div></div>
+      <div><div class="mlbl">Current PITIA</div><div style="font-size:18px;font-weight:600">${fmt(Math.round(curPITIA))}/mo</div></div>
     </div>
     <div class="g4" style="margin-bottom:14px">
       <div class="field"><label>New rate (%)</label><input class="finput" type="number" step="0.125" value="${REFI.rate}" onchange="REFI.rate=parseFloat(this.value)||0;recalc()"></div>
@@ -885,6 +978,9 @@ function renderRefi(r){
         </select>
       </div>
     </div>
+    ${primaryPaydown>0?`<div style="background:var(--teal-bg);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--teal);margin-bottom:10px">
+      ⬇ ${fmt(Math.round(primaryPaydown))} from Proceeds Allocator applied to balance → new balance <b>${fmt(Math.round(newBal))}</b>
+    </div>`:''}
     <div class="mg">
       <div class="metric"><div class="mlbl">New P&I</div><div class="mval">${fmt(Math.round(newPI))}/mo</div></div>
       <div class="metric"><div class="mlbl">New PITIA</div><div class="mval">${fmt(Math.round(newPITIA))}/mo</div></div>
@@ -894,8 +990,8 @@ function renderRefi(r){
       <div class="metric"><div class="mlbl">Annual saving</div><div class="mval ${saving>0?'ok':'danger'}">${saving>0?'-':'+'}${fmt(Math.round(Math.abs(saving*12)))}/yr</div></div>
     </div>
     ${saving>0
-      ?`<div style="background:var(--green-bg);border-radius:8px;padding:9px 12px;font-size:12px;color:var(--green)">✓ Refinancing saves ${fmt(Math.round(saving))}/mo. Estimated break-even: ~${Math.round(6000/saving)} months.</div>`
-      :`<div style="background:var(--amber-bg);border-radius:8px;padding:9px 12px;font-size:12px;color:var(--amber)">⚠ Current rate (${pct(md.rate*100,3)}) is higher than proposed refi rate (${pct(REFI.rate,3)}). The refi benefits from rate reduction. Any cash-out proceeds should target high-rate debt.</div>`}
+      ?`<div style="background:var(--green-bg);border-radius:8px;padding:9px 12px;font-size:12px;color:var(--green)">✓ Refinancing saves ${fmt(Math.round(saving))}/mo. Est. break-even: ~${Math.round(6000/saving)} months.</div>`
+      :`<div style="background:var(--amber-bg);border-radius:8px;padding:9px 12px;font-size:12px;color:var(--amber)">⚠ Current rate (${pct(md.rate*100,3)}) is higher than proposed refi rate (${pct(REFI.rate,3)}). Refi provides rate relief plus any paydown benefit.</div>`}
   </div>
 
   <div class="card">
@@ -915,13 +1011,48 @@ function renderRefi(r){
   <div class="card">
     <div class="ctitle"><span class="ctitle-accent">◈</span> Lender-paid 1/0 temporary buydown</div>
     <div style="font-size:12px;color:var(--text2);line-height:1.8">
-      With a lender-paid 1/0 buydown at par rate <b style="color:var(--text)">${pct(REFI.rate,3)}</b>:
-      &nbsp;Year 1 effective rate = <b style="color:var(--teal)">${pct(REFI.rate-1,3)}</b> → P&I = <b style="color:var(--teal)">${fmt(Math.round(calcPI(newBal,(REFI.rate-1)/100,REFI.term)))}/mo</b><br>
-      Year 2+ rate = <b style="color:var(--text)">${pct(REFI.rate,3)}</b> → P&I = <b style="color:var(--text)">${fmt(Math.round(newPI))}/mo</b><br>
-      <span style="color:var(--text3);font-size:11px">Note: underwriting qualifies at the full ${pct(REFI.rate,3)} rate. The buydown reduces Year 1 cash flow but does not change the qualifying DTI.</span>
+      Year 1 effective rate = <b style="color:var(--teal)">${pct(REFI.rate-1,3)}</b> → P&I = <b style="color:var(--teal)">${fmt(Math.round(calcPI(newBal,(REFI.rate-1)/100,REFI.term)))}/mo</b><br>
+      Year 2+ rate = <b>${pct(REFI.rate,3)}</b> → P&I = <b>${fmt(Math.round(newPI))}/mo</b><br>
+      <span style="color:var(--text3);font-size:11px">Underwriting qualifies at the full ${pct(REFI.rate,3)} rate.</span>
     </div>
-  </div>`;
+  </div>
 
+  <div class="card">
+    <div class="ctitle"><span class="ctitle-accent">◈</span> Investment property refinance scenarios</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:12px">Model a rate/term refi on any investment property to see the monthly savings and DTI impact. HELOC balances are unaffected.</div>`;
+
+  P.filter(p=>p.type==='I'&&!SOLD[p.id]).forEach(p=>{
+    const pr=PROP_REFIS[p.id]||{enabled:false,rate:6.5,term:30};
+    const curPI=p.pi;
+    const newPIp=pr.enabled?calcPI(p.bal,pr.rate/100,pr.term):curPI;
+    const saving_p=curPI-newPIp;
+    const ltv_p=p.bal/p.val*100;
+    html+=`<div style="background:var(--navy3);border:1px solid ${pr.enabled?'var(--teal2)':'var(--border)'};border-radius:var(--r);padding:13px;margin-bottom:9px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text)">${p.addr} <span style="font-size:11px;color:var(--text3)">${p.city}</span></div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px">Current: ${pct(p.rate*100,3)} · Balance: ${fmt(Math.round(p.bal))} · P&I: ${fmt(Math.round(curPI))}/mo · LTV: ${pct(ltv_p)}</div>
+        </div>
+        <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12px;color:var(--text2)">
+          <input type="checkbox" ${pr.enabled?'checked':''} onchange="PROP_REFIS['${p.id}'].enabled=this.checked;recalc()" style="accent-color:var(--teal);cursor:pointer"> Model refi
+        </label>
+      </div>
+      ${pr.enabled?`<div class="g4" style="margin-bottom:10px">
+        <div class="field"><label>New rate (%)</label><input class="finput" type="number" step="0.125" value="${pr.rate}" onchange="PROP_REFIS['${p.id}'].rate=parseFloat(this.value)||0;recalc()"></div>
+        <div class="field"><label>Term (years)</label>
+          <select class="finput" onchange="PROP_REFIS['${p.id}'].term=+this.value;recalc()">
+            ${[10,15,20,25,30].map(t=>`<option value="${t}" ${pr.term===t?'selected':''}>${t}-year</option>`).join('')}
+          </select>
+        </div>
+        <div class="metric" style="margin:0"><div class="mlbl">New P&I</div><div class="mval ${saving_p>0?'ok':'danger'}">${fmt(Math.round(newPIp))}/mo</div></div>
+        <div class="metric" style="margin:0"><div class="mlbl">Monthly saving</div><div class="mval ${saving_p>0?'ok':'danger'}">${saving_p>0?'-':'+'}${fmt(Math.round(Math.abs(saving_p)))}/mo</div></div>
+      </div>
+      <div style="font-size:11px;color:var(--teal)">✓ Refi active — new P&I ${fmt(Math.round(newPIp))}/mo saves ${fmt(Math.round(saving_p))}/mo · Annual savings: ${fmt(Math.round(saving_p*12))}</div>`
+      :`<div style="font-size:11px;color:var(--text3)">Check "Model refi" to simulate a rate/term refinance on this property.</div>`}
+    </div>`;
+  });
+
+  html+=`</div>`;
   document.getElementById('panel-refi').innerHTML=html;
 }
 
@@ -943,6 +1074,7 @@ function renderIncome(r){
       <div class="field"><label>Deferred comp (monthly)</label><input class="finput" type="text" value="${fmtN(INC.deferred,2)}" onchange="INC.deferred=parseN(this.value);recalc()"></div>
     </div>
     <div style="background:var(--amber-bg);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--amber);margin-bottom:12px">⚠ Deferred comp set to $0 — conventional guidelines require 3-year continuance; ~2 years remain on this income.</div>
+    <div style="background:var(--blue-bg,rgba(96,165,250,.1));border-radius:8px;padding:8px 12px;font-size:12px;color:var(--blue);margin-bottom:12px">ℹ DTI method: Fannie Mae B3-3.1-08 — net rental losses (not full PITIA) added to debt. HELOC payments counted separately. See Cash Flow tab for full breakdown.</div>
     <div class="row"><span class="rn">Base salary</span><span class="rv pos">${fmt(Math.round(r.salary))}/mo</span></div>
     <div class="row"><span class="rn">Eligible bonus income</span><span class="rv pos">${fmt(Math.round(r.bonus))}/mo</span></div>
     <div class="row"><span class="rn">Deferred comp</span><span class="rv ${r.deferred>0?'pos':'muted'}">${r.deferred>0?fmt(Math.round(r.deferred))+'/mo':'Not eligible'}</span></div>`;
@@ -1050,7 +1182,7 @@ function renderProps(){
         <div class="field"><label>Rate (%)</label><input class="finput" type="number" step="0.001" value="${(p.rate*100).toFixed(3)}" onchange="P.find(x=>x.id==='${p.id}').rate=+this.value/100;recalc()"></div>
         <div class="field"><label>P&I payment ($)</label><input class="finput" type="text" value="${fmtN(p.pi,2)}" onchange="P.find(x=>x.id==='${p.id}').pi=parseN(this.value);recalc()"></div>
         ${p.type==='I'?`<div class="field"><label>Monthly rent ($) <span style="font-size:10px;color:var(--text3)">(market)</span></label><input class="finput" type="text" value="${fmtN(p.rent)}" onchange="P.find(x=>x.id==='${p.id}').rent=parseN(this.value);recalc()"></div>
-        <div class="field"><label>Schedule E gross rent ($) <span style="font-size:10px;color:var(--teal)">(used for DTI)</span></label><input class="finput" type="text" value="${fmtN(p.schedE,2)}" onchange="P.find(x=>x.id==='${p.id}').schedE=parseN(this.value);recalc()" style="border-color:var(--teal2)"></div>
+        <div class="field"><label>Qualifying rent ($) <span style="font-size:10px;color:var(--teal)">(75% of rent, used for DTI)</span></label><input class="finput" type="text" value="${fmtN(p.schedE,2)}" onchange="P.find(x=>x.id==='${p.id}').schedE=parseN(this.value);recalc()" style="border-color:var(--teal2)"></div>
         <div class="field"><label>Lease end date</label><input class="finput" type="date" value="${p.leaseEnd||''}" onchange="P.find(x=>x.id==='${p.id}').leaseEnd=this.value;recalc()"></div>`:''}
         ${p.helocBal>0||p.type==='I'?`
         <div class="field"><label>HELOC balance ($)</label><input class="finput" type="text" value="${fmtN(Math.round(p.helocBal))}" onchange="const pp=P.find(x=>x.id==='${p.id}');pp.helocBal=parseN(this.value);pp.helocPmt=pp.helocBal*pp.helocRate/12;recalc()"></div>
@@ -1069,6 +1201,212 @@ function renderProps(){
     </div>`;
   });
   document.getElementById('panel-props').innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════════
+// CASH FLOW
+// ═══════════════════════════════════════════════════════════
+function renderCashFlow(r){
+  const retireYrs=+document.getElementById('retire-yr').value;
+  let totalGrossRent=0,totalObligation=0,totalNetCashFlow=0,totalDtiCredit=0,totalDtiDebt=0;
+  const cfRows=[];
+  P.filter(p=>p.type==='I').forEach(p=>{
+    if(SOLD[p.id]){cfRows.push({p,sold:true});return;}
+    const cf=propCashFlow(p);
+    totalGrossRent+=cf.grossRent;
+    totalObligation+=cf.totalObligation;
+    totalNetCashFlow+=cf.netCashFlow;
+    totalDtiCredit+=cf.dtiCredit;
+    totalDtiDebt+=cf.dtiDebt;
+    cfRows.push({p,cf,sold:false});
+  });
+  const portfolioCoverage=(totalGrossRent/totalObligation*100);
+
+  let html=`
+  <div class="mg">
+    <div class="metric"><div class="mlbl">Total gross rent</div><div class="mval ok">${fmt(Math.round(totalGrossRent))}/mo</div></div>
+    <div class="metric"><div class="mlbl">Total obligations</div><div class="mval danger">${fmt(Math.round(totalObligation))}/mo</div></div>
+    <div class="metric"><div class="mlbl">Net portfolio cash flow</div><div class="mval ${totalNetCashFlow>=0?'ok':'danger'}">${fmt(Math.round(totalNetCashFlow))}/mo</div></div>
+    <div class="metric"><div class="mlbl">Coverage ratio</div><div class="mval ${portfolioCoverage>=100?'ok':'warn'}">${portfolioCoverage.toFixed(1)}%</div><div class="msub">rent ÷ obligations</div></div>
+    <div class="metric"><div class="mlbl">DTI rental credit</div><div class="mval ok">${fmt(Math.round(totalDtiCredit))}/mo</div><div class="msub">adds to income</div></div>
+    <div class="metric"><div class="mlbl">DTI rental drag</div><div class="mval ${totalDtiDebt>0?'danger':'ok'}">${fmt(Math.round(totalDtiDebt))}/mo</div><div class="msub">adds to debt</div></div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle"><span class="ctitle-accent">◈</span> Per-property cash flow</div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:12px">
+      <thead>
+        <tr style="border-bottom:1px solid var(--border)">
+          <th style="text-align:left;padding:7px 10px;font-size:10px;color:var(--text3);text-transform:uppercase;font-weight:500">Property</th>
+          <th style="text-align:right;padding:7px 6px;font-size:10px;color:var(--text3);text-transform:uppercase;font-weight:500">Gross rent</th>
+          <th style="text-align:right;padding:7px 6px;font-size:10px;color:var(--text3);text-transform:uppercase;font-weight:500">Qual rent<br><span style="color:var(--teal)">(75%)</span></th>
+          <th style="text-align:right;padding:7px 6px;font-size:10px;color:var(--text3);text-transform:uppercase;font-weight:500">PITIA</th>
+          <th style="text-align:right;padding:7px 6px;font-size:10px;color:var(--text3);text-transform:uppercase;font-weight:500">HELOC pmt</th>
+          <th style="text-align:right;padding:7px 6px;font-size:10px;color:var(--text3);text-transform:uppercase;font-weight:500">Total<br>obligation</th>
+          <th style="text-align:right;padding:7px 6px;font-size:10px;color:var(--text3);text-transform:uppercase;font-weight:500">Net cash<br>flow</th>
+          <th style="text-align:right;padding:7px 6px;font-size:10px;color:var(--text3);text-transform:uppercase;font-weight:500">Annual</th>
+          <th style="text-align:right;padding:7px 6px;font-size:10px;color:var(--text3);text-transform:uppercase;font-weight:500">DTI impact</th>
+          <th style="text-align:right;padding:7px 6px;font-size:10px;color:var(--text3);text-transform:uppercase;font-weight:500">Break-even<br>rent</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+  cfRows.forEach(({p,cf,sold})=>{
+    if(sold){
+      html+=`<tr style="opacity:.35"><td colspan="10" style="padding:8px 10px;color:var(--text3);font-style:italic">${p.addr} — marked as sold</td></tr>`;
+      return;
+    }
+    const ncf=cf.netCashFlow;
+    const ncfColor=ncf>=0?'var(--green)':ncf>=-500?'var(--gold)':'var(--red)';
+    const dtiTxt=cf.dtiCredit>0
+      ?`<span style="color:var(--green)">+${fmt(Math.round(cf.dtiCredit))} income</span>`
+      :`<span style="color:var(--red)">+${fmt(Math.round(cf.dtiDebt))} debt</span>`;
+    const lease=p.leaseEnd?leaseUrgency(p.leaseEnd):{color:'var(--text3)',label:''};
+    html+=`<tr style="border-bottom:1px solid var(--border)">
+      <td style="padding:8px 10px">
+        <div style="font-weight:500;color:var(--text)">${p.addr}</div>
+        <div style="font-size:10px;color:var(--text3)">${p.city}</div>
+        ${p.leaseEnd?`<div style="font-size:10px;color:${lease.color};margin-top:2px">Lease: ${formatLeaseDate(p.leaseEnd)} <span style="background:${lease.bg};padding:1px 5px;border-radius:8px">${lease.label}</span></div>`:''}
+      </td>
+      <td style="text-align:right;padding:8px 6px;color:var(--text)">${fmt(cf.grossRent)}</td>
+      <td style="text-align:right;padding:8px 6px;color:var(--teal)">${fmt(cf.schedE)}</td>
+      <td style="text-align:right;padding:8px 6px;color:var(--text2)">${fmt(Math.round(cf.pitia))}</td>
+      <td style="text-align:right;padding:8px 6px;color:${cf.helocPmt>0?'var(--amber)':'var(--text3)'}">${cf.helocPmt>0?fmt(Math.round(cf.helocPmt)):'—'}</td>
+      <td style="text-align:right;padding:8px 6px;font-weight:500;color:var(--text)">${fmt(Math.round(cf.totalObligation))}</td>
+      <td style="text-align:right;padding:8px 6px;font-weight:600;color:${ncfColor}">${fmt(Math.round(ncf))}</td>
+      <td style="text-align:right;padding:8px 6px;color:${ncfColor}">${fmt(Math.round(ncf*12))}</td>
+      <td style="text-align:right;padding:8px 6px">${dtiTxt}</td>
+      <td style="text-align:right;padding:8px 6px;color:var(--text2)">${fmt(Math.round(cf.breakEvenRent))}</td>
+    </tr>`;
+  });
+
+  html+=`<tr style="background:var(--navy3);font-weight:600">
+    <td style="padding:8px 10px;color:var(--text)">Portfolio total</td>
+    <td style="text-align:right;padding:8px 6px;color:var(--green)">${fmt(Math.round(totalGrossRent))}</td>
+    <td style="text-align:right;padding:8px 6px;color:var(--teal)">—</td>
+    <td style="text-align:right;padding:8px 6px;color:var(--text2)">—</td>
+    <td style="text-align:right;padding:8px 6px;color:var(--text2)">—</td>
+    <td style="text-align:right;padding:8px 6px;color:var(--text)">${fmt(Math.round(totalObligation))}</td>
+    <td style="text-align:right;padding:8px 6px;font-weight:700;color:${totalNetCashFlow>=0?'var(--green)':'var(--red)'}">${fmt(Math.round(totalNetCashFlow))}</td>
+    <td style="text-align:right;padding:8px 6px;color:${totalNetCashFlow>=0?'var(--green)':'var(--red)'}">${fmt(Math.round(totalNetCashFlow*12))}</td>
+    <td style="text-align:right;padding:8px 6px;color:var(--text2)">—</td>
+    <td style="text-align:right;padding:8px 6px;color:var(--text2)">—</td>
+  </tr>
+  </tbody></table></div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle"><span class="ctitle-accent">◈</span> DTI bridge — how rentals flow into the calculation</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:12px">Per Fannie Mae B3-3.1-08: positive net (schedE minus PITIA) → 75% credited to income. Negative net → loss amount added to debt obligations. HELOC payments are separate obligations in both cases.</div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:12px">
+      <thead><tr style="border-bottom:1px solid var(--border)">
+        <th style="text-align:left;padding:6px 10px;font-size:10px;color:var(--text3);text-transform:uppercase">Property</th>
+        <th style="text-align:right;padding:6px 8px;font-size:10px;color:var(--text3);text-transform:uppercase">Qual rent (75%)</th>
+        <th style="text-align:right;padding:6px 8px;font-size:10px;color:var(--text3);text-transform:uppercase">PITIA</th>
+        <th style="text-align:right;padding:6px 8px;font-size:10px;color:var(--text3);text-transform:uppercase">Net vs PITIA</th>
+        <th style="text-align:right;padding:6px 8px;font-size:10px;color:var(--text3);text-transform:uppercase">→ Income</th>
+        <th style="text-align:right;padding:6px 8px;font-size:10px;color:var(--text3);text-transform:uppercase">→ Debt</th>
+        <th style="text-align:right;padding:6px 8px;font-size:10px;color:var(--text3);text-transform:uppercase">HELOC (debt)</th>
+      </tr></thead>
+      <tbody>`;
+
+  cfRows.forEach(({p,cf,sold})=>{
+    if(sold) return;
+    html+=`<tr style="border-bottom:1px solid var(--border)">
+      <td style="padding:6px 10px;color:var(--text);font-weight:500">${p.addr}</td>
+      <td style="text-align:right;padding:6px 8px;color:var(--teal)">${fmt(cf.schedE)}</td>
+      <td style="text-align:right;padding:6px 8px;color:var(--text2)">${fmt(Math.round(cf.pitia))}</td>
+      <td style="text-align:right;padding:6px 8px;font-weight:600;color:${cf.netVsPITIA>=0?'var(--green)':'var(--red)'}">${fmt(Math.round(cf.netVsPITIA))}</td>
+      <td style="text-align:right;padding:6px 8px;color:var(--green)">${cf.dtiCredit>0?'+'+fmt(Math.round(cf.dtiCredit)):'—'}</td>
+      <td style="text-align:right;padding:6px 8px;color:var(--red)">${cf.dtiDebt>0?'+'+fmt(Math.round(cf.dtiDebt)):'—'}</td>
+      <td style="text-align:right;padding:6px 8px;color:${cf.helocPmt>0?'var(--amber)':'var(--text3)'}">${cf.helocPmt>0?'+'+fmt(Math.round(cf.helocPmt)):'—'}</td>
+    </tr>`;
+  });
+
+  const totalHELOC=cfRows.filter(x=>!x.sold).reduce((a,{cf})=>a+(cf?cf.helocPmt:0),0);
+  html+=`<tr style="background:var(--navy3);font-weight:600">
+    <td style="padding:6px 10px;color:var(--text)">Portfolio total</td>
+    <td style="text-align:right;padding:6px 8px;color:var(--teal)">—</td>
+    <td style="text-align:right;padding:6px 8px">—</td>
+    <td style="text-align:right;padding:6px 8px">—</td>
+    <td style="text-align:right;padding:6px 8px;color:var(--green)">${totalDtiCredit>0?'+'+fmt(Math.round(totalDtiCredit)):'—'}</td>
+    <td style="text-align:right;padding:6px 8px;color:var(--red)">${totalDtiDebt>0?'+'+fmt(Math.round(totalDtiDebt)):'—'}</td>
+    <td style="text-align:right;padding:6px 8px;color:var(--amber)">+${fmt(Math.round(totalHELOC))}</td>
+  </tr></tbody></table></div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle"><span class="ctitle-accent">◈</span> Lease renewals — rent needed to improve cash flow</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:12px">Properties with expiring leases present a renegotiation opportunity. The table below shows current rent vs. break-even and what rent increase would flip a property to positive DTI contribution.</div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:12px">
+      <thead><tr style="border-bottom:1px solid var(--border)">
+        <th style="text-align:left;padding:6px 10px;font-size:10px;color:var(--text3);text-transform:uppercase">Property</th>
+        <th style="text-align:right;padding:6px 8px;font-size:10px;color:var(--text3);text-transform:uppercase">Lease ends</th>
+        <th style="text-align:right;padding:6px 8px;font-size:10px;color:var(--text3);text-transform:uppercase">Current rent</th>
+        <th style="text-align:right;padding:6px 8px;font-size:10px;color:var(--text3);text-transform:uppercase">Cash-flow break-even</th>
+        <th style="text-align:right;padding:6px 8px;font-size:10px;color:var(--text3);text-transform:uppercase">DTI break-even (75% = PITIA)</th>
+        <th style="text-align:right;padding:6px 8px;font-size:10px;color:var(--text3);text-transform:uppercase">Increase needed</th>
+        <th style="text-align:right;padding:6px 8px;font-size:10px;color:var(--text3);text-transform:uppercase">DTI if achieved</th>
+      </tr></thead>
+      <tbody>`;
+
+  cfRows.filter(x=>!x.sold&&x.p.leaseEnd).forEach(({p,cf})=>{
+    const lu=leaseUrgency(p.leaseEnd);
+    // Rent needed so that 75% of rent > PITIA  →  rent > PITIA/0.75
+    const dtiBreakEven=Math.ceil(cf.pitia/0.75);
+    const increase=Math.max(0,dtiBreakEven-p.rent);
+    // Simulate DTI if this property achieves break-even rent
+    const simSchedE=dtiBreakEven*0.75;
+    const simNet=simSchedE-cf.pitia;
+    const simCredit=simNet>0?simNet*0.75:0;
+    const simDebt=simNet<0?Math.abs(simNet):0;
+    // Rough DTI delta
+    const currentContrib=totalDtiCredit-totalDtiDebt;  // not precise but indicative
+    html+=`<tr style="border-bottom:1px solid var(--border)">
+      <td style="padding:6px 10px;color:var(--text);font-weight:500">${p.addr}<br><span style="font-size:10px;color:var(--text3)">${p.city}</span></td>
+      <td style="text-align:right;padding:6px 8px;color:${lu.color}">${formatLeaseDate(p.leaseEnd)}<br><span style="font-size:10px;background:${lu.bg};padding:1px 5px;border-radius:8px">${lu.label}</span></td>
+      <td style="text-align:right;padding:6px 8px;color:var(--text)">${fmt(p.rent)}</td>
+      <td style="text-align:right;padding:6px 8px;color:var(--text2)">${fmt(Math.round(cf.breakEvenRent))}</td>
+      <td style="text-align:right;padding:6px 8px;color:var(--teal)">${fmt(dtiBreakEven)}</td>
+      <td style="text-align:right;padding:6px 8px;font-weight:600;color:${increase===0?'var(--green)':'var(--amber)'}">${increase===0?'✓ Positive':'+ '+fmt(increase)+'/mo'}</td>
+      <td style="text-align:right;padding:6px 8px;color:var(--text2)">Adjust rent above to model</td>
+    </tr>`;
+  });
+
+  html+=`</tbody></table></div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle"><span class="ctitle-accent">◈</span> Retirement cash flow projection — ${retireYrs} year${retireYrs!==1?'s':''} out</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:12px">At retirement, salary and bonus income end. The rental portfolio needs to either be self-sustaining or the shortfall must be covered by investment assets.</div>`;
+
+  const retireSalary=INC.salary;
+  const retireMaxDebt=retireSalary*0.50;
+  // At retirement: income = salary + rental credits only
+  const retireQual=retireSalary+totalDtiCredit;
+  const retireDebt=r.totalDebt-(r.qualIncome-retireQual); // approximate
+  // What the portfolio annual cash flow means at retirement
+  const annualPortfolioCF=totalNetCashFlow*12;
+  html+=`<div class="mg">
+    <div class="metric"><div class="mlbl">Salary at retirement</div><div class="mval">${fmt(Math.round(retireSalary))}/mo</div></div>
+    <div class="metric"><div class="mlbl">Rental credit (current)</div><div class="mval ok">${fmt(Math.round(totalDtiCredit))}/mo</div></div>
+    <div class="metric"><div class="mlbl">Portfolio cash flow</div><div class="mval ${totalNetCashFlow>=0?'ok':'danger'}">${fmt(Math.round(totalNetCashFlow))}/mo</div></div>
+    <div class="metric"><div class="mlbl">Annual portfolio P&L</div><div class="mval ${annualPortfolioCF>=0?'ok':'danger'}">${fmt(Math.round(annualPortfolioCF))}/yr</div></div>
+    <div class="metric"><div class="mlbl">Cash needed from assets</div><div class="mval ${totalNetCashFlow<0?'warn':'ok'}">${totalNetCashFlow<0?fmt(Math.round(Math.abs(totalNetCashFlow*12)))+'/yr':'None'}</div></div>
+  </div>
+  <div style="font-size:12px;color:var(--text2);line-height:1.8;background:var(--navy3);border-radius:var(--r);padding:12px">
+    At retirement, the rental portfolio is running at <b style="color:${totalNetCashFlow>=0?'var(--green)':'var(--red)'}">${fmt(Math.round(totalNetCashFlow))}/mo</b> net cash flow.
+    ${totalNetCashFlow<0
+      ?`This means Sam needs to cover <b style="color:var(--red)">${fmt(Math.round(Math.abs(totalNetCashFlow*12)))}/year</b> from investment assets or savings to sustain the portfolio. Over ${retireYrs} year${retireYrs!==1?'s':''}, that is <b style="color:var(--red)">${fmt(Math.round(Math.abs(totalNetCashFlow*12*retireYrs)))}</b> in required reserves.`
+      :`The portfolio is self-sustaining — generating <b style="color:var(--green)">${fmt(Math.round(totalNetCashFlow*12))}/year</b> in net income.`}
+    <br>Use the property sale checkboxes on Overview to see how disposing of cash-flow-negative properties changes this picture.
+  </div>
+  </div>`;
+
+  document.getElementById('panel-cashflow').innerHTML=html;
 }
 
 // ═══════════════════════════════════════════════════════════
