@@ -344,7 +344,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
       <div class="assume-item"><strong>FHA upfront MIP (1.75%)</strong>Financed into the first mortgage, not paid at closing. Annual MIP is 0.55% of loan balance.</div>
       <div class="assume-item"><strong>Arrive Home rates</strong>Repayable: 6.25% first / 8.25% second (10-yr amortizing). Forgivable: 6.625% first / 0% second. Forgiven after 36 on-time payments.</div>
       <div class="assume-item"><strong>metroDPA</strong>0% interest silent second — no monthly payment. Full DPA balance due at sale or refi. Never forgiven. First mortgage rate set above.</div>
-      <div class="assume-item"><strong>2/1 Buydown</strong>An extra 0.25% is added to the first mortgage rate for all programs. Year 1 payment is reduced by 2%, Year 2 by 1%, then standard rate for remaining years.</div>
+      <div class="assume-item"><strong>2/1 Buydown</strong>Available on Arrive Home programs only (Repayable and Forgivable). Not available on metroDPA. Adds 0.25% to the first mortgage rate to cover the buydown cost. Year 1 rate is reduced by 2%, Year 2 by 1%, then standard rate thereafter.</div>
       <div class="assume-item"><strong>Closing costs</strong>Pre-populated from the Brin loan ($240k base). Costs scale with loan amount for larger purchases. Points, pre-paids, and escrows are the main variables.</div>
       <div class="assume-item"><strong>Down payment input</strong>Enter as a percentage (3.5%) or dollar amount ($14,000). DPA covers your down payment automatically in each scenario.</div>
     </div>
@@ -484,14 +484,14 @@ function buildScenarios(purchase, dpInput, buydown, metroR){
      buydown:buydown,
      pros:['Second forgiven after 36 on-time payments','No monthly payment on DPA amount','Best net if you stay 3+ years'],
      cons:['Slightly higher first mortgage rate','DPA balance due if you sell before 36 payments']},
-    {label:'metroDPA 3% Assistance',short:'metroDPA 3%',badge:'badge-blue',rate1:metroR+bdAdd,dpaAmt:purchase*0.03,dpaPct:'3%',dpaRate:0,dpaTerm:0,forgivable:false,metro:true,
-     buydown:buydown,
+    {label:'metroDPA 3% Assistance',short:'metroDPA 3%',badge:'badge-blue',rate1:metroR,dpaAmt:purchase*0.03,dpaPct:'3%',dpaRate:0,dpaTerm:0,forgivable:false,metro:true,
+     buydown:false,
      pros:['No monthly payment on the second','0% interest on DPA balance','Competitive first mortgage rate'],
-     cons:['Full DPA balance due at sale','DPA is never forgiven','Less assistance than Arrive Home']},
-    {label:'metroDPA 4% Assistance',short:'metroDPA 4%',badge:'badge-green',rate1:metroR+bdAdd,dpaAmt:purchase*0.04,dpaPct:'4%',dpaRate:0,dpaTerm:0,forgivable:false,metro:true,
-     buydown:buydown,
+     cons:['Full DPA balance due at sale','DPA is never forgiven','Less assistance than Arrive Home','2/1 buydown not available on metroDPA']},
+    {label:'metroDPA 4% Assistance',short:'metroDPA 4%',badge:'badge-green',rate1:metroR,dpaAmt:purchase*0.04,dpaPct:'4%',dpaRate:0,dpaTerm:0,forgivable:false,metro:true,
+     buydown:false,
      pros:['Largest DPA amount of metroDPA options','No monthly payment on the second','0% interest on balance'],
-     cons:['Largest deferred second due at sale','Never forgiven — full amount due at sale or refi']}
+     cons:['Largest deferred second due at sale','Never forgiven — full amount due at sale or refi','2/1 buydown not available on metroDPA']}
   ];
   return scenarios;
 }
@@ -540,9 +540,10 @@ function renderPaymentCard(r, isW, yrs, houseLabel){
   var hBorder = houseLabel==='A'?' house-a-card':houseLabel==='B'?' house-b-card':'';
   var winBadge = isW ? '<span class="badge-winner">Best at '+yrs+'yr</span>' : '';
   var bdTag = r.s.buydown ? '<span class="buydown-tag">2/1 Buydown</span>' : '';
-  var dpa2row = r.s.forgivable ? '<div class="data-row"><span class="lbl">DPA payment</span><span class="val muted">$0 / no payment</span></div>' :
-    r.s.metro ? '<div class="data-row"><span class="lbl">DPA payment</span><span class="val muted">$0 / deferred</span></div>' :
-    '<div class="data-row"><span class="lbl">DPA payment</span><span class="val">'+fmt(r.dpaPmt)+'/mo</span></div>';
+  var dpa2row = r.s.forgivable ? '<div class="data-row"><span class="lbl">2nd mortgage payment</span><span class="val muted">$0 / no payment</span></div>' :
+    r.s.metro ? '<div class="data-row"><span class="lbl">2nd mortgage payment</span><span class="val muted">$0 / deferred at sale</span></div>' :
+    '<div class="data-row"><span class="lbl">2nd mortgage P&I (10-yr)</span><span class="val neg">'+fmt(r.dpaPmt)+'/mo</span></div>';
+  var totalLbl = (!r.s.forgivable&&!r.s.metro) ? 'Total monthly (1st + 2nd + MIP)' : 'Total monthly P&I + MIP';
   return '<div class="card'+(isW?' winner':'')+hBorder+'">'+
     '<div class="card-header">'+
     hBadge+'<span class="card-badge '+r.s.badge+'">'+r.s.short+'</span>'+winBadge+bdTag+
@@ -560,7 +561,7 @@ function renderPaymentCard(r, isW, yrs, houseLabel){
     '<div class="data-row"><span class="lbl">Monthly MIP (0.55%/yr)</span><span class="val">'+fmt(r.mipMo)+'/mo</span></div>'+
     '<hr class="card-divider">'+
     '<div class="total-section">'+
-    '<div class="total-lbl">Total monthly P&I + MIP</div>'+
+    '<div class="total-lbl">'+totalLbl+'</div>'+
     '<div class="total-amt">'+fmt(r.totalMo)+'/mo</div>'+
     '<div class="total-note">+ taxes & insurance (~'+fmt(r.cc.escrow/12)+'/mo escrow est.)</div>'+
     '</div>'+
