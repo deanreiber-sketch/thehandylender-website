@@ -105,6 +105,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 .data-row .val.neg{color:var(--coral);}
 .data-row .val.muted{font-weight:400;color:var(--muted);}
 .card-divider{border:none;border-top:1px solid var(--border);margin:9px 0;}
+.section-label{font-size:10px;font-weight:600;color:var(--silver);letter-spacing:0.07em;text-transform:uppercase;margin:10px 0 5px;}
 .total-section .total-lbl{font-size:11px;color:var(--muted);}
 .total-section .total-amt{font-size:20px;font-weight:500;color:var(--text);line-height:1.2;}
 .total-section .total-amt.pos{color:var(--teal);}
@@ -128,6 +129,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 .cc-col h4{font-size:11px;font-weight:600;color:var(--navy);margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:6px;}
 .cc-row{display:flex;justify-content:space-between;font-size:11px;color:var(--slate);margin-bottom:4px;}
 .cc-row.total{font-weight:600;color:var(--text);border-top:1px solid var(--border);padding-top:5px;margin-top:5px;}
+.cc-row.muted-row{color:var(--muted);font-style:italic;}
+.cc-row.hdr{font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);padding-bottom:4px;margin-bottom:6px;}
 
 /* DISCLOSURE */
 .disclosure{background:var(--navy);border-radius:12px;padding:18px 22px;margin-bottom:0;}
@@ -182,7 +185,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
   <div class="panel-header">
     <h2>Property Details</h2>
   </div>
-  <div class="prop-grid" style="grid-template-columns:repeat(5,1fr);">
+  <!-- Row 1: price, dp, concessions, taxes, HOI, HOA -->
+  <div class="prop-grid" style="grid-template-columns:repeat(6,1fr);margin-bottom:14px;">
     <div class="input-grp">
       <label>Purchase Price</label>
       <input type="text" id="s-price" value="$400,000" oninput="calcAll()">
@@ -193,29 +197,49 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
       <div style="font-size:10px;color:var(--muted);margin-top:3px;" id="s-dp-hint">= $14,000</div>
     </div>
     <div class="input-grp">
-      <label>Annual Appreciation</label>
+      <label>Seller Concessions ($)</label>
+      <input type="text" id="s-conc" value="$0" oninput="calcAll()" placeholder="e.g. $5,000">
+      <div style="font-size:10px;color:var(--teal);margin-top:3px;">reduces cash to close</div>
+    </div>
+    <div class="input-grp">
+      <label>Annual Prop. Taxes ($)</label>
+      <input type="text" id="s-tax" value="$4,800" oninput="calcAll()" placeholder="e.g. $4,800">
+      <div style="font-size:10px;color:var(--muted);margin-top:3px;" id="s-tax-hint">= $400/mo escrow</div>
+    </div>
+    <div class="input-grp">
+      <label>Annual HOI Premium ($)</label>
+      <input type="text" id="s-hoi" value="$1,800" oninput="calcAll()" placeholder="e.g. $1,800">
+      <div style="font-size:10px;color:var(--muted);margin-top:3px;" id="s-hoi-hint">= $150/mo escrow</div>
+    </div>
+    <div class="input-grp">
+      <label>Monthly HOA Fee ($)</label>
+      <input type="text" id="s-hoa" value="$0" oninput="calcAll()" placeholder="e.g. $250">
+      <div style="font-size:10px;color:var(--muted);margin-top:3px;" id="s-hoa-hint">if applicable</div>
+    </div>
+  </div>
+  <!-- Row 2: appreciation, selling costs, options -->
+  <div class="prop-grid" style="grid-template-columns:repeat(6,1fr);">
+    <div class="input-grp">
+      <label>Annual Appreciation (%)</label>
       <input type="number" id="s-appr" value="3" step="0.25" min="0" max="10" oninput="calcAll()">
     </div>
     <div class="input-grp">
-      <label>Selling Costs at Exit</label>
+      <label>Selling Costs at Exit (%)</label>
       <input type="number" id="s-sell" value="6" step="0.25" min="1" max="12" oninput="calcAll()">
     </div>
-    <div>
-      <label style="display:block;font-size:11px;color:var(--muted);margin-bottom:5px;font-weight:500;">Options</label>
-      <div style="margin-bottom:8px;">
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">Include 2/1 Buydown?</div>
-        <div class="toggle-row">
-          <button class="toggle-btn" id="buydown-no" onclick="setBuydown(false)">No</button>
-          <button class="toggle-btn" id="buydown-yes" onclick="setBuydown(true)">Yes (+0.25%)</button>
-        </div>
+    <div style="grid-column:span 2;">
+      <label style="display:block;font-size:11px;color:var(--muted);margin-bottom:5px;font-weight:500;">Include 2/1 Buydown?</label>
+      <div class="toggle-row">
+        <button class="toggle-btn" id="buydown-no" onclick="setBuydown(false)">No</button>
+        <button class="toggle-btn" id="buydown-yes" onclick="setBuydown(true)">Yes (+0.25%)</button>
       </div>
-      <div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">How long staying?</div>
-        <div class="toggle-row" id="yr-tabs-s">
-          <button class="toggle-btn active" onclick="setYrs(3,this,'s')">3 yr</button>
-          <button class="toggle-btn" onclick="setYrs(4,this,'s')">4 yr</button>
-          <button class="toggle-btn" onclick="setYrs(5,this,'s')">5 yr</button>
-        </div>
+    </div>
+    <div style="grid-column:span 2;">
+      <label style="display:block;font-size:11px;color:var(--muted);margin-bottom:5px;font-weight:500;">How long staying?</label>
+      <div class="toggle-row" id="yr-tabs-s">
+        <button class="toggle-btn active" onclick="setYrs(3,this,'s')">3 yr</button>
+        <button class="toggle-btn" onclick="setYrs(4,this,'s')">4 yr</button>
+        <button class="toggle-btn" onclick="setYrs(5,this,'s')">5 yr</button>
       </div>
     </div>
   </div>
@@ -226,16 +250,28 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
   <div class="compare-wrap">
     <div class="house-col house-a">
       <div class="house-badge"><span class="house-label">House A</span></div>
-      <div class="prop-grid" style="grid-template-columns:repeat(2,1fr);">
+      <div class="prop-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:10px;">
         <div class="input-grp"><label>Purchase Price</label><input type="text" id="a-price" value="$380,000" oninput="calcAll()"></div>
         <div class="input-grp"><label>Down Payment</label><input type="text" id="a-dp" value="3.5%" oninput="calcAll()" placeholder="3.5% or $13,300"><div style="font-size:10px;color:var(--muted);margin-top:3px;" id="a-dp-hint">= $13,300</div></div>
+        <div class="input-grp"><label>Seller Concessions ($)</label><input type="text" id="a-conc" value="$0" oninput="calcAll()" placeholder="e.g. $5,000"><div style="font-size:10px;color:var(--teal);margin-top:3px;">reduces cash to close</div></div>
+      </div>
+      <div class="prop-grid" style="grid-template-columns:repeat(3,1fr);">
+        <div class="input-grp"><label>Annual Prop. Taxes ($)</label><input type="text" id="a-tax" value="$4,200" oninput="calcAll()" placeholder="e.g. $4,200"><div style="font-size:10px;color:var(--muted);margin-top:3px;" id="a-tax-hint">= $350/mo</div></div>
+        <div class="input-grp"><label>Annual HOI Premium ($)</label><input type="text" id="a-hoi" value="$1,600" oninput="calcAll()" placeholder="e.g. $1,600"><div style="font-size:10px;color:var(--muted);margin-top:3px;" id="a-hoi-hint">= $133/mo</div></div>
+        <div class="input-grp"><label>Monthly HOA Fee ($)</label><input type="text" id="a-hoa" value="$0" oninput="calcAll()" placeholder="e.g. $250"><div style="font-size:10px;color:var(--muted);margin-top:3px;">if applicable</div></div>
       </div>
     </div>
     <div class="house-col house-b">
       <div class="house-badge"><span class="house-label">House B</span></div>
-      <div class="prop-grid" style="grid-template-columns:repeat(2,1fr);">
+      <div class="prop-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:10px;">
         <div class="input-grp"><label>Purchase Price</label><input type="text" id="b-price" value="$425,000" oninput="calcAll()"></div>
         <div class="input-grp"><label>Down Payment</label><input type="text" id="b-dp" value="3.5%" oninput="calcAll()" placeholder="3.5% or $14,875"><div style="font-size:10px;color:var(--muted);margin-top:3px;" id="b-dp-hint">= $14,875</div></div>
+        <div class="input-grp"><label>Seller Concessions ($)</label><input type="text" id="b-conc" value="$0" oninput="calcAll()" placeholder="e.g. $5,000"><div style="font-size:10px;color:var(--teal);margin-top:3px;">reduces cash to close</div></div>
+      </div>
+      <div class="prop-grid" style="grid-template-columns:repeat(3,1fr);">
+        <div class="input-grp"><label>Annual Prop. Taxes ($)</label><input type="text" id="b-tax" value="$4,800" oninput="calcAll()" placeholder="e.g. $4,800"><div style="font-size:10px;color:var(--muted);margin-top:3px;" id="b-tax-hint">= $400/mo</div></div>
+        <div class="input-grp"><label>Annual HOI Premium ($)</label><input type="text" id="b-hoi" value="$1,800" oninput="calcAll()" placeholder="e.g. $1,800"><div style="font-size:10px;color:var(--muted);margin-top:3px;" id="b-hoi-hint">= $150/mo</div></div>
+        <div class="input-grp"><label>Monthly HOA Fee ($)</label><input type="text" id="b-hoa" value="$0" oninput="calcAll()" placeholder="e.g. $250"><div style="font-size:10px;color:var(--muted);margin-top:3px;">if applicable</div></div>
       </div>
     </div>
   </div>
@@ -270,45 +306,56 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
 
 <!-- CLOSING COSTS PANEL -->
 <div id="panel-closing" class="property-panel" style="display:none;">
-  <div class="panel-header"><h2>Closing Cost Reference — Based on Brin Loan</h2></div>
+  <div class="panel-header"><h2>Closing Cost Reference</h2><p style="font-size:12px;color:var(--muted);margin:4px 0 0;font-weight:400;">Estimates shown below. Actual figures will appear on your official Loan Estimate once you are under contract.</p></div>
   <div class="cc-grid">
+
+    <!-- APR COSTS -->
     <div>
       <div class="cc-col">
-        <h4>Loan Costs (Section A–D)</h4>
-        <div class="cc-row"><span>Points (1.075%)</span><span>$2,580</span></div>
-        <div class="cc-row"><span>Compliance/Admin Fee</span><span>$159</span></div>
-        <div class="cc-row"><span>Processing Fees</span><span>$795</span></div>
-        <div class="cc-row"><span>Underwriting Fees</span><span>$1,095</span></div>
-        <div class="cc-row"><span>VOE Fee</span><span>$150</span></div>
-        <div class="cc-row"><span>Appraisal Fee</span><span>$750</span></div>
-        <div class="cc-row"><span>Credit Report</span><span>$299</span></div>
+        <h4>APR Costs <span style="font-size:11px;font-weight:400;color:var(--muted);">— lender fees reflected in your interest rate</span></h4>
+        <div class="cc-row hdr"><span>Fee</span><span>Est. Amount</span></div>
+        <div class="cc-row"><span>Origination / Admin Fee</span><span>$159</span></div>
+        <div class="cc-row"><span>Processing Fee</span><span>$795</span></div>
+        <div class="cc-row"><span>Underwriting Fee</span><span>$1,095</span></div>
+        <div class="cc-row"><span>VOE / Employment Verification</span><span>$150</span></div>
+        <div class="cc-row muted-row"><span>Discount Points</span><span>$0 — not required</span></div>
+        <div class="cc-row muted-row"><span>Mortgage Insurance Premium (UFMIP)</span><span>Financed into loan</span></div>
+        <div class="cc-row total"><span>Total APR Costs</span><span>$2,199</span></div>
+      </div>
+      <div style="margin-top:12px;padding:11px 14px;background:#f0f7f4;border-left:3px solid var(--teal);border-radius:6px;font-size:11.5px;color:var(--slate);line-height:1.6;">
+        <strong style="color:var(--text);">What are APR costs?</strong><br>
+        These lender fees are factored into your Annual Percentage Rate (APR). No discount points are charged — your quoted rate is the rate you get. The FHA upfront MIP (1.75% of the base loan) is financed into your loan balance, not paid at closing.
+      </div>
+    </div>
+
+    <!-- NON-APR COSTS -->
+    <div>
+      <div class="cc-col">
+        <h4>Non-APR Costs <span style="font-size:11px;font-weight:400;color:var(--muted);">— third-party & prepaid items</span></h4>
+        <div class="cc-row hdr"><span>Fee</span><span>Est. Amount</span></div>
+        <div class="cc-row"><span>Appraisal Fee</span><span>~$750</span></div>
+        <div class="cc-row"><span>Credit Report</span><span>~$299</span></div>
         <div class="cc-row"><span>Flood Certification</span><span>$9</span></div>
-        <div class="cc-row"><span>Tax Service</span><span>$75</span></div>
+        <div class="cc-row"><span>Tax Service Fee</span><span>$75</span></div>
+        <div class="cc-row"><span>Recording Fees &amp; Transfer Taxes</span><span>~$140</span></div>
+        <div class="cc-row"><span>Lender's Title Insurance</span><span>~$450</span></div>
+        <div class="cc-row"><span>Owner's Title Insurance (optional)</span><span>~$1,500–$2,100</span></div>
+        <div class="cc-row"><span>Title – Settlement / Closing Fee</span><span>~$350</span></div>
         <div class="cc-row"><span>Title – Closing Protection Letter</span><span>$25</span></div>
-        <div class="cc-row"><span>Title – Lender's Title Insurance</span><span>$450</span></div>
-        <div class="cc-row"><span>Title – Recording Services</span><span>$15</span></div>
-        <div class="cc-row"><span>Title – Settlement Fee</span><span>$350</span></div>
-        <div class="cc-row total"><span>Total Loan Costs</span><span>$6,752</span></div>
+        <div class="cc-row"><span>Prepaid Interest (~14 days)</span><span>varies by rate</span></div>
+        <div class="cc-row"><span>Homeowners Insurance Premium (12 mo)</span><span>based on your HOI input</span></div>
+        <div class="cc-row"><span>HOI Escrow Setup (14 months)</span><span>based on your HOI input</span></div>
+        <div class="cc-row"><span>Property Tax Escrow Setup (2 months)</span><span>based on your tax input</span></div>
+        <div class="cc-row muted-row"><span>HOA Transfer / Setup Fee</span><span>if applicable</span></div>
+        <div class="cc-row muted-row"><span>Survey Fee</span><span>if required</span></div>
+        <div class="cc-row total"><span>Total Non-APR Costs</span><span>varies — see card estimates</span></div>
+      </div>
+      <div style="margin-top:12px;padding:11px 14px;background:#f0f7f4;border-left:3px solid var(--teal);border-radius:6px;font-size:11.5px;color:var(--slate);line-height:1.6;">
+        <strong style="color:var(--text);">Cash to Close = Closing Costs + Down Payment − DPA − Seller Concessions</strong><br>
+        Each program card in the Monthly Payment view shows your estimated cash to close based on the purchase price, taxes, HOI, and concessions you've entered. The DPA credit and any seller concessions are applied directly against your out-of-pocket.
       </div>
     </div>
-    <div>
-      <div class="cc-col">
-        <h4>Other Costs (Section E–H)</h4>
-        <div class="cc-row"><span>Recording Fees & Other Taxes</span><span>$86</span></div>
-        <div class="cc-row"><span>Transfer Taxes</span><span>$54</span></div>
-        <div class="cc-row"><span>Homeowner's Insurance Premium (12 mo)</span><span>$3,300</span></div>
-        <div class="cc-row"><span>Prepaid Interest (~21 days)</span><span>$827</span></div>
-        <div class="cc-row"><span>Homeowner's Insurance Escrow (3 mo)</span><span>$825</span></div>
-        <div class="cc-row"><span>Property Taxes Escrow (7 mo)</span><span>$1,974</span></div>
-        <div class="cc-row"><span>Seller Buydown (if applicable)</span><span>$5,321</span></div>
-        <div class="cc-row"><span>Owner's Title Insurance (optional)</span><span>$2,070</span></div>
-        <div class="cc-row total"><span>Total Other Costs</span><span>$14,457</span></div>
-      </div>
-      <div style="margin-top:14px;padding:12px;background:var(--cream);border-radius:8px;font-size:12px;color:var(--slate);">
-        <strong style="color:var(--text);">Total Closing Costs: $21,209</strong><br>
-        Based on the Brin loan ($240,000 / Castle Rock / 5.99%). Costs scale proportionally with loan amount in calculations. Points and pre-paids are the primary variables.
-      </div>
-    </div>
+
   </div>
 </div>
 
@@ -345,13 +392,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
       <div class="assume-item"><strong>Arrive Home rates</strong>Repayable: 6.25% first / 8.25% second (10-yr amortizing). Forgivable: 6.625% first / 0% second. Forgiven after 36 on-time payments.</div>
       <div class="assume-item"><strong>metroDPA</strong>0% interest silent second — no monthly payment. Full DPA balance due at sale or refi. Never forgiven. First mortgage rate set above.</div>
       <div class="assume-item"><strong>2/1 Buydown</strong>Available on Arrive Home programs only (Repayable and Forgivable). Not available on metroDPA. Adds 0.25% to the first mortgage rate to cover the buydown cost. Year 1 rate is reduced by 2%, Year 2 by 1%, then standard rate thereafter.</div>
-      <div class="assume-item"><strong>Closing costs</strong>Pre-populated from the Brin loan ($240k base). Costs scale with loan amount for larger purchases. Points, pre-paids, and escrows are the main variables.</div>
+      <div class="assume-item"><strong>Closing costs</strong>APR costs (origination, processing, underwriting, VOE) are fixed lender fees. Non-APR costs (title, appraisal, escrow setup, prepaids) scale with purchase price and loan amount. No discount points are charged. Escrow setup uses 2 months of property taxes and 14 months of HOI based on your inputs.</div>
       <div class="assume-item"><strong>Down payment input</strong>Enter as a percentage (3.5%) or dollar amount ($14,000). DPA covers your down payment automatically in each scenario.</div>
     </div>
   </div>
 
   <div class="disclosure">
-    <p><strong>Important disclosures:</strong> This comparison is for educational and illustrative purposes only and does not constitute a loan commitment, rate lock, or guarantee of financing. All rates, program terms, and assistance amounts are subject to change. Actual payments will vary based on final loan amount, credit profile, property taxes, homeowners insurance, and other factors. FHA mortgage insurance premiums shown reflect current standard rates and may change. The 2/1 buydown cost is typically paid by the seller or added to closing costs. Arrive Home Forgivable forgiveness is contingent upon 36 consecutive on-time first mortgage payments. metroDPA balance is due upon sale, refinance, or when the property is no longer your primary residence. Please consult with your Handy Lender loan officer for a personalized Loan Estimate. Equal Housing Lender.</p>
+    <p style="font-size:11px;color:rgba(255,255,255,0.7);font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:10px;">Important Disclosures — Please Read</p>
+
+    <p style="margin-bottom:8px;"><strong>Not a Loan Commitment.</strong> Nothing in this tool constitutes a loan commitment, pre-approval, or guarantee of financing. All mortgage applications are subject to underwriting review, credit approval, property appraisal, title clearance, and satisfaction of all applicable lender and investor guidelines. Loan terms, interest rates, program availability, and down payment assistance amounts are subject to change and may vary based on individual qualifications and market conditions at the time of application.</p>
+
+    <p style="margin-bottom:8px;"><strong>Informational Purposes Only.</strong> All figures, payment estimates, closing cost projections, and exit scenarios are estimates based on inputs provided and assumptions noted above. They do not constitute financial, tax, or legal advice. Consult a qualified financial advisor or attorney before making any financial decisions. Actual results will vary.</p>
+
+    <p style="margin-bottom:8px;"><strong>Property Values & Appreciation.</strong> Projected sale prices are based on a user-selected annual appreciation rate applied to the purchase price. These projections are illustrative only and do not constitute an appraisal or guarantee of future value. Actual sale proceeds will depend on market conditions, buyer financing, negotiated terms, and closing costs at time of sale.</p>
+
+    <p style="margin-bottom:8px;"><strong>Rate Lock.</strong> Interest rates shown reflect current market pricing and are not locked. Rates are not locked until you are under contract on a specific property and a rate lock is formally confirmed by your loan officer.</p>
+
+    <p><strong>Data Privacy.</strong> This tool runs entirely within your web browser. No financial data entered into this tool is transmitted to or stored on any external server. All data remains on your device.</p>
   </div>
 </div>
 
@@ -438,37 +495,53 @@ function remainBal(annualRate,n,pv,pmts){
 }
 
 // ── CLOSING COST ESTIMATE ──────────────────────────────────────────────────
-// Based on Brin loan: $240k purchase, $240k loan
-// Loan costs (A+B+C): $6,752. Other costs (E+F+G+H): $14,457 total
-// We separate pre-paids/escrow from fixed fees for scaling
-function estimateClosingCosts(loanAmt, purchasePrice, buydown){
-  // Fixed loan costs (mostly don't scale much with loan size)
-  // Points: 1.075% of loan
-  var points = loanAmt * 0.01075;
-  var fixedLoanFees = 159+795+1095+150+750+299+9+75+25+450+15+350; // $4,172
-  var loanCosts = points + fixedLoanFees;
-  
-  // Other costs
-  var govFees = 140; // recording + transfer
-  
-  // Pre-paids scale slightly - use Brin as base ($240k) proportionally
-  var scale = loanAmt / 240000;
-  var prepaidInterest = Math.round(827 * scale);
-  var hoiPremium = Math.round(3300 * scale);
-  var hoiEscrow = Math.round(825 * scale);
-  var taxEscrow = Math.round(1974 * scale);
-  var prepaids = hoiPremium + prepaidInterest;
-  var escrow = hoiEscrow + taxEscrow;
-  
-  // Seller buydown cost if 2/1 buydown selected
-  // Rough estimate: cost of 2/1 buydown ≈ 2% of loan amount (bank cost)
-  var buydownCost = buydown ? loanAmt * 0.02 : 0;
-  
-  // Owner's title (optional, included in Brin) - scale with purchase price
-  var ownerTitle = Math.round(2070 * (purchasePrice/540000));
-  
-  var total = loanCosts + govFees + prepaids + escrow + ownerTitle + buydownCost;
-  return {total:total, loanCosts:Math.round(loanCosts), govFees:govFees, prepaids:Math.round(prepaids), escrow:Math.round(escrow), ownerTitle:ownerTitle, buydownCost:Math.round(buydownCost)};
+// APR costs: lender fees that factor into APR (no points — rate is as-quoted)
+// Non-APR costs: title, prepaids, escrow setup, gov fees, buydown if applicable
+// Escrow setup: 2 months taxes + 14 months HOI per underwriting guidelines
+function estimateClosingCosts(loanAmt, purchasePrice, buydown, annualTax, annualHOI){
+  var taxMo  = annualTax / 12;
+  var hoiMo  = annualHOI / 12;
+
+  // ── APR COSTS (lender fees) ──────────────────────────────────────
+  // No points — buydown is handled by rate adjustment, not paid points
+  var aprCosts = Math.round(159+795+1095+150+750+299+9+75); // admin, processing, UW, VOE, appraisal, credit, flood, tax svc
+
+  // ── NON-APR COSTS ────────────────────────────────────────────────
+  // Gov / recording
+  var govFees = 140;
+
+  // Prepaids: 14 days prepaid interest + full first-year HOI premium at closing
+  var prepaidInterest = Math.round((loanAmt * 0.065 / 365) * 14);
+  var hoiPremium      = Math.round(annualHOI);
+  var prepaids        = prepaidInterest + hoiPremium;
+
+  // Escrow setup: 2 months taxes + 14 months HOI
+  var taxEscrow  = Math.round(taxMo * 2);
+  var hoiEscrow  = Math.round(hoiMo * 14);
+  var escrow     = taxEscrow + hoiEscrow;
+
+  // Owner's title (scales with purchase price)
+  var ownerTitle = Math.round(2070 * (purchasePrice / 540000));
+
+  // 2/1 buydown cost (seller-paid, ~2% of loan) — shown separately
+  var buydownCost = buydown ? Math.round(loanAmt * 0.02) : 0;
+
+  var nonAprCosts = govFees + prepaids + escrow + ownerTitle + buydownCost;
+  var total = aprCosts + nonAprCosts;
+
+  return {
+    total:       Math.round(total),
+    aprCosts:    aprCosts,
+    nonAprCosts: Math.round(nonAprCosts),
+    escrow:      escrow,
+    taxEscrow:   taxEscrow,
+    hoiEscrow:   hoiEscrow,
+    hoiPremium:  hoiPremium,
+    ownerTitle:  ownerTitle,
+    buydownCost: buydownCost,
+    taxMo:       Math.round(taxMo),
+    hoiMo:       Math.round(hoiMo)
+  };
 }
 
 // ── SCENARIO BUILDER ───────────────────────────────────────────────────────
@@ -497,7 +570,7 @@ function buildScenarios(purchase, dpInput, buydown, metroR){
 }
 
 // ── CALCULATE ONE SCENARIO SET ─────────────────────────────────────────────
-function calcResults(purchase, dpInput, metroR, buydown, yrs){
+function calcResults(purchase, dpInput, metroR, buydown, yrs, sellerConc, annualTax, annualHOI, monthlyHOA){
   var mos = yrs*12;
   var apprRate = currentMode==='single'
     ? parseFloat(document.getElementById('s-appr').value)/100
@@ -507,13 +580,20 @@ function calcResults(purchase, dpInput, metroR, buydown, yrs){
     : parseFloat(document.getElementById('c-sell').value)/100;
 
   var dp = parseMoneyOrPct(dpInput, purchase);
+  var conc = sellerConc || 0;
+  var tax = annualTax || 0;
+  var hoi = annualHOI || 0;
+  var hoa = monthlyHOA || 0;
+  var taxMo = tax / 12;
+  var hoiMo = hoi / 12;
+
   var baseLoan = purchase - dp;
   var UFMIP = baseLoan * 0.0175;
   var firstLoan = baseLoan + UFMIP;
   var mipMo = (baseLoan * 0.0055) / 12;
   var salePrice = purchase * Math.pow(1+apprRate, yrs);
   var sellCosts = salePrice * sellCostP;
-  var cc = estimateClosingCosts(firstLoan, purchase, buydown);
+  var cc = estimateClosingCosts(firstLoan, purchase, buydown, tax, hoi);
 
   var scenarios = buildScenarios(purchase, dpInput, buydown, metroR);
 
@@ -523,12 +603,19 @@ function calcResults(purchase, dpInput, metroR, buydown, yrs){
     if(s.forgivable){dpaPmt=0; remDPA=mos>=36?0:s.dpaAmt;}
     else if(s.metro){dpaPmt=0; remDPA=s.dpaAmt;}
     else{dpaPmt=pmt(s.dpaRate/100,s.dpaTerm,s.dpaAmt); remDPA=remainBal(s.dpaRate/100,s.dpaTerm,s.dpaAmt,mos);}
-    var totalMo = p1+dpaPmt+mipMo;
+    var piMipMo = p1+dpaPmt+mipMo;
+    var totalMo = piMipMo + taxMo + hoiMo + hoa; // true all-in monthly
     var totalPaid = totalMo*mos;
     var rem1 = remainBal(s.rate1/100,360,firstLoan,mos);
     var totalOwed = rem1+remDPA;
     var netProceeds = salePrice - sellCosts - totalOwed;
-    return {s:s,p1:p1,dpaPmt:dpaPmt,mipMo:mipMo,totalMo:totalMo,totalPaid:totalPaid,rem1:rem1,remDPA:remDPA,totalOwed:totalOwed,salePrice:salePrice,sellCosts:sellCosts,netProceeds:netProceeds,firstLoan:firstLoan,dp:dp,cc:cc};
+    // Cash to close: closing costs + down payment − DPA − seller concessions
+    var cashToClose = Math.max(0, cc.total + dp - s.dpaAmt - conc);
+    return {s:s, p1:p1, dpaPmt:dpaPmt, mipMo:mipMo, taxMo:taxMo, hoiMo:hoiMo, hoa:hoa,
+            piMipMo:piMipMo, totalMo:totalMo, totalPaid:totalPaid,
+            rem1:rem1, remDPA:remDPA, totalOwed:totalOwed,
+            salePrice:salePrice, sellCosts:sellCosts, netProceeds:netProceeds,
+            firstLoan:firstLoan, dp:dp, cc:cc, conc:conc, cashToClose:cashToClose};
   });
 
   return results;
@@ -536,35 +623,68 @@ function calcResults(purchase, dpInput, metroR, buydown, yrs){
 
 // ── RENDER CARD ────────────────────────────────────────────────────────────
 function renderPaymentCard(r, isW, yrs, houseLabel){
-  var hBadge = houseLabel==='A'?'<span class="badge-ha">House A</span>':houseLabel==='B'?'<span class="badge-hb">House B</span>':'';
+  var hBadge  = houseLabel==='A'?'<span class="badge-ha">House A</span>':houseLabel==='B'?'<span class="badge-hb">House B</span>':'';
   var hBorder = houseLabel==='A'?' house-a-card':houseLabel==='B'?' house-b-card':'';
   var winBadge = isW ? '<span class="badge-winner">Best at '+yrs+'yr</span>' : '';
-  var bdTag = r.s.buydown ? '<span class="buydown-tag">2/1 Buydown</span>' : '';
-  var dpa2row = r.s.forgivable ? '<div class="data-row"><span class="lbl">2nd mortgage payment</span><span class="val muted">$0 / no payment</span></div>' :
-    r.s.metro ? '<div class="data-row"><span class="lbl">2nd mortgage payment</span><span class="val muted">$0 / deferred at sale</span></div>' :
-    '<div class="data-row"><span class="lbl">2nd mortgage P&I (10-yr)</span><span class="val neg">'+fmt(r.dpaPmt)+'/mo</span></div>';
-  var totalLbl = (!r.s.forgivable&&!r.s.metro) ? 'Total monthly (1st + 2nd + MIP)' : 'Total monthly P&I + MIP';
+  var bdTag    = r.s.buydown ? '<span class="buydown-tag">2/1 Buydown</span>' : '';
+
+  var dpa2row = r.s.forgivable
+    ? '<div class="data-row"><span class="lbl">2nd mortgage payment</span><span class="val muted">$0 — no payment</span></div>'
+    : r.s.metro
+      ? '<div class="data-row"><span class="lbl">2nd mortgage payment</span><span class="val muted">$0 — deferred</span></div>'
+      : '<div class="data-row"><span class="lbl">2nd mortgage P&I (10-yr)</span><span class="val neg">'+fmt(r.dpaPmt)+'/mo</span></div>';
+
+  var hoaRow = r.hoa > 0
+    ? '<div class="data-row"><span class="lbl">HOA</span><span class="val">'+fmt(r.hoa)+'/mo</span></div>'
+    : '';
+
+  // Cash-to-close breakdown
+  var concRow = r.conc > 0
+    ? '<div class="data-row"><span class="lbl">Seller concessions</span><span class="val pos">−'+fmt(r.conc)+'</span></div>'
+    : '';
+  var bdCostRow = r.s.buydown
+    ? '<div class="data-row"><span class="lbl">2/1 buydown cost (seller-paid est.)</span><span class="val neg">+'+fmt(r.cc.buydownCost)+'</span></div>'
+    : '';
+
   return '<div class="card'+(isW?' winner':'')+hBorder+'">'+
     '<div class="card-header">'+
-    hBadge+'<span class="card-badge '+r.s.badge+'">'+r.s.short+'</span>'+winBadge+bdTag+
-    '<h3>'+r.s.label+'</h3>'+
-    '<div class="rate-line">1st: '+r.s.rate1.toFixed(3)+'% | '+
-    (!r.s.metro&&!r.s.forgivable?'2nd: '+r.s.dpaRate+'% 10-yr amort.':(r.s.forgivable?'2nd: 0% forgivable':'2nd: 0% deferred'))+
-    '</div>'+
+      hBadge+'<span class="card-badge '+r.s.badge+'">'+r.s.short+'</span>'+winBadge+bdTag+
+      '<h3>'+r.s.label+'</h3>'+
+      '<div class="rate-line">1st: '+r.s.rate1.toFixed(3)+'% | '+
+        (!r.s.metro&&!r.s.forgivable ? '2nd: '+r.s.dpaRate+'% 10-yr amort.' : (r.s.forgivable ? '2nd: 0% forgivable' : '2nd: 0% deferred'))+
+      '</div>'+
     '</div>'+
     '<div class="card-body">'+
-    '<div class="data-row"><span class="lbl">Down pmt assistance ('+r.s.dpaPct+')</span><span class="val pos">'+fmt(r.s.dpaAmt)+'</span></div>'+
-    '<div class="data-row"><span class="lbl">First loan (incl UFMIP)</span><span class="val">'+fmt(r.firstLoan)+'</span></div>'+
-    '<hr class="card-divider">'+
-    '<div class="data-row"><span class="lbl">1st mortgage P&I</span><span class="val">'+fmt(r.p1)+'/mo</span></div>'+
-    dpa2row+
-    '<div class="data-row"><span class="lbl">Monthly MIP (0.55%/yr)</span><span class="val">'+fmt(r.mipMo)+'/mo</span></div>'+
-    '<hr class="card-divider">'+
-    '<div class="total-section">'+
-    '<div class="total-lbl">'+totalLbl+'</div>'+
-    '<div class="total-amt">'+fmt(r.totalMo)+'/mo</div>'+
-    '<div class="total-note">+ taxes & insurance (~'+fmt(r.cc.escrow/12)+'/mo escrow est.)</div>'+
-    '</div>'+
+
+      /* ── MONTHLY PAYMENT SECTION ── */
+      '<div class="section-label">Monthly Payment</div>'+
+      '<div class="data-row"><span class="lbl">1st mortgage P&I</span><span class="val">'+fmt(r.p1)+'/mo</span></div>'+
+      dpa2row+
+      '<div class="data-row"><span class="lbl">MIP (FHA, 0.55%/yr)</span><span class="val">'+fmt(r.mipMo)+'/mo</span></div>'+
+      '<div class="data-row"><span class="lbl">Property taxes</span><span class="val">'+fmt(r.taxMo)+'/mo</span></div>'+
+      '<div class="data-row"><span class="lbl">Homeowners insurance</span><span class="val">'+fmt(r.hoiMo)+'/mo</span></div>'+
+      hoaRow+
+      '<hr class="card-divider">'+
+      '<div class="total-section" style="margin-bottom:14px;">'+
+        '<div class="total-lbl">Total all-in monthly payment</div>'+
+        '<div class="total-amt">'+fmt(r.totalMo)+'/mo</div>'+
+      '</div>'+
+
+      /* ── CASH TO CLOSE SECTION ── */
+      '<div class="section-label">Est. Cash to Close</div>'+
+      '<div class="data-row"><span class="lbl">APR costs (lender fees)</span><span class="val">'+fmt(r.cc.aprCosts)+'</span></div>'+
+      '<div class="data-row"><span class="lbl">Non-APR costs (title, prepaids, escrow)</span><span class="val">'+fmt(r.cc.nonAprCosts)+'</span></div>'+
+      bdCostRow+
+      '<div class="data-row"><span class="lbl">Down payment</span><span class="val">'+fmt(r.dp)+'</span></div>'+
+      '<div class="data-row"><span class="lbl">DPA credit</span><span class="val pos">−'+fmt(r.s.dpaAmt)+'</span></div>'+
+      concRow+
+      '<hr class="card-divider">'+
+      '<div class="total-section">'+
+        '<div class="total-lbl">Estimated cash to close</div>'+
+        '<div class="total-amt '+(r.cashToClose===0?'pos':'')+'">'+fmt(r.cashToClose)+'</div>'+
+        '<div class="total-note">Closing costs + down payment − DPA'+(r.conc>0?' − concessions':'')+'</div>'+
+      '</div>'+
+
     '</div></div>';
 }
 
@@ -606,20 +726,27 @@ function calcAll(){
   var sellPct = currentMode==='single' ? document.getElementById('s-sell').value : document.getElementById('c-sell').value;
 
   if(currentMode==='single'){
-    var price = parseMoney(document.getElementById('s-price').value);
-    var dpIn = document.getElementById('s-dp').value;
-    var dp = parseMoneyOrPct(dpIn, price);
-    document.getElementById('s-dp-hint').textContent = '= '+fmt(dp);
+    var price   = parseMoney(document.getElementById('s-price').value);
+    var dpIn    = document.getElementById('s-dp').value;
+    var dp      = parseMoneyOrPct(dpIn, price);
+    var conc    = parseMoney(document.getElementById('s-conc').value)||0;
+    var annTax  = parseMoney(document.getElementById('s-tax').value)||4800;
+    var annHOI  = parseMoney(document.getElementById('s-hoi').value)||1800;
+    var moHOA   = parseMoney(document.getElementById('s-hoa').value)||0;
 
-    var results = calcResults(price, dpIn, metroR, useBuydown, yrs);
+    document.getElementById('s-dp-hint').textContent  = '= '+fmt(dp);
+    document.getElementById('s-tax-hint').textContent = '= '+fmt(Math.round(annTax/12))+'/mo escrow';
+    document.getElementById('s-hoi-hint').textContent = '= '+fmt(Math.round(annHOI/12))+'/mo escrow';
+
+    var results = calcResults(price, dpIn, metroR, useBuydown, yrs, conc, annTax, annHOI, moHOA);
     results.forEach(function(r){r.r=yrs*12;});
-    var best = results.reduce(function(a,b){return b.netProceeds>a.netProceeds?b:a;});
+    var best   = results.reduce(function(a,b){return b.netProceeds>a.netProceeds?b:a;});
     var sorted = results.map(function(r){return r.netProceeds;}).sort(function(a,b){return b-a;});
     var margin = sorted[0]-sorted[1];
     document.getElementById('winner-text-main').textContent = best.s.label+' gives the best outcome at '+yrs+' years — '+fmt(best.netProceeds)+' net proceeds at sale.';
-    document.getElementById('winner-text-sub').textContent = fmt(margin)+' more in your pocket than the next best option.';
+    document.getElementById('winner-text-sub').textContent  = fmt(margin)+' more in your pocket than the next best option.';
 
-    var ph = '', eh = '';
+    var ph='', eh='';
     results.forEach(function(r){
       var isW = r===best;
       ph += renderPaymentCard(r, isW, yrs, '');
@@ -632,17 +759,30 @@ function calcAll(){
 
   } else {
     // Compare mode — 4 programs × 2 houses = 8 cards
-    var aPrice = parseMoney(document.getElementById('a-price').value);
-    var bPrice = parseMoney(document.getElementById('b-price').value);
-    var aDpIn = document.getElementById('a-dp').value;
-    var bDpIn = document.getElementById('b-dp').value;
-    var aDp = parseMoneyOrPct(aDpIn, aPrice);
-    var bDp = parseMoneyOrPct(bDpIn, bPrice);
-    document.getElementById('a-dp-hint').textContent = '= '+fmt(aDp);
-    document.getElementById('b-dp-hint').textContent = '= '+fmt(bDp);
+    var aPrice  = parseMoney(document.getElementById('a-price').value);
+    var bPrice  = parseMoney(document.getElementById('b-price').value);
+    var aDpIn   = document.getElementById('a-dp').value;
+    var bDpIn   = document.getElementById('b-dp').value;
+    var aDp     = parseMoneyOrPct(aDpIn, aPrice);
+    var bDp     = parseMoneyOrPct(bDpIn, bPrice);
+    var aConc   = parseMoney(document.getElementById('a-conc').value)||0;
+    var bConc   = parseMoney(document.getElementById('b-conc').value)||0;
+    var aAnnTax = parseMoney(document.getElementById('a-tax').value)||4200;
+    var bAnnTax = parseMoney(document.getElementById('b-tax').value)||4800;
+    var aAnnHOI = parseMoney(document.getElementById('a-hoi').value)||1600;
+    var bAnnHOI = parseMoney(document.getElementById('b-hoi').value)||1800;
+    var aMoHOA  = parseMoney(document.getElementById('a-hoa').value)||0;
+    var bMoHOA  = parseMoney(document.getElementById('b-hoa').value)||0;
 
-    var aResults = calcResults(aPrice, aDpIn, metroR, useCBuydown, yrs);
-    var bResults = calcResults(bPrice, bDpIn, metroR, useCBuydown, yrs);
+    document.getElementById('a-dp-hint').textContent  = '= '+fmt(aDp);
+    document.getElementById('b-dp-hint').textContent  = '= '+fmt(bDp);
+    document.getElementById('a-tax-hint').textContent = '= '+fmt(Math.round(aAnnTax/12))+'/mo';
+    document.getElementById('b-tax-hint').textContent = '= '+fmt(Math.round(bAnnTax/12))+'/mo';
+    document.getElementById('a-hoi-hint').textContent = '= '+fmt(Math.round(aAnnHOI/12))+'/mo';
+    document.getElementById('b-hoi-hint').textContent = '= '+fmt(Math.round(bAnnHOI/12))+'/mo';
+
+    var aResults = calcResults(aPrice, aDpIn, metroR, useCBuydown, yrs, aConc, aAnnTax, aAnnHOI, aMoHOA);
+    var bResults = calcResults(bPrice, bDpIn, metroR, useCBuydown, yrs, bConc, bAnnTax, bAnnHOI, bMoHOA);
     aResults.forEach(function(r){r.r=yrs*12;});
     bResults.forEach(function(r){r.r=yrs*12;});
 
@@ -651,16 +791,16 @@ function calcAll(){
 
     // Best across all 8 scenarios
     var allResults = aResults.concat(bResults);
-    var best = allResults.reduce(function(a,b){return b.netProceeds>a.netProceeds?b:a;});
+    var best   = allResults.reduce(function(a,b){return b.netProceeds>a.netProceeds?b:a;});
     var sorted = allResults.map(function(r){return r.netProceeds;}).sort(function(a,b){return b-a;});
     document.getElementById('winner-text-main').textContent = 'Across both properties: '+best.s.label+' (House '+(aResults.indexOf(best)>=0?'A':'B')+') gives the best '+yrs+'-year outcome.';
-    document.getElementById('winner-text-sub').textContent = fmt(best.netProceeds)+' net proceeds at sale; '+fmt(sorted[0]-sorted[1])+' more than the next best option.';
+    document.getElementById('winner-text-sub').textContent  = fmt(best.netProceeds)+' net proceeds at sale; '+fmt(sorted[0]-sorted[1])+' more than the next best option.';
 
     // Interleave: A1,B1, A2,B2, A3,B3, A4,B4
     var ph='', eh='';
     for(var i=0;i<4;i++){
       var ar=aResults[i], br=bResults[i];
-      var aW = ar===best, bW = br===best;
+      var aW=ar===best, bW=br===best;
       ph += renderPaymentCard(ar, aW, yrs, 'A');
       ph += renderPaymentCard(br, bW, yrs, 'B');
       eh += renderExitCard(ar, aW, yrs, sellPct, 'A');
