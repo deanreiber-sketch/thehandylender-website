@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DPA Comparison — Benegas</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --navy:#1a3a6b;--navy2:#2a5298;--gold:#c9a84c;
+  --cream:#f7f6f2;--white:#fff;--border:#e2e8f0;
+  --text:#1a202c;--muted:#718096;--slate:#4a5568;
+  --teal:#0f6e56;--teal-lt:#e1f5ee;
+  --purple:#3c3489;--purple-lt:#eeedfe;
+  --blue:#185fa5;--blue-lt:#e6f1fb;
+  --green:#3b6d11;--green-lt:#eaf3de;
+  --coral:#993c1d;
+  --ha:#1e40af;--ha-lt:#dbeafe;
+  --hb:#9d174d;--hb-lt:#fce7f3;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);font-size:14px;line-height:1.5;}
+.site-header{background:var(--navy);}
+.header-top{display:flex;align-items:center;justify-content:space-between;padding:18px 36px;border-bottom:1px solid rgba(255,255,255,0.1);}
+.header-label .prep{font-size:10px;color:rgba(255,255,255,0.5);letter-spacing:.08em;text-transform:uppercase;}
+.header-label .name{font-family:'DM Serif Display',serif;font-size:18px;color:white;margin-top:2px;}
+.hero{padding:28px 36px 24px;}
+.hero h1{font-family:'DM Serif Display',serif;font-size:26px;color:white;line-height:1.2;margin-bottom:6px;}
+.hero h1 em{font-style:italic;color:rgba(255,255,255,0.65);}
+.hero p{font-size:12px;color:rgba(255,255,255,0.55);max-width:560px;line-height:1.7;}
+.prop-strip{background:var(--navy2);padding:14px 36px;display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid rgba(255,255,255,0.1);}
+.prop-half{display:flex;align-items:center;gap:20px;padding-right:16px;}
+.prop-half+.prop-half{border-left:1px solid rgba(255,255,255,0.15);padding-left:20px;padding-right:0;}
+.prop-pill{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:12px;flex-shrink:0;}
+.pill-a{background:var(--ha-lt);color:var(--ha);}
+.pill-b{background:var(--hb-lt);color:var(--hb);}
+.prop-info{display:flex;flex-wrap:wrap;gap:12px;}
+.prop-stat .lbl{font-size:10px;color:rgba(255,255,255,0.45);display:block;text-transform:uppercase;letter-spacing:.05em;}
+.prop-stat .val{font-size:13px;font-weight:500;color:rgba(255,255,255,0.9);}
+.rec-banner{background:var(--navy);border-left:4px solid var(--gold);margin:24px 36px 0;border-radius:8px;padding:14px 18px;display:flex;align-items:flex-start;gap:12px;}
+.rec-icon{width:28px;height:28px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.rec-body strong{color:white;font-size:13px;font-weight:500;display:block;margin-bottom:3px;}
+.rec-body span{color:rgba(255,255,255,0.6);font-size:11px;line-height:1.6;}
+.main{padding:24px 36px 40px;}
+.prog-section{margin-bottom:28px;}
+.prog-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
+.prog-badge{font-size:10px;font-weight:600;padding:3px 9px;border-radius:4px;letter-spacing:.04em;text-transform:uppercase;}
+.badge-purple{background:var(--purple-lt);color:var(--purple);}
+.badge-teal{background:var(--teal-lt);color:var(--teal);}
+.badge-blue{background:var(--blue-lt);color:var(--blue);}
+.badge-green{background:var(--green-lt);color:var(--green);}
+.badge-gold{background:#fef3c7;color:#92400e;}
+.prog-title{font-size:14px;font-weight:600;color:var(--text);}
+.prog-sub{font-size:11px;color:var(--muted);margin-left:auto;}
+.bd-note{font-size:10px;color:#b45309;background:#fff7ed;padding:2px 7px;border-radius:3px;font-weight:500;}
+.comp-table{width:100%;border-collapse:collapse;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:white;box-shadow:0 1px 6px rgba(0,0,0,0.04);}
+.comp-table thead tr{background:var(--cream);}
+.comp-table thead th{padding:10px 14px;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:left;border-bottom:1px solid var(--border);}
+.comp-table thead th:not(:first-child){text-align:center;}
+.comp-table thead th.ha-col{background:rgba(30,64,175,0.06);}
+.comp-table thead th.hb-col{background:rgba(157,23,77,0.06);}
+.comp-table tbody tr{border-bottom:1px solid var(--border);}
+.comp-table tbody tr:last-child{border-bottom:none;}
+.comp-table tbody td{padding:9px 14px;font-size:12px;color:var(--text);}
+.comp-table tbody td:not(:first-child){text-align:center;}
+.comp-table tbody td.ha-col{background:rgba(30,64,175,0.03);}
+.comp-table tbody td.hb-col{background:rgba(157,23,77,0.03);}
+.row-label{color:var(--muted);font-size:11px;}
+.row-year{font-weight:600;font-size:11px;color:var(--navy);}
+.sec-divider td{background:var(--cream);padding:5px 14px;font-size:10px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;border-top:1px solid var(--border);}
+.amt-big{font-size:14px;font-weight:600;color:var(--navy);}
+.ineligible-banner td{background:#fff5f0;padding:8px 14px;}
+.assumptions{background:white;border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-top:24px;}
+.assumptions h3{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:10px;}
+.assume-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.assume-item{font-size:10px;color:var(--slate);line-height:1.6;}
+.assume-item strong{display:block;color:var(--text);font-weight:500;margin-bottom:1px;font-size:11px;}
+.disclosure{background:var(--navy);border-radius:10px;padding:16px 20px;margin-top:18px;}
+.disclosure p{font-size:10px;color:rgba(255,255,255,0.4);line-height:1.7;}
+.site-footer{background:var(--navy);border-top:1px solid rgba(255,255,255,0.08);padding:16px 36px;display:flex;align-items:center;justify-content:space-between;margin-top:32px;}
+.footer-right{text-align:right;font-size:10px;color:rgba(255,255,255,0.4);}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-top">
+    <div style="color:white;font-family:'DM Serif Display',serif;font-size:20px;">Handy Lender</div>
+    <div class="header-label"><div class="prep">Prepared by</div><div class="name">Handy Lender</div></div>
+  </div>
+  <div class="hero">
+    <h1>DPA Side-by-Side Comparison<br><em>Benegas — House A vs. House B</em></h1>
+    <p>All DPA programs compared head-to-head — showing Year 1, Year 2, and Year 3+ payments where a 2/1 buydown applies, so you can see exactly what changes and when. Based on actual pricing as of 05/26/26.</p>
+  </div>
+</header>
+
+<div class="prop-strip">
+  <div class="prop-half">
+    <span class="prop-pill pill-a">House A</span>
+    <div class="prop-info">
+      <div class="prop-stat"><span class="lbl">Purchase</span><span class="val">$550,000</span></div>
+      <div class="prop-stat"><span class="lbl">Down payment</span><span class="val">$19,250 (3.5%)</span></div>
+      <div class="prop-stat"><span class="lbl">Loan</span><span class="val">$540,038</span></div>
+      <div class="prop-stat"><span class="lbl">Taxes/yr</span><span class="val">$2,587</span></div>
+      <div class="prop-stat"><span class="lbl">HOI/yr</span><span class="val">$2,200</span></div>
+      <div class="prop-stat"><span class="lbl">HOA/mo</span><span class="val">$0</span></div>
+    </div>
+  </div>
+  <div class="prop-half">
+    <span class="prop-pill pill-b">House B</span>
+    <div class="prop-info">
+      <div class="prop-stat"><span class="lbl">Purchase</span><span class="val">$585,000</span></div>
+      <div class="prop-stat"><span class="lbl">Down payment</span><span class="val">$10,596 (1.8%)</span></div>
+      <div class="prop-stat"><span class="lbl">Loan</span><span class="val">$574,404</span></div>
+      <div class="prop-stat"><span class="lbl">Taxes/yr</span><span class="val">$3,437</span></div>
+      <div class="prop-stat"><span class="lbl">HOI/yr</span><span class="val">$2,400</span></div>
+      <div class="prop-stat"><span class="lbl">HOA/mo</span><span class="val">$135</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="rec-banner">
+    <div class="rec-icon"><svg viewBox="0 0 16 16" width="14" height="14" fill="none"><path d="M8 2l1.5 3 3.5.5-2.5 2.5.5 3.5L8 10l-3 1.5.5-3.5L3 5.5l3.5-.5z" fill="white"/></svg></div>
+    <div class="rec-body"><strong id="rec-main">Calculating…</strong><span id="rec-sub"></span></div>
+  </div>
+  <div id="programs-container" style="margin-top:24px;"></div>
+
+  <div class="prog-section" style="margin-top:32px;">
+    <div class="prog-header"><span style="font-size:14px;font-weight:600;">💰 Cash to Close — All Programs</span></div>
+    <table class="comp-table">
+      <thead><tr><th>Program</th><th class="ha-col">House A</th><th class="hb-col">House B</th></tr></thead>
+      <tbody id="ctc-tbody"></tbody>
+    </table>
+    <p style="font-size:10px;color:var(--muted);margin-top:8px;">* Down payment + closing costs − DPA grant − seller concessions ($10K) − lender credits. Arrive Home Repayable lender credit at 6.875% par ≈ 0.859% of loan; covers LLPA first on buydown option. metroDPA EDGE: 2% discount point (~$11K) paid from seller concessions. UFMIP financed into loan — not in cash to close.</p>
+  </div>
+
+  <div class="assumptions">
+    <h3>How these numbers are calculated</h3>
+    <div class="assume-grid">
+      <div class="assume-item"><strong>Arrive Home Repayable (6.875%)</strong>Par rate generates ~$4,934 lender credit on House B (~$4,639 on A). Credit reduces cash to close. With 2/1 BD: 0.25% LLPA (~$1,350–1,436) is offset from the credit first; net credit still reduces CTC. 8.25% repayable 2nd mortgage over 10 years.</div>
+      <div class="assume-item"><strong>Arrive Home Forgivable (7.750%)</strong>Par rate — essentially $0 lender credit. 0% 2nd forgiven at 36 months. With 2/1 BD: 0.25% LLPA is a cash cost with no credit to offset it. Both programs follow FHA guidelines for DTI (AUS findings govern).</div>
+      <div class="assume-item"><strong>2/1 Buydown Rates</strong>Repayable: Yr1 4.875% → Yr2 5.875% → Yr3+ 6.875%. Forgivable: Yr1 5.750% → Yr2 6.750% → Yr3+ 7.750%. Year 1 and Year 2 payments reflect the reduced rate. Year 3+ is the permanent note rate.</div>
+      <div class="assume-item"><strong>metroDPA (6.750% / EDGE 6.375%)</strong>0% interest, 30-yr deferred 2nd — never forgiven, due at sale/refi. Standard 3% or 4% DPA at 6.750%. EDGE 3% at 6.375% with 2% discount point paid from seller concessions. Buydowns not permitted per program guidelines. Max DTI 50%.</div>
+      <div class="assume-item"><strong>DTI Calculation</strong>$127,742 gross income ($10,645/mo) + $941/mo non-housing debt. DTI shown uses Year 3+ full rate payment (most conservative). metroDPA max 50%; Arrive Home follows FHA guidelines. All three metroDPA options exceed 50% DTI on House B.</div>
+      <div class="assume-item"><strong>Closing Costs</strong>Calibrated from actual draft LE (House B, $585K @ 6.875%). Includes origination ($2,199), appraisal, title, prepaids, and escrow setup. UFMIP (1.75%) financed into loan. $10,000 seller concession applied to both properties. House B loan uses LE-exact $574,404.</div>
+    </div>
+  </div>
+
+  <div class="disclosure" style="margin-top:18px;">
+    <p style="font-size:10px;color:rgba(255,255,255,0.65);font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;">Important Disclosures</p>
+    <p><strong>Not a Loan Commitment.</strong> All figures are estimates based on inputs and current program pricing as of 05/26/26. Nothing here constitutes a loan commitment, pre-approval, or guarantee of financing. Rates, program availability, and terms subject to change without notice. Actual results will vary. This comparison is for informational purposes only and does not constitute financial, tax, or legal advice. Ryan & Brittany Benegas.</p>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div style="color:rgba(255,255,255,0.7);font-family:'DM Serif Display',serif;font-size:16px;">Handy Lender</div>
+  <div class="footer-right">DPA Comparison — Benegas · Handy Lender · Powered by Cornerstone First Mortgage<br>Rates as of 05/26/26 · Pricing subject to change</div>
+</footer>
+
+<script>
+var BORROWER = { grossIncome:127742, nonHousingDebt:941, fico:701 };
+
+var HOUSES = {
+  A: { price:550000, tax:2587, hoi:2200, hoa:0,   conc:10000, dpAmt:19250, loan:540038 },
+  B: { price:585000, tax:3437, hoi:2400, hoa:135,  conc:10000, dpAmt:10596, loan:574404 }
+};
+
+// Repayable pricing from sheet (Discount/Rebate$ based on House B $574,404 loan)
+// Negative = points cost to borrower; Positive = lender credit
+var REP_PRICING = [
+  { rate:6.375, dr:-9518  },
+  { rate:6.500, dr:-7013  },
+  { rate:6.625, dr:-4762  },
+  { rate:6.750, dr:-2797  },
+  { rate:6.875, dr: 4934  }, // par
+];
+
+// 4 programs — no buydown, no EDGE
+var PROGRAMS = [
+  { id:'rep',  label:'Arrive Home Repayable',    short:'Repayable', badge:'badge-purple',
+    parRate:6.875, dpaFactor:0.035, dpaRate:8.25, dpaTerm:120, forgivable:false, metro:false },
+  { id:'forg', label:'Arrive Home Forgivable',   short:'Forgivable', badge:'badge-teal',
+    parRate:7.750, dpaFactor:0.035, dpaRate:0,    dpaTerm:0,   forgivable:true,  metro:false },
+  { id:'m3',   label:'metroDPA Standard 3% DPA', short:'metro 3%',  badge:'badge-blue',
+    parRate:6.750, dpaFactor:0.030, dpaRate:0,    dpaTerm:0,   forgivable:false, metro:true  },
+  { id:'m4',   label:'metroDPA Standard 4% DPA', short:'metro 4%',  badge:'badge-green',
+    parRate:6.750, dpaFactor:0.040, dpaRate:0,    dpaTerm:0,   forgivable:false, metro:true  },
+];
+
+function pmtFn(annRate, n, pv) {
+  var r = annRate / 12;
+  return pv * r * Math.pow(1+r,n) / (Math.pow(1+r,n)-1);
+}
+function fmt(v) { return '$' + Math.round(v).toLocaleString(); }
+
+// Closing costs — calibrated from actual LE (House B $585K @ 6.875%)
+// HOI 12-month premium: House B LE shows $3,360 actual vs $2,400 listed annual
+function calcCC(price, loan, tax, hoi, ratePct) {
+  var hoiPremium = Math.round(hoi * (price === 585000 ? 3360/2400 : 1));
+  var fixed      = 2199 + 750 + 299 + 9 + 75 + 575 + 875 + 30 + 86 + 55;
+  var ownerTitle = Math.round(2027 * price / 585000);
+  var prepInt    = Math.round(loan * (ratePct / 100 / 365) * 12);
+  var hoiEsc     = Math.round(hoi / 12 * 2);
+  var taxEsc     = Math.round(tax / 12 * 2);
+  return fixed + ownerTitle + hoiPremium + prepInt + hoiEsc + taxEsc;
+}
+
+// Scale a Discount/Rebate$ from House B loan to target loan
+function scaleDR(drB, loan) {
+  return Math.round(drB * loan / HOUSES.B.loan);
+}
+
+// For Repayable: find the best rate achievable.
+// Strategy: walk rates from lowest to highest.
+// - If going below par produces a positive CTC (because losing lender credit outweighs points savings),
+//   pick the lowest rate that still has CTC > $0.
+// - If at par the excess concession is best applied to reduce the repayable 2nd balance, stay at par.
+function findBestRepRate(h) {
+  var dpaAmt = Math.round(h.price * 0.035);
+  var lcPar  = scaleDR(4934, h.loan);
+  var cc_par = calcCC(h.price, h.loan, h.tax, h.hoi, 6.875);
+  var neededPar  = cc_par + h.dpAmt - dpaAmt - lcPar;
+  var excessConc = h.conc - Math.max(0, neededPar); // surplus after covering CTC at par
+
+  // Evaluate all rates below par
+  var candidates = [];
+  var belowPar = REP_PRICING.filter(function(p){ return p.rate < 6.875; })
+                             .sort(function(a,b){ return a.rate - b.rate; });
+
+  belowPar.forEach(function(entry) {
+    var points      = Math.abs(scaleDR(entry.dr, h.loan));
+    var cc          = calcCC(h.price, h.loan, h.tax, h.hoi, entry.rate);
+    var totalNeeded = cc + h.dpAmt + points - dpaAmt; // no lender credit below par
+    var ctc         = Math.max(0, totalNeeded - h.conc);
+    candidates.push({ rate: entry.rate, points: points, ctc: ctc, cc: cc });
+  });
+
+  // Find candidates where CTC > $0 (concession not fully covering the points cost)
+  var withCTC = candidates.filter(function(c){ return c.ctc > 0; });
+
+  if (withCTC.length > 0) {
+    // Pick the lowest rate that has a positive CTC (best rate, real borrower contribution)
+    var best = withCTC[0];
+    return { rate: best.rate, pointsCost: best.points, ctc: best.ctc,
+             cc: best.cc, lc: 0, excessConc: excessConc };
+  } else {
+    // All below-par rates are fully covered by concession — stay at par
+    // Apply excess to reduce repayable 2nd balance instead
+    return { rate: 6.875, pointsCost: 0, ctc: Math.max(0, neededPar - h.conc),
+             cc: cc_par, lc: lcPar, excessConc: excessConc };
+  }
+}
+
+function calcScenario(hk, prog) {
+  var h        = HOUSES[hk];
+  var loan     = h.loan;
+  var baseLoan = Math.round(loan / 1.0175);
+  var mipMo    = (baseLoan * 0.0055) / 12;
+  var taxMo    = h.tax / 12;
+  var hoiMo    = h.hoi / 12;
+  var hoa      = h.hoa;
+  var dpaAmt   = Math.round(h.price * prog.dpaFactor);
+  var dpaPmt   = (!prog.forgivable && !prog.metro && prog.dpaRate > 0)
+                 ? pmtFn(prog.dpaRate / 100, prog.dpaTerm, dpaAmt) : 0;
+
+  var noteRate, ctc, cc, lc, pointsCost, excessConc, rateNote;
+
+  if (prog.id === 'rep') {
+    var best   = findBestRepRate(h);
+    noteRate   = best.rate;
+    ctc        = best.ctc;
+    cc         = best.cc;
+    lc         = best.lc;
+    pointsCost = best.pointsCost;
+    excessConc = best.excessConc;
+    rateNote   = noteRate < 6.875
+                 ? noteRate.toFixed(3) + '% (bought down from par)'
+                 : '6.875% (par)';
+  } else if (prog.id === 'forg') {
+    noteRate   = prog.parRate;
+    // Forgivable: tiny lender credit at 7.750% par (~$563 on B, scale to A)
+    lc         = scaleDR(563, loan);
+    cc         = calcCC(h.price, loan, h.tax, h.hoi, prog.parRate);
+    ctc        = Math.max(0, cc + h.dpAmt - dpaAmt - h.conc - lc);
+    pointsCost = 0; excessConc = 0;
+    rateNote   = '7.750% (par)';
+  } else {
+    // metroDPA
+    noteRate   = prog.parRate;
+    lc         = 0;
+    cc         = calcCC(h.price, loan, h.tax, h.hoi, prog.parRate);
+    ctc        = Math.max(0, cc + h.dpAmt - dpaAmt - h.conc);
+    pointsCost = 0; excessConc = 0;
+    rateNote   = prog.parRate.toFixed(3) + '%';
+  }
+
+  // Payment uses the ACTUAL note rate (buydown rate if applicable)
+  var pi  = pmtFn(noteRate / 100, 360, loan);
+  var mo  = pi + mipMo + taxMo + hoiMo + hoa + dpaPmt;
+  var dti = ((mo + BORROWER.nonHousingDebt) / (BORROWER.grossIncome / 12)) * 100;
+  var maxDti = prog.metro ? 50 : 57;
+  var dtiOk  = dti <= maxDti;
+
+  return { pi, mo, mipMo, taxMo, hoiMo, hoa, dpaPmt, dpaAmt,
+           loan, ctc, noteRate, rateNote, dti, maxDti, dtiOk,
+           lc, excessConc, pointsCost, cc };
+}
+
+function render() {
+  var container = document.getElementById('programs-container');
+  container.innerHTML = '';
+
+  PROGRAMS.forEach(function(prog) {
+    var a = calcScenario('A', prog);
+    var b = calcScenario('B', prog);
+
+    var hbIneligible   = !b.dtiOk;
+    var hbHeaderLabel  = hbIneligible ? 'House B ✗' : 'House B';
+    var hbHeaderStyle  = hbIneligible ? 'color:var(--coral);' : '';
+
+    var subNote = prog.id === 'rep'
+      ? '<span class="bd-note">Rate: A=' + a.noteRate.toFixed(3) + '% · B=' + b.noteRate.toFixed(3) + '% (excess concession buys down from 6.875%)</span>'
+      : prog.metro
+        ? '<span style="font-size:10px;color:var(--muted);">0% deferred 2nd · no buydown permitted</span>'
+        : '<span style="font-size:10px;color:var(--muted);">Fixed ' + prog.parRate.toFixed(3) + '% par</span>';
+
+    var ineligRow = hbIneligible
+      ? '<tr class="ineligible-banner"><td colspan="3"><span style="font-size:11px;color:var(--coral);font-weight:600;">⚠ House B ineligible — </span><span style="font-size:10px;color:var(--muted);">DTI ' + b.dti.toFixed(1) + '% exceeds ' + b.maxDti + '% metroDPA maximum.</span></td></tr>'
+      : '';
+
+    var creditRow = '';
+    if (prog.id === 'rep') {
+      creditRow =
+        (a.lc > 0 || b.lc > 0
+          ? '<tr><td class="row-label">Lender credit at 6.875% par</td>' +
+            '<td class="ha-col" style="color:var(--teal);">' + (a.lc > 0 ? '−' + fmt(a.lc) : '—') + '</td>' +
+            '<td class="hb-col" style="color:var(--teal);">' + (b.lc > 0 ? '−' + fmt(b.lc) : '—') + '</td></tr>'
+          : '') +
+        (a.pointsCost > 0 || b.pointsCost > 0
+          ? '<tr><td class="row-label">Points to buy rate down</td>' +
+            '<td class="ha-col" style="color:var(--coral);">' + (a.pointsCost > 0 ? '+' + fmt(a.pointsCost) : '—') + '</td>' +
+            '<td class="hb-col" style="color:var(--coral);">' + (b.pointsCost > 0 ? '+' + fmt(b.pointsCost) : '—') + '</td></tr>' +
+          '<tr><td class="row-label">Excess concession applied</td>' +
+            '<td class="ha-col" style="color:var(--teal);">' + (a.excessConc > 0 ? '−' + fmt(Math.min(a.excessConc, a.pointsCost)) : '—') + '</td>' +
+            '<td class="hb-col" style="color:var(--teal);">' + (b.excessConc > 0 ? '−' + fmt(Math.min(b.excessConc, b.pointsCost)) : '—') + '</td></tr>'
+          : '');
+    } else if (a.lc > 0) {
+      creditRow = '<tr><td class="row-label">Lender credit</td>' +
+        '<td class="ha-col" style="color:var(--teal);">−' + fmt(a.lc) + '</td>' +
+        '<td class="hb-col" style="color:var(--teal);">−' + fmt(b.lc) + '</td></tr>';
+    }
+
+    var hoaRow = HOUSES.B.hoa > 0
+      ? '<tr><td class="row-label">HOA</td><td class="ha-col">—</td><td class="hb-col">' + fmt(HOUSES.B.hoa) + '/mo</td></tr>'
+      : '';
+
+    var html =
+      '<div class="prog-section">' +
+        '<div class="prog-header">' +
+          '<span class="prog-badge ' + prog.badge + '">' + prog.short + '</span>' +
+          '<span class="prog-title">' + prog.label + '</span>' +
+          '<span class="prog-sub">' + subNote + '</span>' +
+        '</div>' +
+        '<table class="comp-table">' +
+          '<thead><tr>' +
+            '<th style="width:38%">Line Item</th>' +
+            '<th class="ha-col">House A</th>' +
+            '<th class="hb-col" style="' + hbHeaderStyle + '">' + hbHeaderLabel + '</th>' +
+          '</tr></thead>' +
+          '<tbody>' +
+            ineligRow +
+            '<tr><td class="row-label">DPA assistance</td>' +
+              '<td class="ha-col">' + fmt(a.dpaAmt) + (prog.forgivable ? ' <span style="font-size:9px;color:var(--teal);">forgiven mo.36</span>' : '') + '</td>' +
+              '<td class="hb-col">' + fmt(b.dpaAmt) + (prog.forgivable ? ' <span style="font-size:9px;color:var(--teal);">forgiven mo.36</span>' : '') + '</td></tr>' +
+            '<tr><td class="row-label">2nd mortgage payment</td>' +
+              '<td class="ha-col">' + (prog.forgivable ? '$0' : prog.metro ? '$0 deferred' : fmt(a.dpaPmt) + '/mo') + '</td>' +
+              '<td class="hb-col">' + (prog.forgivable ? '$0' : prog.metro ? '$0 deferred' : fmt(b.dpaPmt) + '/mo') + '</td></tr>' +
+            creditRow +
+            '<tr class="sec-divider"><td colspan="3">Monthly All-In Payment</td></tr>' +
+            '<tr class="row-year">' +
+              '<td><strong>Monthly Payment</strong> <span style="font-size:10px;font-weight:normal;color:var(--muted);">@ ' + a.noteRate.toFixed(3) + '%' + (a.noteRate !== b.noteRate ? ' / ' + b.noteRate.toFixed(3) + '%' : '') + '</span></td>' +
+              '<td class="ha-col"><span class="amt-big">' + fmt(a.mo) + '/mo</span></td>' +
+              '<td class="hb-col"><span class="amt-big">' + fmt(b.mo) + '/mo</span></td>' +
+            '</tr>' +
+            '<tr><td class="row-label">Est. DTI</td>' +
+              '<td class="ha-col" style="font-weight:600;color:' + (a.dtiOk?'var(--teal)':'var(--coral)') + ';">' + a.dti.toFixed(1) + '% <span style="font-size:9px;font-weight:normal;color:var(--muted);">/ max ' + a.maxDti + '%</span></td>' +
+              '<td class="hb-col" style="font-weight:600;color:' + (b.dtiOk?'var(--teal)':'var(--coral)') + ';">' + b.dti.toFixed(1) + '% <span style="font-size:9px;font-weight:normal;color:var(--muted);">/ max ' + b.maxDti + '%</span></td></tr>' +
+            '<tr class="sec-divider"><td colspan="3">Payment Breakdown</td></tr>' +
+            '<tr><td class="row-label">1st mortgage P&I</td><td class="ha-col">' + fmt(a.pi) + '/mo</td><td class="hb-col">' + fmt(b.pi) + '/mo</td></tr>' +
+            '<tr><td class="row-label">FHA MIP (0.55%)</td><td class="ha-col">' + fmt(a.mipMo) + '/mo</td><td class="hb-col">' + fmt(b.mipMo) + '/mo</td></tr>' +
+            '<tr><td class="row-label">Property taxes</td><td class="ha-col">' + fmt(a.taxMo) + '/mo</td><td class="hb-col">' + fmt(b.taxMo) + '/mo</td></tr>' +
+            '<tr><td class="row-label">Homeowners insurance</td><td class="ha-col">' + fmt(a.hoiMo) + '/mo</td><td class="hb-col">' + fmt(b.hoiMo) + '/mo</td></tr>' +
+            hoaRow +
+            (a.dpaPmt > 0 ? '<tr><td class="row-label">Repayable 2nd (8.25% / 10yr)</td><td class="ha-col">' + fmt(a.dpaPmt) + '/mo</td><td class="hb-col">' + fmt(b.dpaPmt) + '/mo</td></tr>' : '') +
+          '</tbody>' +
+        '</table>' +
+      '</div>';
+
+    var div = document.createElement('div');
+    div.innerHTML = html;
+    container.appendChild(div.firstChild);
+  });
+
+  // Cash to Close table
+  var ctcBody = document.getElementById('ctc-tbody');
+  ctcBody.innerHTML = '';
+  PROGRAMS.forEach(function(prog) {
+    var a = calcScenario('A', prog);
+    var b = calcScenario('B', prog);
+    var bInelig = !b.dtiOk;
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td><span class="prog-badge ' + prog.badge + '" style="margin-right:6px;">' + prog.short + '</span>' + prog.label +
+        (prog.id==='rep' ? '<br><span style="font-size:9px;color:#b45309;">A @ ' + a.noteRate.toFixed(3) + '% · B @ ' + b.noteRate.toFixed(3) + '%</span>' : '') + '</td>' +
+      '<td class="ha-col"><span class="amt-big">' + fmt(a.ctc) + '</span></td>' +
+      '<td class="hb-col"><span class="amt-big" style="' + (bInelig?'color:var(--muted);':'') + '">' + fmt(b.ctc) + (bInelig?' *':'') + '</span>' +
+        (bInelig ? '<br><span style="font-size:9px;color:var(--coral);">DTI ineligible</span>' : '') + '</td>';
+    ctcBody.appendChild(tr);
+  });
+
+  // Recommendation — lowest monthly among eligible
+  var bestMo = 999999, bestHouse = 'A', bestProg = PROGRAMS[0];
+  PROGRAMS.forEach(function(prog) {
+    var a = calcScenario('A', prog); var b = calcScenario('B', prog);
+    if (a.dtiOk && a.mo < bestMo) { bestMo = a.mo; bestHouse = 'A'; bestProg = prog; }
+    if (b.dtiOk && b.mo < bestMo) { bestMo = b.mo; bestHouse = 'B'; bestProg = prog; }
+  });
+  var otherHouse = bestHouse === 'A' ? 'B' : 'A';
+  var otherBest  = 999999;
+  PROGRAMS.forEach(function(p) { var c = calcScenario(otherHouse, p); if (c.dtiOk && c.mo < otherBest) otherBest = c.mo; });
+
+  document.getElementById('rec-main').textContent =
+    'House ' + bestHouse + ' with ' + bestProg.label + ' offers the lowest all-in monthly cost.';
+  document.getElementById('rec-sub').textContent =
+    fmt(bestMo) + '/mo — ' + fmt(Math.round(otherBest - bestMo)) + '/mo less than the best eligible option on House ' + otherHouse + '. ' +
+    "House A's lower price, no HOA, and lower property taxes give it a structural cost advantage across every program.";
+}
+
+render();
+</script>
+</body>
+</html>
