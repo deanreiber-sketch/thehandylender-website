@@ -109,7 +109,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);
     <span class="prop-pill pill-b">House B</span>
     <div class="prop-info">
       <div class="prop-stat"><span class="lbl">Purchase</span><span class="val">$585,000</span></div>
-      <div class="prop-stat"><span class="lbl">Down payment</span><span class="val">$10,596 (1.8%)</span></div>
+      <div class="prop-stat"><span class="lbl">Down payment</span><span class="val">$20,475 (3.5%)</span></div>
       <div class="prop-stat"><span class="lbl">Loan</span><span class="val">$574,404</span></div>
       <div class="prop-stat"><span class="lbl">Taxes/yr</span><span class="val">$3,437</span></div>
       <div class="prop-stat"><span class="lbl">HOI/yr</span><span class="val">$2,400</span></div>
@@ -162,7 +162,7 @@ var BORROWER = { grossIncome:127742, nonHousingDebt:941, fico:701 };
 
 var HOUSES = {
   A: { price:550000, tax:2587, hoi:2200, hoa:0,   conc:10000, dpAmt:19250, loan:540038 },
-  B: { price:585000, tax:3437, hoi:2400, hoa:135,  conc:10000, dpAmt:10596, loan:574404 }
+  B: { price:585000, tax:3437, hoi:2400, hoa:135,  conc:10000, dpAmt:20475, loan:574404 }
 };
 
 // Repayable pricing from sheet (Discount/Rebate$ based on House B $574,404 loan)
@@ -223,32 +223,28 @@ function findBestRepRate(h) {
   var excessConc = h.conc - Math.max(0, neededPar); // surplus after covering CTC at par
 
   // Evaluate all rates below par
-  var candidates = [];
+  // Walk rates from just below par DOWN to lowest
+  // Pick the FIRST (closest to par) rate where CTC > $0
+  // That gives the best achievable rate where the concession doesn't fully cover the cost
   var belowPar = REP_PRICING.filter(function(p){ return p.rate < 6.875; })
-                             .sort(function(a,b){ return a.rate - b.rate; });
+                             .sort(function(a,b){ return b.rate - a.rate; }); // high to low
 
-  belowPar.forEach(function(entry) {
+  for (var i = 0; i < belowPar.length; i++) {
+    var entry       = belowPar[i];
     var points      = Math.abs(scaleDR(entry.dr, h.loan));
     var cc          = calcCC(h.price, h.loan, h.tax, h.hoi, entry.rate);
-    var totalNeeded = cc + h.dpAmt + points - dpaAmt; // no lender credit below par
+    var totalNeeded = cc + h.dpAmt + points - dpaAmt;
     var ctc         = Math.max(0, totalNeeded - h.conc);
-    candidates.push({ rate: entry.rate, points: points, ctc: ctc, cc: cc });
-  });
-
-  // Find candidates where CTC > $0 (concession not fully covering the points cost)
-  var withCTC = candidates.filter(function(c){ return c.ctc > 0; });
-
-  if (withCTC.length > 0) {
-    // Pick the lowest rate that has a positive CTC (best rate, real borrower contribution)
-    var best = withCTC[0];
-    return { rate: best.rate, pointsCost: best.points, ctc: best.ctc,
-             cc: best.cc, lc: 0, excessConc: excessConc };
-  } else {
-    // All below-par rates are fully covered by concession — stay at par
-    // Apply excess to reduce repayable 2nd balance instead
-    return { rate: 6.875, pointsCost: 0, ctc: Math.max(0, neededPar - h.conc),
-             cc: cc_par, lc: lcPar, excessConc: excessConc };
+    if (ctc > 0) {
+      // This is the best rate where there's still a real borrower contribution
+      return { rate: entry.rate, pointsCost: points, ctc: ctc,
+               cc: cc, lc: 0, excessConc: excessConc };
+    }
   }
+
+  // All below-par rates fully covered — stay at par, apply excess to reduce 2nd balance
+  return { rate: 6.875, pointsCost: 0, ctc: Math.max(0, neededPar - h.conc),
+           cc: cc_par, lc: lcPar, excessConc: excessConc };
 }
 
 function calcScenario(hk, prog) {
