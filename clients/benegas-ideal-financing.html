@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ideal Financing Scenarios — Benegas</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --ink:#0f1923;--ink2:#1e2d3d;
+  --gold:#b8973a;--gold-lt:#f5ead4;--gold-dk:#7a6020;
+  --sage:#2d5a45;--sage-lt:#e8f2ed;
+  --slate:#3d5166;--slate-lt:#edf1f5;
+  --cream:#faf8f4;--white:#fff;
+  --border:#e4ddd0;--muted:#7a7060;
+  --coral:#c0442a;--coral-lt:#fdf0ec;
+  --yr1:#1a5276;--yr2:#1e6b4a;--yr3:#5d3a1a;
+}
+body{font-family:'Epilogue',sans-serif;background:var(--cream);color:var(--ink);font-size:14px;line-height:1.6;min-height:100vh;}
+
+/* HEADER */
+.header{background:var(--ink);padding:0;overflow:hidden;position:relative;}
+.header::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(184,151,58,0.04) 40px,rgba(184,151,58,0.04) 80px);}
+.header-inner{position:relative;z-index:1;padding:40px 48px 36px;}
+.header-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;}
+.brand{font-family:'Playfair Display',serif;font-size:18px;color:var(--gold);letter-spacing:.02em;}
+.brand-sub{font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:.12em;text-transform:uppercase;margin-top:3px;}
+.prep-by{text-align:right;font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:.08em;text-transform:uppercase;line-height:1.8;}
+.prep-by strong{display:block;color:rgba(255,255,255,0.75);font-size:13px;font-family:'Playfair Display',serif;letter-spacing:.03em;font-weight:400;}
+.header-title{margin-bottom:8px;}
+.header-title h1{font-family:'Playfair Display',serif;font-size:34px;color:white;line-height:1.15;font-weight:600;}
+.header-title h1 em{color:var(--gold);font-style:italic;}
+.header-title p{font-size:12px;color:rgba(255,255,255,0.45);margin-top:10px;max-width:520px;line-height:1.8;}
+.header-rule{height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin-top:28px;opacity:.4;}
+
+/* STRATEGY STRIP */
+.strategy{background:var(--gold-lt);border-bottom:1px solid var(--border);padding:18px 48px;display:flex;gap:40px;align-items:center;}
+.strat-item{display:flex;align-items:flex-start;gap:10px;}
+.strat-icon{width:32px;height:32px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;}
+.strat-text strong{display:block;font-size:11px;font-weight:600;color:var(--gold-dk);letter-spacing:.05em;text-transform:uppercase;}
+.strat-text span{font-size:11px;color:var(--muted);line-height:1.6;}
+.strat-divider{width:1px;height:40px;background:var(--border);}
+
+/* MAIN */
+.main{padding:36px 48px 48px;}
+.scenarios-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-bottom:32px;}
+
+/* SCENARIO CARD */
+.scenario-card{background:white;border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 2px 16px rgba(15,25,35,0.06);}
+.card-header{padding:22px 24px 18px;border-bottom:1px solid var(--border);position:relative;}
+.card-header::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.s1 .card-header::before{background:linear-gradient(90deg,var(--sage),var(--yr2));}
+.s2 .card-header::before{background:linear-gradient(90deg,var(--slate),var(--yr1));}
+.scenario-label{display:inline-flex;align-items:center;gap:6px;margin-bottom:8px;}
+.scenario-num{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:3px;}
+.s1 .scenario-num{background:var(--sage-lt);color:var(--sage);}
+.s2 .scenario-num{background:var(--slate-lt);color:var(--slate);}
+.card-header h2{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--ink);line-height:1.2;}
+.card-header .card-sub{font-size:11px;color:var(--muted);margin-top:5px;}
+.card-stats{display:flex;gap:20px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);}
+.stat{flex:1;}
+.stat .lbl{font-size:9px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;display:block;}
+.stat .val{font-size:13px;font-weight:600;color:var(--ink);margin-top:2px;}
+
+/* PAYMENT TIMELINE */
+.payment-timeline{padding:20px 24px;}
+.timeline-title{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
+.year-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.year-row:last-child{margin-bottom:0;}
+.yr-badge{width:52px;flex-shrink:0;text-align:center;padding:4px 6px;border-radius:6px;font-size:10px;font-weight:600;letter-spacing:.04em;}
+.yr1-b{background:#e8f4fd;color:var(--yr1);}
+.yr2-b{background:#e8f6ef;color:var(--yr2);}
+.yr3-b{background:#fdf3e8;color:var(--yr3);}
+.yr-bar-wrap{flex:1;position:relative;height:28px;}
+.yr-bar{height:100%;border-radius:6px;display:flex;align-items:center;padding:0 10px;font-size:13px;font-weight:600;color:white;position:relative;min-width:120px;}
+.yr1-bar{background:linear-gradient(90deg,#1a5276,#2980b9);}
+.yr2-bar{background:linear-gradient(90deg,#1e6b4a,#27ae60);}
+.yr3-bar{background:linear-gradient(90deg,#5d3a1a,#a04000);}
+.yr-rate{font-size:10px;color:var(--muted);white-space:nowrap;flex-shrink:0;}
+.yr-detail{font-size:9px;color:rgba(255,255,255,0.75);font-weight:400;margin-left:4px;}
+
+/* REFI SECTION */
+.refi-box{margin:0 24px 20px;background:var(--gold-lt);border:1px solid #e0cfa0;border-radius:10px;padding:14px 16px;}
+.refi-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.refi-icon{width:24px;height:24px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:white;}
+.refi-title{font-size:11px;font-weight:600;color:var(--gold-dk);letter-spacing:.05em;text-transform:uppercase;}
+.refi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.refi-stat .lbl{font-size:9px;color:var(--gold-dk);opacity:.7;letter-spacing:.06em;text-transform:uppercase;display:block;}
+.refi-stat .val{font-size:13px;font-weight:600;color:var(--gold-dk);}
+.refi-stat .sub{font-size:10px;color:var(--gold-dk);opacity:.65;}
+
+/* COST SECTION */
+.cost-box{margin:0 24px 24px;background:var(--slate-lt);border:1px solid #c8d4e0;border-radius:10px;padding:14px 16px;}
+.cost-title{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:10px;}
+.cost-rows{}
+.cost-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid rgba(61,81,102,0.1);}
+.cost-row:last-child{border-bottom:none;padding-top:8px;margin-top:4px;}
+.cost-row.total{border-top:2px solid rgba(61,81,102,0.2);font-weight:600;}
+.cost-label{font-size:11px;color:var(--slate);}
+.cost-val{font-size:12px;font-weight:500;color:var(--ink);}
+.cost-val.credit{color:var(--sage);}
+.cost-val.cost{color:var(--coral);}
+.cost-val.total-val{font-size:14px;font-weight:700;color:var(--ink);}
+
+/* BREAKDOWN */
+.breakdown{padding:0 24px 24px;}
+.breakdown-title{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.breakdown-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.bd-item{background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;}
+.bd-item .lbl{font-size:9px;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:4px;}
+.bd-item .val{font-size:12px;font-weight:600;color:var(--ink);}
+
+/* COMPARISON TABLE */
+.comparison{background:white;border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 2px 16px rgba(15,25,35,0.06);margin-bottom:28px;}
+.comp-header{padding:20px 28px;border-bottom:1px solid var(--border);background:var(--ink);}
+.comp-header h3{font-family:'Playfair Display',serif;font-size:18px;color:white;font-weight:600;}
+.comp-header p{font-size:11px;color:rgba(255,255,255,0.45);margin-top:4px;}
+.comp-table{width:100%;border-collapse:collapse;}
+.comp-table th{padding:10px 16px;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;text-align:left;background:var(--cream);border-bottom:1px solid var(--border);}
+.comp-table th:not(:first-child){text-align:center;}
+.comp-table td{padding:10px 16px;font-size:12px;border-bottom:1px solid var(--border);}
+.comp-table td:not(:first-child){text-align:center;}
+.comp-table tr:last-child td{border-bottom:none;}
+.comp-table .row-label{color:var(--muted);font-size:11px;}
+.comp-table .highlight{background:rgba(184,151,58,0.05);}
+.comp-table .highlight td{font-weight:600;}
+.s1-col{background:rgba(45,90,69,0.04);}
+.s2-col{background:rgba(61,81,102,0.04);}
+.big-num{font-size:15px;font-weight:700;color:var(--ink);}
+.green{color:var(--sage);font-weight:600;}
+.amber{color:var(--gold-dk);font-weight:600;}
+.red{color:var(--coral);}
+
+/* NOTES */
+.notes{background:var(--ink2);border-radius:12px;padding:20px 24px;margin-bottom:28px;}
+.notes h3{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+.notes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.note-item{font-size:10px;color:rgba(255,255,255,0.5);line-height:1.7;}
+.note-item strong{display:block;color:rgba(255,255,255,0.8);font-size:11px;margin-bottom:3px;font-weight:500;}
+
+/* DISCLOSURE */
+.disclosure{background:var(--ink);border-radius:10px;padding:16px 20px;}
+.disclosure p{font-size:10px;color:rgba(255,255,255,0.35);line-height:1.7;}
+
+/* FOOTER */
+footer{background:var(--ink);border-top:1px solid rgba(255,255,255,0.06);padding:16px 48px;display:flex;justify-content:space-between;align-items:center;margin-top:0;}
+.footer-brand{font-family:'Playfair Display',serif;font-size:15px;color:var(--gold);}
+.footer-right{font-size:10px;color:rgba(255,255,255,0.3);text-align:right;line-height:1.7;}
+
+@media(max-width:800px){
+  .scenarios-grid{grid-template-columns:1fr;}
+  .header-inner,.strategy,.main{padding-left:20px;padding-right:20px;}
+  .strategy{flex-wrap:wrap;gap:16px;}
+  .strat-divider{display:none;}
+  .notes-grid,.breakdown-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-top">
+      <div>
+        <div class="brand">Handy Lender</div>
+        <div class="brand-sub">Powered by Cornerstone First Mortgage</div>
+      </div>
+      <div class="prep-by">
+        Prepared for<strong>Ryan &amp; Brittany Benegas</strong>
+        May 27, 2026
+      </div>
+    </div>
+    <div class="header-title">
+      <h1>Your Ideal Financing<br><em>Two Paths Forward</em></h1>
+      <p>Both scenarios use Arrive Home Repayable with a 2/1 buydown — engineered to keep payments under $4,100 in Years 1 and 2, with a clear refinance target that locks you in at $4,100 or better permanently.</p>
+    </div>
+    <div class="header-rule"></div>
+  </div>
+</div>
+
+<div class="strategy">
+  <div class="strat-item">
+    <div class="strat-icon">🎯</div>
+    <div class="strat-text">
+      <strong>Payment Target</strong>
+      <span>Under $4,100/mo in Years 1 &amp; 2<br>via 2/1 buydown</span>
+    </div>
+  </div>
+  <div class="strat-divider"></div>
+  <div class="strat-item">
+    <div class="strat-icon">📉</div>
+    <div class="strat-text">
+      <strong>Refi Trigger</strong>
+      <span>If rates reach ~5.875–6.8% by Year 2<br>lock in $4,100 or less permanently</span>
+    </div>
+  </div>
+  <div class="strat-divider"></div>
+  <div class="strat-item">
+    <div class="strat-icon">🏦</div>
+    <div class="strat-text">
+      <strong>DPA Program</strong>
+      <span>Arrive Home Repayable · 3.5% 2nd<br>8.25% / 10-yr · rolls into refi</span>
+    </div>
+  </div>
+  <div class="strat-divider"></div>
+  <div class="strat-item">
+    <div class="strat-icon">✅</div>
+    <div class="strat-text">
+      <strong>Approved DTI</strong>
+      <span>Up to 55% on Arrive Home (FHA)<br>Your file qualifies</span>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="scenarios-grid">
+
+    <!-- SCENARIO 1 -->
+    <div class="scenario-card s1">
+      <div class="card-header">
+        <div class="scenario-label">
+          <span class="scenario-num">Scenario 1</span>
+        </div>
+        <h2>Lower Price · Simpler Path</h2>
+        <div class="card-sub">$520K asking · offer $530K with $13K back · par rate 6.875% + 2/1 buydown</div>
+        <div class="card-stats">
+          <div class="stat"><span class="lbl">Purchase Price</span><span class="val">$530,000</span></div>
+          <div class="stat"><span class="lbl">Loan Amount</span><span class="val">$520,400</span></div>
+          <div class="stat"><span class="lbl">DPA (2nd)</span><span class="val">$18,550</span></div>
+          <div class="stat"><span class="lbl">Note Rate</span><span class="val">6.875%</span></div>
+        </div>
+      </div>
+
+      <div class="payment-timeline">
+        <div class="timeline-title">Monthly All-In Payment (PITI + 2nd mortgage)</div>
+        <div class="year-row">
+          <div class="yr-badge yr1-b">Year 1</div>
+          <div class="yr-bar-wrap">
+            <div class="yr-bar yr1-bar" style="width:84%;">$3,615<span class="yr-detail">4.875%</span></div>
+          </div>
+          <div class="yr-rate">← $485 below target</div>
+        </div>
+        <div class="year-row">
+          <div class="yr-badge yr2-b">Year 2</div>
+          <div class="yr-bar-wrap">
+            <div class="yr-bar yr2-bar" style="width:91%;">$3,939<span class="yr-detail">5.875%</span></div>
+          </div>
+          <div class="yr-rate">← $161 below target</div>
+        </div>
+        <div class="year-row">
+          <div class="yr-badge yr3-b">Year 3+</div>
+          <div class="yr-bar-wrap">
+            <div class="yr-bar yr3-bar" style="width:99%;">$4,280<span class="yr-detail">6.875%</span></div>
+          </div>
+          <div class="yr-rate">← $180 above target</div>
+        </div>
+      </div>
+
+      <div class="refi-box">
+        <div class="refi-header">
+          <div class="refi-icon">↻</div>
+          <div class="refi-title">Refinance Target — Year 2</div>
+        </div>
+        <div class="refi-grid">
+          <div class="refi-stat">
+            <span class="lbl">Refi Loan (incl. DPA)</span>
+            <span class="val">$530,639</span>
+            <span class="sub">1st balance + $18,550 DPA</span>
+          </div>
+          <div class="refi-stat">
+            <span class="lbl">@ 5.875% (Year 2 rate)</span>
+            <span class="val">$3,780/mo</span>
+            <span class="sub">$320 under $4,100 target ✓</span>
+          </div>
+          <div class="refi-stat">
+            <span class="lbl">Break-even refi rate</span>
+            <span class="val">6.800%</span>
+            <span class="sub">Max rate to hit $4,100</span>
+          </div>
+          <div class="refi-stat">
+            <span class="lbl">Rate improvement needed</span>
+            <span class="val">~0.075%</span>
+            <span class="sub">Very achievable target</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cost-box">
+        <div class="cost-title">Cash to Close</div>
+        <div class="cost-rows">
+          <div class="cost-row"><span class="cost-label">Closing costs</span><span class="cost-val">$10,963</span></div>
+          <div class="cost-row"><span class="cost-label">2/1 buydown account (seller-funded)</span><span class="cost-val">$12,059</span></div>
+          <div class="cost-row"><span class="cost-label">Lender credit at 6.875% par</span><span class="cost-val credit">−$4,470</span></div>
+          <div class="cost-row"><span class="cost-label">Seller concessions</span><span class="cost-val credit">−$13,000</span></div>
+          <div class="cost-row total"><span class="cost-label">Borrower brings to closing</span><span class="cost-val total-val">$5,552</span></div>
+        </div>
+      </div>
+
+      <div class="breakdown">
+        <div class="breakdown-title">Year 3+ Payment Breakdown</div>
+        <div class="breakdown-grid">
+          <div class="bd-item"><span class="lbl">P&I</span><span class="val">$3,419</span></div>
+          <div class="bd-item"><span class="lbl">FHA MIP</span><span class="val">$234</span></div>
+          <div class="bd-item"><span class="lbl">Taxes + HOI</span><span class="val">$399</span></div>
+          <div class="bd-item"><span class="lbl">2nd Mortgage</span><span class="val">$228</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENARIO 2 -->
+    <div class="scenario-card s2">
+      <div class="card-header">
+        <div class="scenario-label">
+          <span class="scenario-num">Scenario 2</span>
+        </div>
+        <h2>Higher Price · Rate Bought Down</h2>
+        <div class="card-sub">$540K asking · offer $550K with $13K back · buy rate to 6.625% + 2/1 buydown</div>
+        <div class="card-stats">
+          <div class="stat"><span class="lbl">Purchase Price</span><span class="val">$550,000</span></div>
+          <div class="stat"><span class="lbl">Loan Amount</span><span class="val">$540,038</span></div>
+          <div class="stat"><span class="lbl">DPA (2nd)</span><span class="val">$19,250</span></div>
+          <div class="stat"><span class="lbl">Note Rate</span><span class="val">6.625%</span></div>
+        </div>
+      </div>
+
+      <div class="payment-timeline">
+        <div class="timeline-title">Monthly All-In Payment (PITI + 2nd mortgage)</div>
+        <div class="year-row">
+          <div class="yr-badge yr1-b">Year 1</div>
+          <div class="yr-bar-wrap">
+            <div class="yr-bar yr1-bar" style="width:85%;">$3,655<span class="yr-detail">4.625%</span></div>
+          </div>
+          <div class="yr-rate">← $445 below target</div>
+        </div>
+        <div class="year-row">
+          <div class="yr-badge yr2-b">Year 2</div>
+          <div class="yr-bar-wrap">
+            <div class="yr-bar yr2-bar" style="width:92%;">$3,987<span class="yr-detail">5.625%</span></div>
+          </div>
+          <div class="yr-rate">← $113 below target</div>
+        </div>
+        <div class="year-row">
+          <div class="yr-badge yr3-b">Year 3+</div>
+          <div class="yr-bar-wrap">
+            <div class="yr-bar yr3-bar" style="width:100%;">$4,336<span class="yr-detail">6.625%</span></div>
+          </div>
+          <div class="yr-rate">← $236 above target</div>
+        </div>
+      </div>
+
+      <div class="refi-box">
+        <div class="refi-header">
+          <div class="refi-icon">↻</div>
+          <div class="refi-title">Refinance Target — Year 2</div>
+        </div>
+        <div class="refi-grid">
+          <div class="refi-stat">
+            <span class="lbl">Refi Loan (incl. DPA)</span>
+            <span class="val">$550,663</span>
+            <span class="sub">1st balance + $19,250 DPA</span>
+          </div>
+          <div class="refi-stat">
+            <span class="lbl">@ 5.875% (Year 2 rate)</span>
+            <span class="val">$3,907/mo</span>
+            <span class="sub">$193 under $4,100 target ✓</span>
+          </div>
+          <div class="refi-stat">
+            <span class="lbl">Break-even refi rate</span>
+            <span class="val">6.416%</span>
+            <span class="sub">Max rate to hit $4,100</span>
+          </div>
+          <div class="refi-stat">
+            <span class="lbl">Rate improvement needed</span>
+            <span class="val">~0.209%</span>
+            <span class="sub">Very achievable target</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cost-box">
+        <div class="cost-title">Cash to Close</div>
+        <div class="cost-rows">
+          <div class="cost-row"><span class="cost-label">Closing costs</span><span class="cost-val">$11,033</span></div>
+          <div class="cost-row"><span class="cost-label">Points to buy rate to 6.625%</span><span class="cost-val cost">$4,477</span></div>
+          <div class="cost-row"><span class="cost-label">2/1 buydown account (seller-funded)</span><span class="cost-val">$12,366</span></div>
+          <div class="cost-row"><span class="cost-label">Seller concessions</span><span class="cost-val credit">−$13,000</span></div>
+          <div class="cost-row total"><span class="cost-label">Borrower brings to closing</span><span class="cost-val total-val">$14,876</span></div>
+        </div>
+      </div>
+
+      <div class="breakdown">
+        <div class="breakdown-title">Year 3+ Payment Breakdown</div>
+        <div class="breakdown-grid">
+          <div class="bd-item"><span class="lbl">P&I</span><span class="val">$3,458</span></div>
+          <div class="bd-item"><span class="lbl">FHA MIP</span><span class="val">$243</span></div>
+          <div class="bd-item"><span class="lbl">Taxes + HOI</span><span class="val">$399</span></div>
+          <div class="bd-item"><span class="lbl">2nd Mortgage</span><span class="val">$236</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SIDE BY SIDE COMPARISON -->
+  <div class="comparison">
+    <div class="comp-header">
+      <h3>Head-to-Head Comparison</h3>
+      <p>Arrive Home Repayable · 2/1 Buydown · $13,000 seller concessions</p>
+    </div>
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th style="width:35%"></th>
+          <th class="s1-col">Scenario 1 · $530K</th>
+          <th class="s2-col">Scenario 2 · $550K</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="row-label">Note rate (permanent)</td><td class="s1-col">6.875%</td><td class="s2-col">6.625%</td></tr>
+        <tr class="highlight"><td class="row-label">Year 1 payment</td><td class="s1-col"><span class="big-num">$3,615</span><span class="green"> ✓</span></td><td class="s2-col"><span class="big-num">$3,655</span><span class="green"> ✓</span></td></tr>
+        <tr class="highlight"><td class="row-label">Year 2 payment</td><td class="s1-col"><span class="big-num">$3,939</span><span class="green"> ✓</span></td><td class="s2-col"><span class="big-num">$3,987</span><span class="green"> ✓</span></td></tr>
+        <tr class="highlight"><td class="row-label">Year 3+ payment</td><td class="s1-col"><span class="big-num">$4,280</span></td><td class="s2-col"><span class="big-num">$4,336</span></td></tr>
+        <tr><td class="row-label">Repayable 2nd payment</td><td class="s1-col">$228/mo</td><td class="s2-col">$236/mo</td></tr>
+        <tr><td class="row-label">Borrower cash to close</td><td class="s1-col"><span class="green">$5,552</span></td><td class="s2-col"><span class="amber">$14,876</span></td></tr>
+        <tr><td class="row-label">Buydown account (seller)</td><td class="s1-col">$12,059</td><td class="s2-col">$12,366</td></tr>
+        <tr><td class="row-label">Points cost (borrower)</td><td class="s1-col"><span class="green">$0</span></td><td class="s2-col"><span class="amber">$4,477</span></td></tr>
+        <tr><td class="row-label">Lender credit</td><td class="s1-col"><span class="green">$4,470</span></td><td class="s2-col">$0</td></tr>
+        <tr><td class="row-label">Refi loan (incl. DPA)</td><td class="s1-col">$530,639</td><td class="s2-col">$550,663</td></tr>
+        <tr><td class="row-label">Refi pmt @ 5.875%</td><td class="s1-col"><span class="green">$3,780/mo</span></td><td class="s2-col"><span class="green">$3,907/mo</span></td></tr>
+        <tr><td class="row-label">Max refi rate → $4,100</td><td class="s1-col">6.800%</td><td class="s2-col">6.416%</td></tr>
+        <tr><td class="row-label">DTI Year 1 / Year 3+</td><td class="s1-col">42.8% / 49.0%</td><td class="s2-col">43.2% / 49.6%</td></tr>
+        <tr><td class="row-label">Available gift funds needed</td><td class="s1-col"><span class="green">None required</span></td><td class="s2-col"><span class="amber">~$0 (within $20K own funds)</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- NOTES -->
+  <div class="notes">
+    <h3>How This Works</h3>
+    <div class="notes-grid">
+      <div class="note-item">
+        <strong>2/1 Buydown Mechanics</strong>
+        The seller funds a buydown escrow account at closing. Year 1 your rate is reduced by 2%, Year 2 by 1%, then your permanent note rate applies from Year 3 onward. The buydown account subsidizes the difference — no temporary loan, no balloon.
+      </div>
+      <div class="note-item">
+        <strong>The Refinance Strategy</strong>
+        At the end of Year 2 you refinance the first mortgage and roll the DPA balance into the new loan. If rates have improved to even 5.875% — the same as your Year 2 buydown rate — your payment locks in at $3,780–3,907 permanently, well under $4,100. The refi breakeven rate is very achievable.
+      </div>
+      <div class="note-item">
+        <strong>Repayable 2nd Mortgage</strong>
+        The DPA second mortgage has no monthly interest — you pay 8.25% over 10 years on just the $18–19K balance. At refi it rolls into your new first mortgage. If you sell before refinancing, the balance is due at closing from proceeds.
+      </div>
+      <div class="note-item">
+        <strong>Offer Strategy</strong>
+        At this price point ($520–540K) homes aren't sitting. Offering $10K over asking with $13–15K in seller concessions is a competitive, clean offer that sellers understand. The seller nets asking price; you get the concessions to fund the buydown.
+      </div>
+      <div class="note-item">
+        <strong>Scenario 1 Advantage</strong>
+        Lower purchase price means the lender credit at par 6.875% covers a significant portion of costs — borrower brings just $5,552. Ideal if preserving cash is the priority and the $30K gift from parents stays in reserve.
+      </div>
+      <div class="note-item">
+        <strong>Scenario 2 Advantage</strong>
+        Slightly higher price but permanently lower rate (6.625% vs 6.875%) saves $39/mo every month from Year 3 on. Costs $14,876 at closing — well within the $20K own funds available. Gift funds can remain untouched as a cushion.
+      </div>
+    </div>
+  </div>
+
+  <div class="disclosure">
+    <p><strong style="color:rgba(255,255,255,0.6);">Important Disclosures.</strong> All figures are estimates based on current Arrive Home Repayable pricing as of 05/26/26 and the assumptions noted above. Nothing here constitutes a loan commitment, pre-approval, or guarantee of financing. Rates, program availability, and terms subject to change. The refinance strategy assumes future market rates and borrower qualification at time of refinance — neither can be guaranteed. Actual results will vary. Ryan &amp; Brittany Benegas · Handy Lender · Powered by Cornerstone First Mortgage.</p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-brand">Handy Lender</div>
+  <div class="footer-right">Ideal Financing Scenarios · Ryan &amp; Brittany Benegas<br>Powered by Cornerstone First Mortgage · 866-815-1803 · dreiber@cfmtg.com</div>
+</footer>
+
+</body>
+</html>
