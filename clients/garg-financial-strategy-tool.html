@@ -243,11 +243,12 @@ select.finput option{background:var(--navy2)}
 <nav class="nav">
   <button class="ntab active" onclick="showTab('overview',this)">Overview</button>
   <button class="ntab" onclick="showTab('proceeds',this)">Proceeds Allocator</button>
-  <button class="ntab" onclick="showTab('assets',this)">Assets &amp; Liquidity</button>
+  <button class="ntab" onclick="showTab('assets',this)">Assets &amp; Liabilities</button>
   <button class="ntab" onclick="showTab('refi',this)">Refi Modeler</button>
   <button class="ntab" onclick="showTab('income',this)">Income &amp; DTI</button>
   <button class="ntab" onclick="showTab('props',this)">Properties</button>
   <button class="ntab" onclick="showTab('cashflow',this)">Cash Flow</button>
+  <button class="ntab" onclick="showTab('retirement',this)">Retirement</button>
   <button class="ntab" onclick="showTab('advisory',this)">Advisory</button>
 </nav>
 
@@ -259,6 +260,7 @@ select.finput option{background:var(--navy2)}
   <div id="panel-income" class="panel"></div>
   <div id="panel-props" class="panel"></div>
   <div id="panel-cashflow" class="panel"></div>
+  <div id="panel-retirement" class="panel"></div>
   <div id="panel-advisory" class="panel"></div>
 </main>
 
@@ -341,15 +343,24 @@ const DEFAULT_OTHER = [
 ];
 const DEFAULT_INCOME = {salary:25001.60, bonus:6500, deferred:0};
 const DEFAULT_REFI   = {rate:6.5, term:30, cashout:0, useRefi:true};
+const DEFAULT_PROP_TEMPLATE = () => ({
+  id:'new_'+Date.now(), addr:'New Property', city:'', type:'I',
+  val:500000, bal:400000, rate:7.0, pi:0,
+  hoi:150, tax:400, hoa:0, mi:0,
+  helocBal:0, helocRate:0, helocPmt:0,
+  rent:2500, leaseEnd:'', schedE:1875,
+  sellCost:0.06, listed:false, isNew:true,
+  downPct:20, purchasePrice:500000
+});
 // Per-property refi scenarios (investment properties)
 const DEFAULT_PROP_REFIS = () => Object.fromEntries(
   ['ca','sky','blf','sw1','sw2'].map(id=>[id,{enabled:false,rate:6.5,term:30}])
 );
 
 // ── State (loaded from localStorage or defaults) ──────────
-let P, OD, INC, REFI, PROP_REFIS, SOLD, ALLOCS, ASSETS, ASSET_LIQ, ASSET_ALLOCS;
+let P, OD, INC, REFI, PROP_REFIS, SOLD, ALLOCS, ASSETS, ASSET_LIQ, ASSET_ALLOCS, RETIRE, PURCHASES;
 
-const DATA_VERSION = 10; // increment when DEFAULT_PROPS data changes
+const DATA_VERSION = 12; // increment when DEFAULT_PROPS data changes
 
 function loadState(){
   try{
@@ -381,7 +392,10 @@ function loadState(){
     } else {
       // Same version — load everything from storage
       P  = s.props      ? s.props.map(x=>({...x})) : DEFAULT_PROPS.map(x=>({...x}));
-      OD = s.otherDebts ? s.otherDebts              : DEFAULT_OTHER.map(x=>({...x}));
+      // Re-seed OD if saved version is missing known debt IDs (stale cache)
+    const hasSavedOD = s.otherDebts && s.otherDebts.length > 0;
+    const hasKnownOD = hasSavedOD && s.otherDebts.some(d=>['apple','wf1','wf2','sams','chase'].includes(d.id));
+    OD = (hasSavedOD && hasKnownOD) ? s.otherDebts : DEFAULT_OTHER.map(x=>({...x}));
     }
 
     INC         = s.income      ? s.income      : {...DEFAULT_INCOME};
@@ -389,7 +403,20 @@ function loadState(){
     SOLD        = s.sold        ? s.sold        : {};
     ALLOCS      = s.allocs      ? s.allocs      : {};
     PROP_REFIS  = s.propRefis   ? s.propRefis   : DEFAULT_PROP_REFIS();
-    ASSETS      = s.assets      ? s.assets      : [];
+    RETIRE      = s.retire      ? s.retire      : {monthlyNeeded:15000,partTimeIncome:0,targetProps:3,growthRate:3};
+    PURCHASES   = s.purchases   ? s.purchases   : [];
+    const DEFAULT_ASSETS = [
+      {id:'a_fid1',    name:'Fidelity (401k)',               type:'retire', bal:93000,  tax:25, notes:'Retirement account'},
+      {id:'a_fid2',    name:'Fidelity (IRA)',                type:'retire', bal:24000,  tax:25, notes:'Retirement account'},
+      {id:'a_fidbrok', name:'Fidelity Brokerage Individual', type:'invest', bal:180000, tax:20, notes:'Individual brokerage'},
+      {id:'a_coin',    name:'Coinbase',                      type:'crypto', bal:87000,  tax:30, notes:'Crypto holdings'},
+      {id:'a_robin',   name:'Robinhood',                     type:'invest', bal:30000,  tax:20, notes:'Individual brokerage'},
+    ];
+    // If saved assets exist and user has added/modified them, use saved version.
+    // But if saved version is empty OR missing our seeded IDs (old version), use defaults.
+    const hasSavedAssets = s.assets && s.assets.length > 0;
+    const hasSeededIds   = hasSavedAssets && s.assets.some(a=>['a_fid1','a_fid2','a_fidbrok','a_coin','a_robin'].includes(a.id));
+    ASSETS = (hasSavedAssets && hasSeededIds) ? s.assets : DEFAULT_ASSETS;
     ASSET_LIQ   = s.assetLiq    ? s.assetLiq    : {};
     ASSET_ALLOCS= s.assetAllocs ? s.assetAllocs : {};
   }catch(e){resetState()}
@@ -398,6 +425,8 @@ function resetState(){
   P=DEFAULT_PROPS.map(x=>({...x}));OD=DEFAULT_OTHER.map(x=>({...x}));
   INC={...DEFAULT_INCOME};REFI={...DEFAULT_REFI};PROP_REFIS=DEFAULT_PROP_REFIS();
   SOLD={};ALLOCS={};ASSETS=[];ASSET_LIQ={};ASSET_ALLOCS={};
+  RETIRE={monthlyNeeded:15000,partTimeIncome:0,targetProps:3,growthRate:3};
+  PURCHASES=[];
 }
 function resetAllocs(){
   if(!confirm('Reset all allocations to $0?'))return;
@@ -405,7 +434,7 @@ function resetAllocs(){
   recalc();
 }
 function saveAll(){
-  localStorage.setItem('sg_tool',JSON.stringify({version:DATA_VERSION,props:P,otherDebts:OD,income:INC,refi:REFI,propRefis:PROP_REFIS,sold:SOLD,allocs:ALLOCS,assets:ASSETS,assetLiq:ASSET_LIQ,assetAllocs:ASSET_ALLOCS}));
+  localStorage.setItem('sg_tool',JSON.stringify({version:DATA_VERSION,props:P,otherDebts:OD,income:INC,refi:REFI,propRefis:PROP_REFIS,sold:SOLD,allocs:ALLOCS,assets:ASSETS,assetLiq:ASSET_LIQ,assetAllocs:ASSET_ALLOCS,retire:RETIRE,purchases:PURCHASES}));
   const n=document.getElementById('save-note');
   n.textContent='Saved '+new Date().toLocaleTimeString();
   setTimeout(()=>n.textContent='',4000);
@@ -508,7 +537,7 @@ function calcDTI(){
   // --- Income ---
   const salary=INC.salary, bonus=INC.bonus, deferred=INC.deferred;
   let rentalSum=0;
-  P.filter(p=>p.type==='I').forEach(p=>{ rentalSum+=rentalCredit(p); });
+  [...P,...(typeof PURCHASES!=='undefined'?PURCHASES:[])].filter(p=>p.type==='I').forEach(p=>{ rentalSum+=rentalCredit(p); });
   // rentalCredit returns 0 for loss properties — costs already in investDebt
   // Only add positive rental income (at 75% of net) to qualifying income
   const qualIncome=salary+bonus+deferred+rentalSum;
@@ -526,7 +555,7 @@ function calcDTI(){
   // Negative net cash flow: net LOSS added to debt side. HELOC = separate obligation.
   // The full PITIA is NOT double-counted on the debt side — it is netted against schedE.
   let investDebt=0;
-  P.filter(p=>p.type==='I'&&!SOLD[p.id]).forEach(p=>{
+  [...P, ...(typeof PURCHASES!=='undefined'?PURCHASES:[])].filter(p=>p.type==='I'&&!SOLD[p.id]).forEach(p=>{
     const pr=PROP_REFIS&&PROP_REFIS[p.id];
     const propPI=(pr&&pr.enabled)?calcPI(p.bal,pr.rate/100,pr.term):p.pi;
     const pitia=propPI+p.hoi+p.tax+p.hoa;
@@ -586,6 +615,7 @@ function renderAll(){
   else if(id==='income') renderIncome(r);
   else if(id==='props') renderProps();
   else if(id==='cashflow') renderCashFlow(r);
+  else if(id==='retirement') renderRetirement(r);
   else if(id==='advisory') renderAdvisory(r);
 }
 
@@ -621,7 +651,7 @@ function renderOverview(r){
     <div style="font-size:11px;color:var(--text3);margin-bottom:10px">When a property is sold, the proceeds shown are <b style="color:var(--text)">after paying off the 1st mortgage AND HELOC balance</b>. The remaining net proceeds are available to allocate on the Proceeds tab.</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:9px">`;
 
-  P.filter(p=>p.type==='I').forEach(p=>{
+  [...P,...(PURCHASES||[])].filter(p=>p.type==='I').forEach(p=>{
     const sp=saleProceeds(p);
     // simulate selling this prop
     const prevSold=SOLD[p.id];
@@ -904,6 +934,54 @@ function renderAssets(r){
     </div>`;
     html+=`</div>`;
   }
+
+  // ── Liabilities section ──────────────────────────────────────────────────
+  html+=`<div style="margin-top:1.5rem">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:8px">
+      <div>
+        <div class="ctitle" style="margin-bottom:2px"><span class="ctitle-accent">◈</span> Other monthly liabilities</div>
+        <div style="font-size:11px;color:var(--text3)">Car loans, credit cards, personal loans, any obligation not tied to a property. These flow directly into your DTI.</div>
+      </div>
+      <button class="btn btn-t btn-sm" onclick="addDebt()">+ Add liability</button>
+    </div>
+    <div class="card" style="padding:0">`;
+
+  OD.forEach((d,i)=>{
+    html+=`<div style="display:grid;grid-template-columns:1fr 140px 140px auto;gap:10px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border)">
+      <div class="field"><label style="font-size:10px">Description</label>
+        <input class="finput sm" type="text" value="${d.name}" onchange="OD[${i}].name=this.value;recalc()">
+      </div>
+      <div class="field"><label style="font-size:10px">Monthly payment ($)</label>
+        <input class="finput sm" type="text" value="${fmtN(d.pmt,2)}" onchange="OD[${i}].pmt=parseN(this.value);recalc()">
+      </div>
+      <div class="field"><label style="font-size:10px">Balance ($) <span style="color:var(--text3)">(optional)</span></label>
+        <input class="finput sm" type="text" value="${d.bal?fmtN(d.bal):''}" placeholder="0" onchange="OD[${i}].bal=parseN(this.value);recalc()">
+      </div>
+      <button class="btn btn-r btn-sm" onclick="removeDebt(${i})" style="margin-top:16px">✕</button>
+    </div>`;
+  });
+
+  const totalOD=OD.reduce((a,d)=>a+d.pmt,0);
+  html+=`<div style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;background:var(--navy3);border-radius:0 0 var(--rl) var(--rl)">
+    <span style="font-size:12px;font-weight:600;color:var(--text)">Total monthly liabilities</span>
+    <span style="font-size:14px;font-weight:600;color:var(--red)">${fmt(Math.round(totalOD))}/mo</span>
+  </div></div></div>`;
+
+  // ── Net worth summary ─────────────────────────────────────────────────────
+  const propEquity=[...P,...(PURCHASES||[])].filter(p=>!SOLD[p.id]).reduce((a,p)=>a+Math.max(0,(p.val*(1-p.sellCost))-p.bal-p.helocBal),0);
+  const totalLiabilities=[...P,...(PURCHASES||[])].filter(p=>!SOLD[p.id]).reduce((a,p)=>a+p.bal+p.helocBal,0);
+  const netWorth=propEquity+totalAssets-0; // assets already net, props show equity
+  html+=`<div class="card" style="margin-top:1rem;background:linear-gradient(135deg,var(--navy3),var(--navy4,var(--navy3)))">
+    <div class="ctitle"><span class="ctitle-accent">◈</span> Net worth snapshot</div>
+    <div class="mg">
+      <div class="metric"><div class="mlbl">Real estate equity</div><div class="mval info">${fmt(Math.round(propEquity))}</div></div>
+      <div class="metric"><div class="mlbl">Financial assets</div><div class="mval info">${fmt(Math.round(totalAssets))}</div></div>
+      <div class="metric"><div class="mlbl">Total net worth</div><div class="mval ok">${fmt(Math.round(propEquity+totalAssets))}</div></div>
+      <div class="metric"><div class="mlbl">Total debt (mortgages+HELOCs)</div><div class="mval danger">${fmt(Math.round(totalLiabilities))}</div></div>
+      <div class="metric"><div class="mlbl">Monthly liabilities (non-prop)</div><div class="mval danger">${fmt(Math.round(totalOD))}/mo</div></div>
+      <div class="metric"><div class="mlbl">Leverage ratio</div><div class="mval ${totalLiabilities/Math.max(propEquity+totalAssets,1)*100>70?'warn':''}">${(totalLiabilities/Math.max(propEquity+totalAssets+totalLiabilities,1)*100).toFixed(1)}%</div><div class="msub">debt / total assets</div></div>
+    </div>
+  </div>`;
 
   document.getElementById('panel-assets').innerHTML=html;
 }
@@ -1195,61 +1273,126 @@ function leaseUrgency(d){
 // ═══════════════════════════════════════════════════════════
 function renderProps(){
   let html='';
-  P.forEach(p=>{
-    const hpmt=p.helocBal*p.helocRate/12;
-    const pitia=p.pi+p.hoi+p.tax+p.hoa+hpmt;
-    const cashflow=p.type==='I'?p.rent-pitia:null;
-    const eq=netEquity(p);
-    const sp=saleProceeds(p);
-    const ltv=p.bal/p.val*100;
-    const isSold=SOLD[p.id];
 
-    html+=`<div class="pcard ${p.listed?'listed':''} ${p.type==='P'?'primary':''}">
-      ${p.type==='I'?`<div style="display:flex;justify-content:flex-end;margin-bottom:6px">
-        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--text2)">
-          <input type="checkbox" ${isSold?'checked':''} onchange="SOLD['${p.id}']=this.checked;recalc()" style="accent-color:var(--teal);cursor:pointer"> Mark sold
-        </label>
-      </div>`:''}
-      <div class="pcard-body ${isSold?'sold':''}">
-      <div class="ph">
-        <div>
-          <div class="pa">${p.addr}</div>
-          <div class="pc">${p.city}</div>
-          ${p.type==='I'&&p.leaseEnd?`<div style="font-size:11px;color:var(--text3);margin-top:2px">Lease ends: <b style="color:${leaseUrgency(p.leaseEnd).color}">${formatLeaseDate(p.leaseEnd)}</b> <span style="font-size:10px;background:${leaseUrgency(p.leaseEnd).bg};color:${leaseUrgency(p.leaseEnd).color};padding:1px 6px;border-radius:10px;margin-left:4px">${leaseUrgency(p.leaseEnd).label}</span></div>`:''}
-          <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:5px">
-            ${p.type==='P'?'<span class="badge bb">Primary Residence</span>':'<span class="badge bt">Investment</span>'}
-            ${p.listed?'<span class="badge bo">Listed for Sale</span>':''}
-            ${isSold?'<span class="badge bo">Marked as Sold</span>':''}
-            ${cashflow!==null?`<span class="badge ${cashflow>=0?'bg':'br'}">${cashflow>=0?'+':''}${fmt(Math.round(cashflow))}/mo cash flow</span>`:''}
-          </div>
-        </div>
-      </div>
-      <div class="g4">
-        <div class="field"><label>Est. value ($)</label><input class="finput" type="text" value="${fmtN(p.val)}" onchange="P.find(x=>x.id==='${p.id}').val=parseN(this.value);recalc()"></div>
-        <div class="field"><label>Mortgage balance ($)</label><input class="finput" type="text" value="${fmtN(Math.round(p.bal))}" onchange="P.find(x=>x.id==='${p.id}').bal=parseN(this.value);recalc()"></div>
-        <div class="field"><label>Rate (%)</label><input class="finput" type="number" step="0.001" value="${(p.rate*100).toFixed(3)}" onchange="P.find(x=>x.id==='${p.id}').rate=+this.value/100;recalc()"></div>
-        <div class="field"><label>P&I payment ($)</label><input class="finput" type="text" value="${fmtN(p.pi,2)}" onchange="P.find(x=>x.id==='${p.id}').pi=parseN(this.value);recalc()"></div>
-        ${p.type==='I'?`<div class="field"><label>Monthly rent ($) <span style="font-size:10px;color:var(--text3)">(market)</span></label><input class="finput" type="text" value="${fmtN(p.rent)}" onchange="P.find(x=>x.id==='${p.id}').rent=parseN(this.value);recalc()"></div>
-        <div class="field"><label>Qualifying rent ($) <span style="font-size:10px;color:var(--teal)">(75% of rent, used for DTI)</span></label><input class="finput" type="text" value="${fmtN(p.schedE,2)}" onchange="P.find(x=>x.id==='${p.id}').schedE=parseN(this.value);recalc()" style="border-color:var(--teal2)"></div>
-        <div class="field"><label>Lease end date</label><input class="finput" type="date" value="${p.leaseEnd||''}" onchange="P.find(x=>x.id==='${p.id}').leaseEnd=this.value;recalc()"></div>`:''}
-        ${p.helocBal>0||p.type==='I'?`
-        <div class="field"><label>HELOC balance ($)</label><input class="finput" type="text" value="${fmtN(Math.round(p.helocBal))}" onchange="const pp=P.find(x=>x.id==='${p.id}');pp.helocBal=parseN(this.value);pp.helocPmt=pp.helocBal*pp.helocRate/12;recalc()"></div>
-        <div class="field"><label>HELOC rate (%)</label><input class="finput" type="number" step="0.01" value="${(p.helocRate*100).toFixed(2)}" onchange="const pp=P.find(x=>x.id==='${p.id}');pp.helocRate=+this.value/100;recalc()"></div>
-        <div class="field"><label>HELOC pmt (I/O) ($)</label><input class="finput" type="text" value="${fmtN(hpmt,2)}" onchange="P.find(x=>x.id==='${p.id}').helocPmt=parseN(this.value);recalc()"></div>
-        `:''}
-      </div>
-      <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:16px;font-size:11px;color:var(--text3)">
-        <span>LTV: <b style="color:var(--text)">${pct(ltv)}</b></span>
-        <span>Net equity: <b style="color:var(--teal)">${fmt(Math.round(eq))}</b></span>
-        ${p.type==='I'?`<span>Total PITIA+HELOC: <b>${fmt(Math.round(pitia))}/mo</b></span>
-        <span>Schedule E income: <b>${fmt(Math.round(p.schedE))}/mo</b></span>`:''}
-        ${p.type==='I'&&p.helocBal>0?`<span style="color:var(--amber)">If sold: pays off 1st (${fmt(Math.round(sp.payoff1st))}) + HELOC (${fmt(Math.round(sp.payoffHeloc))}) → net proceeds ${fmt(Math.round(sp.net))}</span>`:''}
-      </div>
-      </div>
-    </div>`;
+  // ── New property purchase section ────────────────────────────────────────
+  html+=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:8px">
+    <div style="font-size:12px;color:var(--text2)">Existing properties + any modeled purchases. Sold properties are archived below.</div>
+    <button class="btn btn-t btn-sm" onclick="addNewProperty()">+ Model new purchase</button>
+  </div>`;
+
+  // ── Render active (unsold) properties ────────────────────────────────────
+  const allProps=[...P,...PURCHASES];
+  allProps.filter(p=>!SOLD[p.id]).forEach(p=>{
+    html+=renderPropCard(p,false);
   });
+
+  // ── Archived sold properties ──────────────────────────────────────────────
+  const soldList=allProps.filter(p=>SOLD[p.id]);
+  if(soldList.length>0){
+    html+=`<div style="margin-top:1.25rem;margin-bottom:.5rem">
+      <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Archived — marked as sold</div>`;
+    soldList.forEach(p=>{ html+=renderPropCard(p,true); });
+    html+=`</div>`;
+  }
+
+  // Debts section moved to Assets & Liabilities tab
+
   document.getElementById('panel-props').innerHTML=html;
 }
+
+function renderPropCard(p,isSold){
+  const hpmt=p.helocBal*(p.helocRate/100)/12;
+  const pitia=p.pi+p.hoi+p.tax+p.hoa;
+  const cashflow=p.rent-(pitia+hpmt);
+  const eq=(p.val*(1-p.sellCost))-p.bal-p.helocBal;
+  const ltv=p.val>0?p.bal/p.val*100:0;
+  const sp={payoff1st:p.bal,payoffHeloc:p.helocBal,net:eq};
+  const isPurchase=!!p.isNew;
+
+  return `<div class="pcard ${p.listed&&!isSold?'listed':''} ${isPurchase?'primary':''}" style="${isSold?'opacity:.45;margin-bottom:6px':''}">
+    ${isPurchase?`<div style="background:var(--teal-bg);border-radius:6px;padding:4px 10px;font-size:10px;color:var(--teal);font-weight:600;display:inline-block;margin-bottom:8px">MODELED PURCHASE</div>`:''}
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:8px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:15px;font-weight:500;color:var(--text)">${p.addr}</div>
+        <div style="font-size:11px;color:var(--text3)">${p.city}</div>
+        ${p.leaseEnd?`<div style="font-size:11px;margin-top:2px;color:${leaseUrgency(p.leaseEnd).color}">Lease: ${formatLeaseDate(p.leaseEnd)} <span style="font-size:10px;background:${leaseUrgency(p.leaseEnd).bg};padding:1px 5px;border-radius:8px">${leaseUrgency(p.leaseEnd).label}</span></div>`:''}
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:5px">
+          ${p.type==='P'?'<span class="badge bb">Primary</span>':'<span class="badge bt">Investment</span>'}
+          ${p.listed&&!isSold?'<span class="badge bo">Listed</span>':''}
+          ${isSold?'<span class="badge ba">Sold / Archived</span>':''}
+          ${p.type==='I'?`<span class="badge ${cashflow>=0?'bg':'br'}">${cashflow>=0?'+':''}${fmt(Math.round(cashflow))}/mo cash flow</span>`:''}
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        ${p.type==='I'&&!isSold?`<label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px;color:var(--text2)">
+          <input type="checkbox" onchange="${isPurchase?`removePurchase('${p.id}')`:`SOLD['${p.id}']=this.checked;recalc()`}" style="accent-color:var(--teal);cursor:pointer"> ${isPurchase?'Remove':'Mark sold'}
+        </label>`:''}
+        ${isSold?`<button class="btn btn-g btn-sm" onclick="SOLD['${p.id}']=false;recalc()">↺ Restore</button>`:''}
+        ${isSold&&isPurchase?`<button class="btn btn-r btn-sm" onclick="removePurchase('${p.id}')">Remove</button>`:''}
+      </div>
+    </div>
+    ${isSold?'':`<div class="g4">
+      <div class="field"><label>Est. value ($)</label><input class="finput" type="text" value="${fmtN(p.val)}" onchange="updateProp('${p.id}','val',parseN(this.value))"></div>
+      <div class="field"><label>Mortgage balance ($)</label><input class="finput" type="text" value="${fmtN(Math.round(p.bal))}" onchange="updateProp('${p.id}','bal',parseN(this.value))"></div>
+      <div class="field"><label>Rate (%)</label><input class="finput" type="number" step="0.001" value="${(p.rate*100).toFixed(3)}" onchange="updateProp('${p.id}','rate',parseFloat(this.value)/100)"></div>
+      <div class="field"><label>P&I payment ($)</label><input class="finput" type="text" value="${fmtN(p.pi,2)}" onchange="updateProp('${p.id}','pi',parseN(this.value))"></div>
+      ${p.type==='I'?`<div class="field"><label>Monthly rent ($) <span style="font-size:10px;color:var(--text3)">(market)</span></label><input class="finput" type="text" value="${fmtN(p.rent)}" onchange="updateProp('${p.id}','rent',parseN(this.value));updateProp('${p.id}','schedE',parseN(this.value)*0.75)"></div>
+      <div class="field"><label>Qualifying rent ($) <span style="font-size:10px;color:var(--teal)">(75%, for DTI)</span></label><input class="finput" type="text" value="${fmtN(p.schedE,2)}" onchange="updateProp('${p.id}','schedE',parseN(this.value))" style="border-color:var(--teal2)"></div>
+      <div class="field"><label>Lease end date</label><input class="finput" type="date" value="${p.leaseEnd||''}" onchange="updateProp('${p.id}','leaseEnd',this.value)"></div>`:''}
+      <div class="field"><label>HELOC balance ($)</label><input class="finput" type="text" value="${fmtN(Math.round(p.helocBal))}" onchange="updateProp('${p.id}','helocBal',parseN(this.value))"></div>
+      <div class="field"><label>HELOC rate (%)</label><input class="finput" type="number" step="0.01" value="${(p.helocRate*100).toFixed(2)}" onchange="updateProp('${p.id}','helocRate',parseFloat(this.value)/100)"></div>
+      <div class="field"><label>HELOC pmt (I/O) ($)</label><input class="finput" type="text" value="${fmtN(p.helocBal*(p.helocRate)/12,2)}" onchange="updateProp('${p.id}','helocPmt',parseN(this.value))"></div>
+    </div>
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:14px;font-size:11px;color:var(--text3)">
+      <span>LTV: <b style="color:var(--text)">${pct(ltv)}</b></span>
+      <span>Net equity: <b style="color:var(--teal)">${fmt(Math.round(eq))}</b></span>
+      ${p.type==='I'?`<span>PITIA+HELOC: <b>${fmt(Math.round(pitia+hpmt))}/mo</b></span>
+      <span>Qualifying rent: <b style="color:var(--teal)">${fmt(Math.round(p.schedE))}/mo</b></span>`:''}
+      ${p.type==='I'&&p.helocBal>0?`<span style="color:var(--amber)">If sold: 1st (${fmt(Math.round(sp.payoff1st))}) + HELOC (${fmt(Math.round(sp.payoffHeloc))}) → net <b>${fmt(Math.round(sp.net))}</b></span>`:''}
+      ${p.type==='I'&&p.helocBal===0?`<span style="color:var(--teal)">If sold: 1st (${fmt(Math.round(sp.payoff1st))}) → net <b>${fmt(Math.round(sp.net))}</b></span>`:''}
+    </div>`}
+  </div>`;
+}
+
+function updateProp(id,field,val){
+  const p=P.find(x=>x.id===id)||PURCHASES.find(x=>x.id===id);
+  if(p){p[field]=val;}
+  recalc();
+}
+
+function addNewProperty(){
+  const t=DEFAULT_PROP_TEMPLATE();
+  // Auto-calculate P&I from purchase price, down%, rate
+  t.pi=calcPI(t.bal,t.rate/100,30);
+  t.schedE=t.rent*0.75;
+  PURCHASES.push(t);
+  PROP_REFIS[t.id]={enabled:false,rate:6.5,term:30};
+  recalc();
+  // Scroll to new card
+  setTimeout(()=>{
+    const cards=document.querySelectorAll('.pcard');
+    if(cards.length) cards[cards.length-1].scrollIntoView({behavior:'smooth',block:'center'});
+  },100);
+}
+
+function removePurchase(id){
+  PURCHASES=PURCHASES.filter(x=>x.id!==id);
+  delete SOLD[id];
+  delete PROP_REFIS[id];
+  recalc();
+}
+
+function addDebt(){
+  OD.push({id:'d_'+Date.now(),name:'New debt',pmt:0,bal:0});
+  recalc();
+}
+
+function removeDebt(i){
+  if(!confirm('Remove this debt?'))return;
+  OD.splice(i,1);
+  recalc();
+}
+
 
 // ═══════════════════════════════════════════════════════════
 // CASH FLOW
@@ -1258,7 +1401,7 @@ function renderCashFlow(r){
   const retireYrs=+document.getElementById('retire-yr').value;
   let totalGrossRent=0,totalObligation=0,totalNetCashFlow=0,totalDtiCredit=0,totalDtiDebt=0;
   const cfRows=[];
-  P.filter(p=>p.type==='I').forEach(p=>{
+  [...P,...(PURCHASES||[])].filter(p=>p.type==='I').forEach(p=>{
     if(SOLD[p.id]){cfRows.push({p,sold:true});return;}
     const cf=propCashFlow(p);
     totalGrossRent+=cf.grossRent;
@@ -1455,6 +1598,174 @@ function renderCashFlow(r){
   </div>`;
 
   document.getElementById('panel-cashflow').innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════════
+// RETIREMENT PLANNER
+// ═══════════════════════════════════════════════════════════
+function renderRetirement(r){
+  const retireYrs = +document.getElementById('retire-yr').value;
+  const needed    = RETIRE.monthlyNeeded   || 15000;
+  const partTime  = RETIRE.partTimeIncome  || 0;
+  const growth    = (RETIRE.growthRate     || 3) / 100;
+
+  // Current portfolio cash flow
+  const allProps = [...P,...(PURCHASES||[])];
+  let portCF=0, portRent=0, portObl=0;
+  allProps.filter(p=>p.type==='I'&&!SOLD[p.id]).forEach(p=>{
+    const pitia=p.pi+p.hoi+p.tax+p.hoa;
+    const helocPmt=effectiveHelocPmt(p);
+    const cf=p.rent-(pitia+helocPmt);
+    portCF+=cf; portRent+=p.rent; portObl+=pitia+helocPmt;
+  });
+
+  // Asset withdrawal capacity
+  let totalAssets=0, totalRetire=0, totalInvest=0;
+  (ASSETS||[]).forEach(a=>{
+    totalAssets+=a.bal;
+    if(a.type==='retire') totalRetire+=a.bal;
+    else totalInvest+=a.bal;
+  });
+
+  // At retirement: income = salary + portfolio CF + part-time
+  const retireSalary = INC.salary; // assumed to continue (SS/pension placeholder)
+  const totalMonthlyIncome = portCF + partTime + (portCF>0?0:0);
+  const gap = needed - totalMonthlyIncome - partTime;
+  const annualGap = gap * 12;
+
+  // How many years assets last at current gap
+  const assetRunway = annualGap > 0 ? Math.round(totalAssets / annualGap) : 999;
+
+  // Properties needed for self-sufficiency
+  const avgPropCF = portCF / Math.max(allProps.filter(p=>p.type==='I'&&!SOLD[p.id]).length, 1);
+  const propsNeeded = avgPropCF > 0 ? Math.ceil(needed / avgPropCF) : '∞';
+
+  // Portfolio value needed (cap rate approach at 6%)
+  const capRate = 0.06;
+  const portfolioNeeded = (needed * 12) / capRate;
+
+  // Current portfolio value
+  const portValue = allProps.filter(p=>p.type==='I'&&!SOLD[p.id]).reduce((a,p)=>a+p.val,0);
+
+  // Rent growth projection — what rent needs to be in N years
+  const projectedRent = portRent * Math.pow(1+growth, retireYrs);
+  const projectedObl  = portObl; // obligations roughly fixed (fixed rate mortgages)
+  const projectedCF   = projectedRent - projectedObl;
+
+  // Monthly income needed from salary currently vs at retirement
+  const currentGap = needed - r.qualIncome;
+
+  function bar(val, max, color){
+    const w=Math.min(Math.round(val/max*100),100);
+    return `<div style="background:var(--navy3);border-radius:6px;height:10px;overflow:hidden;margin-top:5px"><div style="width:${w}%;height:100%;background:${color};border-radius:6px;transition:width .5s"></div></div>`;
+  }
+
+  let html=`
+  <div class="mg">
+    <div class="metric"><div class="mlbl">Monthly income needed</div><div class="mval"><input type="text" value="${fmtN(needed)}" style="background:none;border:none;color:inherit;font-family:'DM Serif Display',serif;font-size:22px;width:130px;padding:0" onchange="RETIRE.monthlyNeeded=parseN(this.value);recalc()"></div><div class="msub">edit to adjust target</div></div>
+    <div class="metric"><div class="mlbl">Current portfolio CF</div><div class="mval ${portCF>=0?'ok':'danger'}">${fmt(Math.round(portCF))}/mo</div><div class="msub">all active rentals</div></div>
+    <div class="metric"><div class="mlbl">Part-time / other income</div><div class="mval"><input type="text" value="${fmtN(partTime)}" style="background:none;border:none;color:inherit;font-family:'DM Serif Display',serif;font-size:22px;width:130px;padding:0" onchange="RETIRE.partTimeIncome=parseN(this.value);recalc()"></div><div class="msub">edit to model side income</div></div>
+    <div class="metric"><div class="mlbl">Monthly shortfall</div><div class="mval ${gap<=0?'ok':'danger'}">${gap<=0?'Self-sufficient':fmt(Math.round(gap))+' gap'}</div><div class="msub">${gap>0?'from portfolio/assets':''}</div></div>
+    <div class="metric"><div class="mlbl">Total investable assets</div><div class="mval info">${fmt(Math.round(totalAssets))}</div><div class="msub">${assetRunway<100?assetRunway+' yr runway at gap':'Surplus'}</div></div>
+    <div class="metric"><div class="mlbl">Rent growth rate (%/yr)</div><div class="mval"><input type="number" step="0.5" value="${RETIRE.growthRate||3}" style="background:none;border:none;color:inherit;font-family:'DM Serif Display',serif;font-size:22px;width:60px;padding:0" onchange="RETIRE.growthRate=parseFloat(this.value)||3;recalc()"></div><div class="msub">for projections</div></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:.875rem">
+
+    <div class="card">
+      <div class="ctitle"><span class="ctitle-accent">◈</span> Income at retirement — ${retireYrs} yr${retireYrs!==1?'s':''} out</div>
+      <div class="row"><span class="rn">Monthly target</span><span class="rv">${fmt(Math.round(needed))}/mo</span></div>
+      <div class="row"><span class="rn">Rental portfolio CF (current)</span><span class="rv ${portCF>=0?'pos':'neg'}">${fmt(Math.round(portCF))}/mo</span></div>
+      <div class="row"><span class="rn">Projected rental CF (${retireYrs}yr @ ${RETIRE.growthRate||3}% rent growth)</span><span class="rv ${projectedCF>=0?'pos':'neg'}">${fmt(Math.round(projectedCF))}/mo</span></div>
+      <div class="row"><span class="rn">Part-time / other income</span><span class="rv ${partTime>0?'pos':'muted'}">${partTime>0?'+'+fmt(Math.round(partTime))+'/mo':'—'}</span></div>
+      <div class="row"><span class="rn">Social Security / pension</span><span class="rv muted">Not modeled — add via part-time income</span></div>
+      <div class="total-row" style="margin-top:8px">
+        <span class="tr-lbl">${gap>0?'Monthly gap':'Monthly surplus'}</span>
+        <span class="tr-val ${gap>0?'danger':'ok'}">${gap>0?fmt(Math.round(gap)):'-'+fmt(Math.round(-gap))}</span>
+      </div>
+      ${bar(Math.max(0,totalMonthlyIncome+partTime), needed, gap<=0?'var(--green)':'var(--amber)')}
+      <div style="font-size:10px;color:var(--text3);margin-top:3px;text-align:right">${Math.round(Math.min((totalMonthlyIncome+partTime)/needed*100,100))}% of target covered by portfolio</div>
+    </div>
+
+    <div class="card">
+      <div class="ctitle"><span class="ctitle-accent">◈</span> Portfolio size required</div>
+      <div class="row"><span class="rn">Portfolio value needed<span class="rsub"> at 6% cap rate to generate ${fmt(Math.round(needed))}/mo</span></span><span class="rv">${fmt(Math.round(portfolioNeeded))}</span></div>
+      <div class="row"><span class="rn">Current portfolio value</span><span class="rv info">${fmt(Math.round(portValue))}</span></div>
+      <div class="row"><span class="rn">Gap to target portfolio</span><span class="rv ${portValue>=portfolioNeeded?'pos':'warn'}">${portValue>=portfolioNeeded?'✓ Achieved':fmt(Math.round(portfolioNeeded-portValue))+' needed'}</span></div>
+      <div class="row"><span class="rn">Avg properties needed<span class="rsub"> at current avg CF/property</span></span><span class="rv">${propsNeeded}</span></div>
+      <div class="row"><span class="rn">Active investment properties</span><span class="rv">${allProps.filter(p=>p.type==='I'&&!SOLD[p.id]).length}</span></div>
+      ${bar(portValue, portfolioNeeded, 'var(--teal)')}
+      <div style="font-size:10px;color:var(--text3);margin-top:3px;text-align:right">${Math.round(Math.min(portValue/portfolioNeeded*100,100))}% of target portfolio value</div>
+    </div>
+
+  </div>
+
+  <div class="card">
+    <div class="ctitle"><span class="ctitle-accent">◈</span> Timeline to retirement — ${retireYrs} yr${retireYrs!==1?'s':''} projection</div>
+    <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:12px">
+      <thead><tr style="border-bottom:1px solid var(--border)">
+        <th style="text-align:left;padding:7px 10px;font-size:10px;color:var(--text3);text-transform:uppercase">Year</th>
+        <th style="text-align:right;padding:7px 8px;font-size:10px;color:var(--text3);text-transform:uppercase">Projected rent</th>
+        <th style="text-align:right;padding:7px 8px;font-size:10px;color:var(--text3);text-transform:uppercase">Obligations</th>
+        <th style="text-align:right;padding:7px 8px;font-size:10px;color:var(--text3);text-transform:uppercase">Portfolio CF</th>
+        <th style="text-align:right;padding:7px 8px;font-size:10px;color:var(--text3);text-transform:uppercase">+ Part-time</th>
+        <th style="text-align:right;padding:7px 8px;font-size:10px;color:var(--text3);text-transform:uppercase">Total income</th>
+        <th style="text-align:right;padding:7px 8px;font-size:10px;color:var(--text3);text-transform:uppercase">vs Target</th>
+        <th style="text-align:right;padding:7px 8px;font-size:10px;color:var(--text3);text-transform:uppercase">Asset draw</th>
+      </tr></thead><tbody>`;
+
+  let assetPool = totalAssets;
+  const maxYrs = Math.max(retireYrs + 5, 10);
+  for(let yr=1; yr<=maxYrs; yr++){
+    const projR = portRent * Math.pow(1+growth, yr);
+    const projCF = projR - portObl;
+    const totalInc = projCF + partTime;
+    const vs = totalInc - needed;
+    const draw = vs < 0 ? Math.abs(vs) * 12 : 0;
+    assetPool = Math.max(0, assetPool - draw);
+    const isRetireYr = yr === retireYrs;
+    const rowColor = vs >= 0 ? 'var(--green)' : vs > -2000 ? 'var(--gold)' : 'var(--red)';
+    html+=`<tr style="border-bottom:1px solid var(--border);${isRetireYr?'background:rgba(45,212,191,.06);font-weight:600':''}">
+      <td style="padding:6px 10px;color:var(--text)">${isRetireYr?'<span style="background:var(--teal-bg);color:var(--teal);padding:2px 6px;border-radius:8px;font-size:10px">RETIRE</span> ':''}Yr ${yr}</td>
+      <td style="text-align:right;padding:6px 8px;color:var(--text2)">${fmt(Math.round(projR))}</td>
+      <td style="text-align:right;padding:6px 8px;color:var(--text2)">${fmt(Math.round(portObl))}</td>
+      <td style="text-align:right;padding:6px 8px;color:${projCF>=0?'var(--green)':'var(--red)'}">${fmt(Math.round(projCF))}</td>
+      <td style="text-align:right;padding:6px 8px;color:var(--text2)">${partTime>0?'+'+fmt(Math.round(partTime)):'—'}</td>
+      <td style="text-align:right;padding:6px 8px;font-weight:500;color:var(--text)">${fmt(Math.round(totalInc))}</td>
+      <td style="text-align:right;padding:6px 8px;font-weight:600;color:${rowColor}">${vs>=0?'+':''}${fmt(Math.round(vs))}</td>
+      <td style="text-align:right;padding:6px 8px;color:${draw>0?'var(--amber)':'var(--text3)'}">${draw>0?fmt(Math.round(draw))+'/yr':'—'}<br><span style="font-size:10px;color:var(--text3)">Pool: ${fmt(Math.round(assetPool))}</span></td>
+    </tr>`;
+  }
+
+  html+=`</tbody></table></div>
+  </div>
+
+  <div class="card">
+    <div class="ctitle"><span class="ctitle-accent">◈</span> Scenarios — what changes the picture</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div style="background:var(--navy3);border-radius:var(--r);padding:12px">
+        <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px">🏠 Sell underperformers</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.7">Selling Via Faisan + Bluffmont eliminates ~${fmt(Math.round(
+          Math.abs(Math.min(0,(6300-(6690.98+178+776.67+245))))+Math.abs(Math.min(0,(3075-(3511.60+591.58+887.08+247))))
+        ))}/mo in rental losses from DTI and frees equity to buy cash-flow positive properties.</div>
+      </div>
+      <div style="background:var(--navy3);border-radius:var(--r);padding:12px">
+        <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px">📈 Rent increases at renewal</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.7">Sky Pilot and Bluffmont leases expire soon. Even a 10% rent increase on renewal would add ~${fmt(Math.round((3900*0.1+4100*0.1)*0.75))}/mo to qualifying income and improve portfolio cash flow.</div>
+      </div>
+      <div style="background:var(--navy3);border-radius:var(--r);padding:12px">
+        <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px">💼 Part-time / consulting</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.7">Even ${fmt(5000)}/mo in part-time consulting income bridges the gap significantly. Use the "Part-time income" field above to model any amount — Social Security, consulting, side business.</div>
+      </div>
+      <div style="background:var(--navy3);border-radius:var(--r);padding:12px">
+        <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px">🔄 1031 exchange strategy</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.7">Selling negative-CF properties and 1031 exchanging into cash-flow positive ones defers capital gains while repositioning the portfolio. Model this using the "New Purchase" button on the Properties tab.</div>
+      </div>
+    </div>
+  </div>`;
+
+  document.getElementById('panel-retirement').innerHTML=html;
 }
 
 // ═══════════════════════════════════════════════════════════
