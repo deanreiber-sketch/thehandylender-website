@@ -293,19 +293,19 @@ select.finput option{background:var(--navy2)}
 // DATA
 // ═══════════════════════════════════════════════════════════
 const DEFAULT_PROPS = [
-  // ── All values sourced directly from Refi_Eval.xlsx ──────────────────────
+  // ── All values sourced from Refi_Eval.xlsx + client updates (PDF 5/27/26) ──
   // HOI and Tax stored as monthly (annual ÷ 12). schedE = rent × 75%.
   {id:'ca',  addr:'31852 Via Faisan',   city:'Coto de Caza, CA',  type:'I',
-   val:1800000,  bal:1109250.24, rate:0.0600,  pi:6690.98,
+   val:2100000,  bal:1109250.24, rate:0.0600,  pi:6690.98,
    hoi:178.00,   tax:776.67,    hoa:245.00,   mi:0,
    helocBal:160000,  helocRate:0.100,  helocPmt:1333.33,
-   rent:8000,  leaseEnd:'2027-07-31', schedE:6000.00,
+   rent:8400,  leaseEnd:'2027-07-31', schedE:6300.00,
    sellCost:0.06, listed:false},
   {id:'sky', addr:'17951 Sky Pilot Ln', city:'Parker, CO',         type:'I',
-   val:635500,   bal:413064.00,  rate:0.05125, pi:3827.14,
+   val:685000,   bal:413064.00,  rate:0.05125, pi:3827.14,
    hoi:250.50,   tax:719.20,    hoa:100.00,   mi:0,
    helocBal:0,       helocRate:0,      helocPmt:0,
-   rent:3900,  leaseEnd:'2026-06-30', schedE:2925.00,
+   rent:3900,  leaseEnd:'2027-06-30', schedE:2925.00,
    sellCost:0.06, listed:false},
   {id:'blf', addr:'10213 Bluffmont Dr', city:'Lone Tree, CO',      type:'I',
    val:1100000,  bal:708739.93,  rate:0.03625, pi:3511.60,
@@ -314,9 +314,9 @@ const DEFAULT_PROPS = [
    rent:4100,  leaseEnd:'2027-01-14', schedE:3075.00,
    sellCost:0.06, listed:false},
   {id:'sw1', addr:'3598 Swabuck Pl',    city:'Castle Rock, CO',    type:'I',
-   val:657500,   bal:123006.78,  rate:0.04125, pi:726.97,
+   val:690000,   bal:123006.78,  rate:0.04125, pi:726.97,
    hoi:221.58,   tax:401.92,    hoa:71.67,    mi:0,
-   helocBal:248975,  helocRate:0.1200, helocPmt:2489.75,
+   helocBal:0,       helocRate:0,      helocPmt:0,
    rent:3575,  leaseEnd:'2026-06-30', schedE:2681.25,
    sellCost:0.06, listed:true},
   {id:'sw2', addr:'3426 Swabuck Pl',    city:'Castle Rock, CO',    type:'I',
@@ -349,7 +349,7 @@ const DEFAULT_PROP_REFIS = () => Object.fromEntries(
 // ── State (loaded from localStorage or defaults) ──────────
 let P, OD, INC, REFI, PROP_REFIS, SOLD, ALLOCS, ASSETS, ASSET_LIQ, ASSET_ALLOCS;
 
-const DATA_VERSION = 9; // increment when DEFAULT_PROPS data changes
+const DATA_VERSION = 10; // increment when DEFAULT_PROPS data changes
 
 function loadState(){
   try{
