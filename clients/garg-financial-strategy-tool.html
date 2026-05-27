@@ -349,7 +349,7 @@ const DEFAULT_PROP_REFIS = () => Object.fromEntries(
 // ── State (loaded from localStorage or defaults) ──────────
 let P, OD, INC, REFI, PROP_REFIS, SOLD, ALLOCS, ASSETS, ASSET_LIQ, ASSET_ALLOCS;
 
-const DATA_VERSION = 7; // increment when DEFAULT_PROPS data changes
+const DATA_VERSION = 9; // increment when DEFAULT_PROPS data changes
 
 function loadState(){
   try{
@@ -1062,7 +1062,8 @@ function renderRefi(r){
 function renderIncome(r){
   const gap=r.totalDebt-(r.qualIncome*0.50);
   const md=P.find(p=>p.id==='md');
-  const mdBal=md.bal+REFI.cashout;
+  const primaryPaydown=+(ALLOCS['primary_paydown']||0);
+  const mdBal=Math.max(0,md.bal-primaryPaydown+REFI.cashout);
   const mdPI=REFI.useRefi?calcPI(mdBal,REFI.rate/100,REFI.term):md.pi;
   const mdPITIA=mdPI+md.hoi+md.tax+md.hoa;
 
@@ -1073,21 +1074,47 @@ function renderIncome(r){
       <div class="field"><label>Bonus (monthly avg)</label><input class="finput" type="text" value="${fmtN(INC.bonus,2)}" onchange="INC.bonus=parseN(this.value);recalc()"></div>
       <div class="field"><label>Deferred comp (monthly)</label><input class="finput" type="text" value="${fmtN(INC.deferred,2)}" onchange="INC.deferred=parseN(this.value);recalc()"></div>
     </div>
-    <div style="background:var(--amber-bg);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--amber);margin-bottom:12px">⚠ Deferred comp set to $0 — conventional guidelines require 3-year continuance; ~2 years remain on this income.</div>
-    <div style="background:var(--blue-bg,rgba(96,165,250,.1));border-radius:8px;padding:8px 12px;font-size:12px;color:var(--blue);margin-bottom:12px">ℹ DTI method: Fannie Mae B3-3.1-08 — net rental losses (not full PITIA) added to debt. HELOC payments counted separately. See Cash Flow tab for full breakdown.</div>
+    <div style="background:var(--amber-bg);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--amber);margin-bottom:8px">
+      ⚠ Deferred comp set to $0 — conventional guidelines require 3-year continuance; ~2 years remain.
+    </div>
+    <div style="background:rgba(96,165,250,.1);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--blue);margin-bottom:12px;line-height:1.8">
+      <b>📋 DTI Calculation Method: Approach 2 — Fannie Mae B3-3.1-08</b><br>
+      <span style="color:var(--text2)">
+      <b style="color:var(--green)">Income:</b> Qualifying rent (75% of gross rent) − PITIA = net.
+        If net is <b>positive</b> → that net × 75% is added to qualifying income.
+        If net is <b>negative</b> → $0 income credit; the loss goes to the debt side instead.<br>
+      <b style="color:var(--red)">Debt:</b> Net rental losses added to monthly obligations.
+        HELOC payments are always a separate debt obligation regardless of cash flow.<br>
+      <b style="color:var(--text3)">Note:</b> Full PITIA is <u>not</u> double-counted — it is netted against qualifying rent first.
+      See the Cash Flow tab for a complete per-property breakdown.
+      </span>
+    </div>
     <div class="row"><span class="rn">Base salary</span><span class="rv pos">${fmt(Math.round(r.salary))}/mo</span></div>
     <div class="row"><span class="rn">Eligible bonus income</span><span class="rv pos">${fmt(Math.round(r.bonus))}/mo</span></div>
     <div class="row"><span class="rn">Deferred comp</span><span class="rv ${r.deferred>0?'pos':'muted'}">${r.deferred>0?fmt(Math.round(r.deferred))+'/mo':'Not eligible'}</span></div>`;
 
+  // Rental income rows — match calcDTI logic exactly
   P.filter(p=>p.type==='I').forEach(p=>{
     if(SOLD[p.id]){
-      html+=`<div class="row"><span class="rn" style="color:var(--text3)">${p.addr} <span class="badge bx">sold</span></span><span class="rv muted">—</span></div>`;return;
+      html+=`<div class="row"><span class="rn" style="color:var(--text3)">${p.addr} <span class="badge bx">sold</span></span><span class="rv muted">—</span></div>`;
+      return;
     }
-    const hpmt=effectiveHelocPmt(p);
-    const pitia=p.pi+p.hoi+p.tax+p.hoa+hpmt;
+    const pr=PROP_REFIS&&PROP_REFIS[p.id];
+    const propPI=(pr&&pr.enabled)?calcPI(p.bal,pr.rate/100,pr.term):p.pi;
+    const pitia=propPI+p.hoi+p.tax+p.hoa; // PITIA only, NO HELOC
     const net=p.schedE-pitia;
-    const credit=net>0?net*0.75:net;
-    html+=`<div class="row"><span class="rn">${p.addr}<span class="rsub"> — 75% rental credit (Schedule E)</span></span><span class="rv ${credit>=0?'pos':'neg'}">${fmt(Math.round(credit))}/mo</span></div>`;
+    const credit=net>0?net*0.75:0;  // positive: 75% of net to income; negative: $0 (goes to debt side)
+    if(credit>0){
+      html+=`<div class="row">
+        <span class="rn">${p.addr}<span class="rsub"> — qual rent ${fmt(p.schedE)} − PITIA ${fmt(Math.round(pitia))} = +${fmt(Math.round(net))} × 75%</span></span>
+        <span class="rv pos">+${fmt(Math.round(credit))}/mo</span>
+      </div>`;
+    } else {
+      html+=`<div class="row">
+        <span class="rn">${p.addr}<span class="rsub"> — qual rent ${fmt(p.schedE)} − PITIA ${fmt(Math.round(pitia))} = ${fmt(Math.round(net))} (loss → debt side)</span></span>
+        <span class="rv muted">$0</span>
+      </div>`;
+    }
   });
 
   html+=`<div class="total-row"><span class="tr-lbl">Total qualifying income</span><span class="tr-val ok">${fmt(Math.round(r.qualIncome))}/mo</span></div>
@@ -1097,13 +1124,33 @@ function renderIncome(r){
     <div class="ctitle"><span class="ctitle-accent">◈</span> Monthly obligations</div>
     <div class="row"><span class="rn">Primary PITIA ${REFI.useRefi?'<span class="badge bt">refi rate</span>':'<span class="badge bx">current rate</span>'}</span><span class="rv neg">${fmt(Math.round(mdPITIA))}/mo</span></div>`;
 
+  // Debt rows — match calcDTI logic exactly
   P.filter(p=>p.type==='I'&&!SOLD[p.id]).forEach(p=>{
-    const hpmt=effectiveHelocPmt(p);
-    const pitia=p.pi+p.hoi+p.tax+p.hoa+hpmt;
-    html+=`<div class="row"><span class="rn">${p.addr}<span class="rsub"> PITIA + HELOC</span></span><span class="rv neg">${fmt(Math.round(pitia))}/mo</span></div>`;
+    const pr=PROP_REFIS&&PROP_REFIS[p.id];
+    const propPI=(pr&&pr.enabled)?calcPI(p.bal,pr.rate/100,pr.term):p.pi;
+    const pitia=propPI+p.hoi+p.tax+p.hoa;
+    const helocPmt=effectiveHelocPmt(p);
+    const net=p.schedE-pitia;
+
+    if(net<0){
+      // Net rental loss goes on debt side
+      html+=`<div class="row">
+        <span class="rn">${p.addr}<span class="rsub"> — net rental loss (qual rent ${fmt(p.schedE)} − PITIA ${fmt(Math.round(pitia))})</span></span>
+        <span class="rv neg">${fmt(Math.round(Math.abs(net)))}/mo</span>
+      </div>`;
+    }
+    if(helocPmt>0){
+      // HELOC always a separate obligation
+      html+=`<div class="row">
+        <span class="rn">${p.addr}<span class="rsub"> — HELOC payment (interest only)</span></span>
+        <span class="rv neg">${fmt(Math.round(helocPmt))}/mo</span>
+      </div>`;
+    }
   });
-  OD.forEach(d=>{ html+=`<div class="row"><span class="rn">${d.name}</span><span class="rv neg">${fmt(Math.round(d.pmt))}/mo</span></div>`; });
-  // No rental loss double-count — all property costs captured in investDebt above
+
+  OD.forEach(d=>{
+    html+=`<div class="row"><span class="rn">${d.name}</span><span class="rv neg">${fmt(Math.round(d.pmt))}/mo</span></div>`;
+  });
 
   html+=`<div class="total-row"><span class="tr-lbl">Total obligations</span><span class="tr-val danger">${fmt(Math.round(r.totalDebt))}/mo</span></div>
     <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
@@ -1112,7 +1159,7 @@ function renderIncome(r){
         <div class="mval ${dtiColor(r.dti)} serif" style="font-size:40px">${pct(r.dti)}</div>
       </div>
       <div style="font-size:12px;color:var(--text2);line-height:1.9;text-align:right">
-        50% target: <b style="color:var(--text)">${fmt(Math.round(r.qualIncome*0.50))}/mo</b><br>
+        50% target max debt: <b style="color:var(--text)">${fmt(Math.round(r.qualIncome*0.50))}/mo</b><br>
         <span style="color:${gap>0?'var(--red)':'var(--green)'}">${gap>0?'Need to reduce debt by '+fmt(Math.round(gap))+'/mo':'Under target by '+fmt(Math.round(-gap))+'/mo'}</span>
       </div>
     </div>
@@ -1120,6 +1167,7 @@ function renderIncome(r){
 
   document.getElementById('panel-income').innerHTML=html;
 }
+
 
 // ═══════════════════════════════════════════════════════════
 // LEASE HELPERS
@@ -1298,7 +1346,7 @@ function renderCashFlow(r){
 
   <div class="card">
     <div class="ctitle"><span class="ctitle-accent">◈</span> DTI bridge — how rentals flow into the calculation</div>
-    <div style="font-size:11px;color:var(--text3);margin-bottom:12px">Per Fannie Mae B3-3.1-08: positive net (schedE minus PITIA) → 75% credited to income. Negative net → loss amount added to debt obligations. HELOC payments are separate obligations in both cases.</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:12px">Calculation method: Approach 2 (Fannie Mae B3-3.1-08). Qualifying rent (75% of gross rent) minus PITIA = net. Positive net → 75% of that net credited to income. Negative net → loss added to debt side. HELOC payments are always a separate debt obligation. Full PITIA is not separately counted on the debt side — it is netted against qualifying rent.</div>
     <div style="overflow-x:auto">
     <table style="width:100%;border-collapse:collapse;font-size:12px">
       <thead><tr style="border-bottom:1px solid var(--border)">
