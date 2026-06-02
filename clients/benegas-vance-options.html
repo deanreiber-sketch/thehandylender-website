@@ -14,7 +14,7 @@
   --o2:#1e6b4a;--o2-lt:#d5f5e3;--o2-md:#27ae60;
   --o3:#6c3483;--o3-lt:#e8daef;--o3-md:#9b59b6;
   --cream:#faf8f4;--white:#fff;--border:#e4ddd0;--muted:#7a7060;
-  --teal:#0e7c6a;--coral:#c0442a;
+  --teal:#0e7c6a;--coral:#c0442a;--coral-lt:#fdf0ec;
   --yr1c:#1a5276;--yr2c:#1e6b4a;--yr3c:#5d3a1a;
 }
 body{font-family:'Epilogue',sans-serif;background:var(--cream);color:var(--ink);font-size:14px;line-height:1.6;}
@@ -28,16 +28,18 @@ body{font-family:'Epilogue',sans-serif;background:var(--cream);color:var(--ink);
 .prep strong{display:block;color:rgba(255,255,255,0.8);font-family:'Playfair Display',serif;font-size:14px;font-weight:400;}
 .header h1{font-family:'Playfair Display',serif;font-size:30px;color:white;line-height:1.2;font-weight:600;}
 .header h1 em{color:var(--gold);font-style:italic;}
-.header p{font-size:12px;color:rgba(255,255,255,0.45);margin-top:8px;max-width:600px;line-height:1.8;}
+.header p{font-size:12px;color:rgba(255,255,255,0.45);margin-top:8px;max-width:580px;line-height:1.8;}
 .header-rule{height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin-top:24px;opacity:.35;}
-.prop-strip{background:var(--ink2);padding:12px 48px;display:flex;gap:22px;align-items:center;border-bottom:2px solid rgba(184,151,58,0.2);flex-wrap:wrap;}
+.prop-strip{background:var(--ink2);padding:12px 48px;display:flex;gap:24px;align-items:center;border-bottom:2px solid rgba(184,151,58,0.2);flex-wrap:wrap;}
 .prop-item .lbl{font-size:9px;color:rgba(255,255,255,0.4);letter-spacing:.08em;text-transform:uppercase;display:block;}
-.prop-item .val{font-size:12px;font-weight:500;color:rgba(255,255,255,0.85);}
+.prop-item .val{font-size:13px;font-weight:500;color:rgba(255,255,255,0.85);}
 .prop-div{width:1px;height:28px;background:rgba(255,255,255,0.1);}
 .earnest-strip{background:var(--gold-lt);border-bottom:1px solid #e0cfa0;padding:10px 48px;display:flex;align-items:center;gap:12px;}
 .earnest-strip p{font-size:11px;color:var(--gold-dk);line-height:1.6;}
 .earnest-strip strong{font-weight:600;}
 .main{padding:28px 48px 48px;}
+
+/* CARDS */
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:28px;}
 .card{background:white;border-radius:14px;overflow:hidden;border:1px solid var(--border);box-shadow:0 2px 12px rgba(15,25,35,0.06);}
 .card-top{height:4px;}
@@ -54,17 +56,9 @@ body{font-family:'Epilogue',sans-serif;background:var(--cream);color:var(--ink);
 .card-meta{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap;}
 .meta .lbl{font-size:9px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;display:block;}
 .meta .val{font-size:12px;font-weight:600;color:var(--ink);}
-.headline-pmt{padding:14px 18px 10px;border-bottom:1px solid var(--border);text-align:center;}
-.headline-yr{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;}
-.c1 .headline-yr{color:var(--o1);}
-.c2 .headline-yr{color:var(--o2);}
-.c3 .headline-yr{color:var(--o3);}
-.headline-num{font-family:'Playfair Display',serif;font-size:36px;font-weight:600;line-height:1;}
-.c1 .headline-num{color:var(--o1);}
-.c2 .headline-num{color:var(--o2);}
-.c3 .headline-num{color:var(--o3);}
-.headline-sub{font-size:10px;color:var(--muted);margin-top:3px;}
-.pmt-section{padding:12px 18px;}
+
+/* PAYMENTS */
+.pmt-section{padding:14px 18px;}
 .pmt-title{font-size:9px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
 .yr-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
 .yr-badge{width:44px;flex-shrink:0;font-size:9px;font-weight:600;padding:3px 4px;border-radius:5px;text-align:center;}
@@ -78,6 +72,8 @@ body{font-family:'Epilogue',sans-serif;background:var(--cream);color:var(--ink);
 .y3bar{background:linear-gradient(90deg,#5d3a1a,#a04000);}
 .o2bar{background:linear-gradient(90deg,#1e6b4a,#27ae60);}
 .o3bar{background:linear-gradient(90deg,#6c3483,#9b59b6);}
+
+/* CC BREAKDOWN */
 .cc-section{padding:0 18px 12px;}
 .cc-title{font-size:9px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
 .cc-table{width:100%;font-size:10px;border-collapse:collapse;}
@@ -86,7 +82,9 @@ body{font-family:'Epilogue',sans-serif;background:var(--cream);color:var(--ink);
 .cc-table td{padding:3px 0;}
 .cc-table td:last-child{text-align:right;font-weight:500;}
 .cc-lbl{color:var(--muted);}
-.cc-hdr{font-size:9px;font-weight:600;color:var(--ink);letter-spacing:.04em;text-transform:uppercase;padding-top:6px;}
+.cc-section-hdr{font-size:9px;font-weight:600;color:var(--ink);letter-spacing:.04em;text-transform:uppercase;padding-top:6px;}
+
+/* CASH BOX */
 .cash-box{margin:0 18px 12px;border-radius:8px;padding:11px 13px;}
 .c1 .cash-box{background:var(--o1-lt);border:1px solid #aed6f1;}
 .c2 .cash-box{background:var(--o2-lt);border:1px solid #a9dfbf;}
@@ -99,11 +97,16 @@ body{font-family:'Epilogue',sans-serif;background:var(--cream);color:var(--ink);
 .cash-row:last-child{border-bottom:none;padding-top:6px;font-weight:700;font-size:12px;}
 .cred{color:var(--teal);}
 .costt{color:var(--coral);}
-.earnest-box{margin:0 18px 18px;background:#fffbf0;border:1px solid #e8d5a0;border-radius:8px;padding:10px 13px;}
+
+/* EARNEST BOX */
+.earnest-box{margin:0 18px 14px;background:#fffbf0;border:1px solid #e8d5a0;border-radius:8px;padding:10px 13px;}
 .etitle{font-size:9px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--gold-dk);margin-bottom:6px;}
 .earnest-row{display:flex;justify-content:space-between;font-size:11px;padding:2px 0;}
 .earnest-row.refund{font-weight:700;font-size:12px;padding-top:5px;border-top:1px solid #e8d5a0;margin-top:4px;}
 .refund-good{color:var(--teal);}
+.refund-zero{color:var(--coral);}
+
+/* COMPARISON TABLE */
 .comp-wrap{background:white;border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(15,25,35,0.06);margin-bottom:24px;}
 .comp-head{background:var(--ink);padding:16px 24px;}
 .comp-head h3{font-family:'Playfair Display',serif;font-size:18px;color:white;font-weight:600;}
@@ -124,6 +127,8 @@ table.comp tr:last-child td{border-bottom:none;}
 .green{color:var(--teal);font-weight:600;}
 .amber{color:#b7770d;font-weight:600;}
 .red{color:var(--coral);font-weight:600;}
+
+/* NOTES */
 .notes{background:var(--ink2);border-radius:12px;padding:18px 24px;margin-bottom:20px;}
 .notes h3{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
 .notes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
@@ -137,6 +142,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,0.06);padding
 </style>
 </head>
 <body>
+
 <div class="header">
   <div class="header-inner">
     <div class="header-top">
@@ -144,7 +150,7 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,0.06);padding
       <div class="prep">Prepared for<strong>Ryan &amp; Brittany Benegas</strong>June 2, 2026</div>
     </div>
     <h1>Three Loan Structure Options<br><em>7462 Vance Street, Arvada</em></h1>
-    <p>All three options use a 2/1 temporary buydown — your Year 1 effective rate drops by 2% in every scenario. Options 2 and 3 use a parental gift for the down payment with no DPA second mortgage, giving you a cleaner loan and more flexibility down the road.</p>
+    <p>Three ways to use your $20,000 in seller concessions — each with a different rate, program, and closing cost structure. Closing 6/29/26 · First payment 8/1/26 · Prepaid interest = 2 days.</p>
     <div class="header-rule"></div>
   </div>
 </div>
@@ -160,14 +166,14 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,0.06);padding
   <div class="prop-div"></div>
   <div class="prop-item"><span class="lbl">Earnest Deposited</span><span class="val">$7,000</span></div>
   <div class="prop-div"></div>
-  <div class="prop-item"><span class="lbl">Gift (Options 2 &amp; 3)</span><span class="val">$25,000</span></div>
+  <div class="prop-item"><span class="lbl">Closing Date</span><span class="val">June 29, 2026</span></div>
   <div class="prop-div"></div>
-  <div class="prop-item"><span class="lbl">Closing · First Pmt</span><span class="val">6/29/26 · 8/1/26</span></div>
+  <div class="prop-item"><span class="lbl">First Payment</span><span class="val">August 1, 2026</span></div>
 </div>
 
 <div class="earnest-strip">
   <span>💡</span>
-  <p>Your <strong>$7,000 earnest money</strong> counts toward cash to close. Any amount under $7,000 means you <strong>receive a refund at closing</strong>.</p>
+  <p>Your <strong>$7,000 earnest money deposit</strong> counts toward cash to close. Any amount under $7,000 means you <strong>receive a refund at closing</strong> — you won't need to bring additional funds beyond what's already deposited.</p>
 </div>
 
 <div class="main">
@@ -179,55 +185,57 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,0.06);padding
   <div class="card-head">
     <span class="opt-tag">Option 1</span>
     <h3>Arrive Home Repayable<br>+ 2/1 Buydown @ 6.875%</h3>
-    <p>DPA covers down payment · seller conc funds BD subsidy · lender credit offsets costs · repayable 2nd mortgage</p>
+    <p>DPA covers down payment · 2/1 temp buydown · repayable 2nd mortgage · lender credit offsets costs</p>
     <div class="card-meta">
       <div class="meta"><span class="lbl">Note Rate</span><span class="val">6.875%</span></div>
-      <div class="meta"><span class="lbl">DPA 2nd</span><span class="val">$19,250 @ 8.25%/10yr</span></div>
-      <div class="meta"><span class="lbl">Gift Needed</span><span class="val">None</span></div>
+      <div class="meta"><span class="lbl">DPA 2nd</span><span class="val">$19,250 @ 8.25%</span></div>
+      <div class="meta"><span class="lbl">Down Pmt</span><span class="val">DPA covered</span></div>
     </div>
   </div>
-  <div class="headline-pmt">
-    <div class="headline-yr">Year 1 Effective Rate — 4.875%</div>
-    <div class="headline-num">$3,924<span style="font-size:16px;font-weight:400;">/mo</span></div>
-    <div class="headline-sub">Includes P&I · MIP · taxes · HOI · DPA 2nd payment</div>
-  </div>
+
   <div class="pmt-section">
-    <div class="pmt-title">Payment by Year</div>
+    <div class="pmt-title">Monthly All-In Payment (PITI + 2nd mortgage)</div>
     <div class="yr-row"><div class="yr-badge y1b">Yr 1</div><div class="yr-bar y1bar">$3,924<span>4.875% effective</span></div></div>
     <div class="yr-row"><div class="yr-badge y2b">Yr 2</div><div class="yr-bar y2bar">$4,261<span>5.875% effective</span></div></div>
     <div class="yr-row"><div class="yr-badge y3b">Yr 3+</div><div class="yr-bar y3bar">$4,614<span>6.875% note rate</span></div></div>
   </div>
+
   <div class="cc-section">
     <div class="cc-title">Closing Cost Breakdown</div>
     <table class="cc-table">
-      <tr><td class="cc-lbl cc-hdr" colspan="2">Loan Costs</td></tr>
-      <tr><td class="cc-lbl">Origination (proc, UW, VOE)</td><td>$2,199</td></tr>
-      <tr><td class="cc-lbl">Arrive Home program fee</td><td>$395</td></tr>
+      <tr><td class="cc-lbl cc-section-hdr" colspan="2">Loan Costs</td></tr>
+      <tr><td class="cc-lbl">Origination (processing, UW, VOE)</td><td>$2,199</td></tr>
+      <tr><td class="cc-lbl">Arrive Home origination fee</td><td>$395</td></tr>
       <tr><td class="cc-lbl">Appraisal</td><td>$750</td></tr>
       <tr><td class="cc-lbl">Credit, flood, tax service</td><td>$383</td></tr>
-      <tr><td class="cc-lbl">Lender title / settlement / cert</td><td>$1,480</td></tr>
-      <tr><td class="cc-lbl cc-hdr" colspan="2">Other Costs</td></tr>
-      <tr><td class="cc-lbl">Govt fees</td><td>$141</td></tr>
-      <tr><td class="cc-lbl">HOI prepaid (12 mo @ $280)</td><td>$3,360</td></tr>
+      <tr><td class="cc-lbl">Lender title insurance</td><td>$575</td></tr>
+      <tr><td class="cc-lbl">Settlement fee</td><td>$875</td></tr>
+      <tr><td class="cc-lbl">Tax certificate</td><td>$30</td></tr>
+      <tr><td class="cc-lbl cc-section-hdr" colspan="2">Other Costs</td></tr>
+      <tr><td class="cc-lbl">Govt fees (recording + transfer)</td><td>$141</td></tr>
+      <tr><td class="cc-lbl">HOI prepaid (12 months @ $280)</td><td>$3,360</td></tr>
       <tr><td class="cc-lbl">Prepaid interest (2 days @ 6.875%)</td><td>$203</td></tr>
-      <tr><td class="cc-lbl">HOI + tax escrow (2 mo each)</td><td>$1,177</td></tr>
+      <tr><td class="cc-lbl">HOI escrow (2 months)</td><td>$560</td></tr>
+      <tr><td class="cc-lbl">Tax escrow (2 months @ $308.27)</td><td>$617</td></tr>
       <tr><td class="cc-lbl">Owner's title insurance</td><td>$2,027</td></tr>
       <tr><td>Total Cash Closing Costs</td><td>$12,115</td></tr>
     </table>
   </div>
+
   <div class="cash-box">
     <div class="cash-title">Cash to Close</div>
     <div class="cash-row"><span>Down payment</span><span>$19,250</span></div>
     <div class="cash-row"><span>DPA covers down payment</span><span class="cred">−$19,250</span></div>
     <div class="cash-row"><span>Closing costs</span><span>$12,115</span></div>
-    <div class="cash-row"><span>2/1 BD subsidy (seller-funded)</span><span>$12,515</span></div>
+    <div class="cash-row"><span>2/1 buydown subsidy</span><span>$12,515</span></div>
     <div class="cash-row"><span>Lender credit (net of LLPA)</span><span class="cred">−$3,710</span></div>
     <div class="cash-row"><span>Seller concessions</span><span class="cred">−$20,000</span></div>
     <div class="cash-row"><span>Cash to Close</span><span class="costt">$920</span></div>
   </div>
+
   <div class="earnest-box">
     <div class="etitle">🏦 Earnest Money</div>
-    <div class="earnest-row"><span>Deposited</span><span>$7,000</span></div>
+    <div class="earnest-row"><span>Earnest deposited</span><span>$7,000</span></div>
     <div class="earnest-row"><span>Applied to closing</span><span>−$920</span></div>
     <div class="earnest-row refund refund-good"><span>Refund at closing</span><span>$6,080</span></div>
   </div>
@@ -238,55 +246,58 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,0.06);padding
   <div class="card-top"></div>
   <div class="card-head">
     <span class="opt-tag">Option 2</span>
-    <h3>No DPA · Gift $25K<br>Perm 5.875% + 2/1 BD</h3>
-    <p>Gift covers dp + partial CC · seller conc funds perm rate buydown + BD subsidy · no 2nd mortgage ever</p>
+    <h3>metroDPA EDGE 6.25%<br>4% DPA — No Monthly 2nd</h3>
+    <p>2% discount point gets rate to 6.25% · 4% DPA covers down payment + partial CC · 0% deferred 2nd (no monthly payment)</p>
     <div class="card-meta">
-      <div class="meta"><span class="lbl">Note Rate</span><span class="val">5.875%</span></div>
-      <div class="meta"><span class="lbl">2nd Mortgage</span><span class="val" style="color:var(--teal);">None ✓</span></div>
-      <div class="meta"><span class="lbl">Gift Needed</span><span class="val">$25,000</span></div>
+      <div class="meta"><span class="lbl">Note Rate</span><span class="val">6.25%</span></div>
+      <div class="meta"><span class="lbl">DPA 2nd</span><span class="val">$21,602 · 0% deferred</span></div>
+      <div class="meta"><span class="lbl">Down Pmt</span><span class="val">DPA covers dp + $2,352 CC</span></div>
     </div>
   </div>
-  <div class="headline-pmt">
-    <div class="headline-yr">Year 1 Effective Rate — 3.875%</div>
-    <div class="headline-num">$3,370<span style="font-size:16px;font-weight:400;">/mo</span></div>
-    <div class="headline-sub">Includes P&I · MIP · taxes · HOI · no 2nd payment</div>
-  </div>
+
   <div class="pmt-section">
-    <div class="pmt-title">Payment by Year</div>
-    <div class="yr-row"><div class="yr-badge y1b">Yr 1</div><div class="yr-bar y1bar">$3,370<span>3.875% effective</span></div></div>
-    <div class="yr-row"><div class="yr-badge y2b">Yr 2</div><div class="yr-bar y2bar">$3,688<span>4.875% effective</span></div></div>
-    <div class="yr-row"><div class="yr-badge y3b">Yr 3+</div><div class="yr-bar o2bar">$4,025<span>5.875% note rate</span></div></div>
+    <div class="pmt-title">Monthly All-In Payment (PITI only — no 2nd payment ever)</div>
+    <div class="yr-row"><div class="yr-badge y1b">Yr 1</div><div class="yr-bar o2bar">$4,155<span>6.25% fixed</span></div></div>
+    <div class="yr-row"><div class="yr-badge y2b">Yr 2</div><div class="yr-bar o2bar">$4,155<span>6.25% fixed</span></div></div>
+    <div class="yr-row"><div class="yr-badge y3b">Yr 3+</div><div class="yr-bar o2bar">$4,155<span>6.25% fixed</span></div></div>
   </div>
+
   <div class="cc-section">
-    <div class="cc-title">How Funds Are Allocated</div>
+    <div class="cc-title">Closing Cost Breakdown</div>
     <table class="cc-table">
-      <tr><td class="cc-lbl cc-hdr" colspan="2">Gift $25,000</td></tr>
-      <tr><td class="cc-lbl">Down payment (3.5%)</td><td>$19,250</td></tr>
-      <tr><td class="cc-lbl">Toward closing costs</td><td>$5,750</td></tr>
-      <tr><td class="cc-lbl cc-hdr" colspan="2">Seller Concessions $20,000</td></tr>
-      <tr><td class="cc-lbl">Remaining closing costs</td><td>$5,941</td></tr>
-      <tr><td class="cc-lbl">Points to perm rate 5.875%</td><td>$6,356</td></tr>
-      <tr><td class="cc-lbl">2/1 BD subsidy</td><td>$11,900</td></tr>
-      <tr><td class="cc-lbl">Total conc needed</td><td>$24,197</td></tr>
-      <tr><td class="cc-lbl cc-hdr" colspan="2">Total Cash Closing Costs</td></tr>
-      <tr><td>Cash CC</td><td>$11,691</td></tr>
+      <tr><td class="cc-lbl cc-section-hdr" colspan="2">Loan Costs</td></tr>
+      <tr><td class="cc-lbl">Origination incl. 1.5% metroDPA fee</td><td>$9,935</td></tr>
+      <tr><td class="cc-lbl">Appraisal</td><td>$600</td></tr>
+      <tr><td class="cc-lbl">Compliance/Admin (metroDPA)</td><td>$250</td></tr>
+      <tr><td class="cc-lbl">Credit, flood</td><td>$308</td></tr>
+      <tr><td class="cc-lbl">Investor Funding Fee (metroDPA)</td><td>$475</td></tr>
+      <tr><td class="cc-lbl">Tax service</td><td>$84</td></tr>
+      <tr><td class="cc-lbl">Title fees (admin, settlement, etc.)</td><td>$2,070</td></tr>
+      <tr><td class="cc-lbl cc-section-hdr" colspan="2">Other Costs</td></tr>
+      <tr><td class="cc-lbl">Govt fees (recording + transfer)</td><td>$141</td></tr>
+      <tr><td class="cc-lbl">HOI prepaid (12 months @ $280)</td><td>$3,360</td></tr>
+      <tr><td class="cc-lbl">Prepaid interest (2 days @ 6.25%)</td><td>$185</td></tr>
+      <tr><td class="cc-lbl">HOI escrow (2 months)</td><td>$560</td></tr>
+      <tr><td class="cc-lbl">Tax escrow (2 months @ $308.27)</td><td>$617</td></tr>
+      <tr><td class="cc-lbl">Owner's title insurance</td><td>$2,090</td></tr>
+      <tr><td>Total Cash Closing Costs</td><td>$31,767</td></tr>
     </table>
   </div>
+
   <div class="cash-box">
     <div class="cash-title">Cash to Close</div>
     <div class="cash-row"><span>Down payment</span><span>$19,250</span></div>
-    <div class="cash-row"><span>Closing costs</span><span>$11,691</span></div>
-    <div class="cash-row"><span>Points to 5.875%</span><span>$6,356</span></div>
-    <div class="cash-row"><span>2/1 BD subsidy</span><span>$11,900</span></div>
-    <div class="cash-row"><span>Gift from parents</span><span class="cred">−$25,000</span></div>
+    <div class="cash-row"><span>Closing costs (incl. EDGE disc pt)</span><span>$31,767</span></div>
+    <div class="cash-row"><span>DPA 4% of note</span><span class="cred">−$21,602</span></div>
     <div class="cash-row"><span>Seller concessions</span><span class="cred">−$20,000</span></div>
-    <div class="cash-row"><span>Cash to Close</span><span class="costt">$4,197</span></div>
+    <div class="cash-row"><span>Cash to Close</span><span class="costt">$9,415</span></div>
   </div>
+
   <div class="earnest-box">
     <div class="etitle">🏦 Earnest Money</div>
-    <div class="earnest-row"><span>Deposited</span><span>$7,000</span></div>
-    <div class="earnest-row"><span>Applied to closing</span><span>−$4,197</span></div>
-    <div class="earnest-row refund refund-good"><span>Refund at closing</span><span>$2,803</span></div>
+    <div class="earnest-row"><span>Earnest deposited</span><span>$7,000</span></div>
+    <div class="earnest-row"><span>Applied to closing</span><span>−$7,000</span></div>
+    <div class="earnest-row refund refund-zero"><span>Still owed at closing</span><span>$2,415</span></div>
   </div>
 </div>
 
@@ -295,52 +306,59 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,0.06);padding
   <div class="card-top"></div>
   <div class="card-head">
     <span class="opt-tag">Option 3</span>
-    <h3>No DPA · Gift $25K<br>5.375% Permanent Rate</h3>
-    <p>Gift covers dp + partial CC · seller conc + gift cover points to 5.375% · no 2nd mortgage · lowest permanent rate</p>
+    <h3>No DPA · Gift Down Pmt<br>5.49% Permanent Rate</h3>
+    <p>Parents gift down payment · $20K conc covers closing costs · remaining conc buys rate to 5.49% · no 2nd mortgage</p>
     <div class="card-meta">
-      <div class="meta"><span class="lbl">Note Rate</span><span class="val">5.375%</span></div>
+      <div class="meta"><span class="lbl">Note Rate</span><span class="val">5.490%</span></div>
       <div class="meta"><span class="lbl">2nd Mortgage</span><span class="val" style="color:var(--teal);">None ✓</span></div>
-      <div class="meta"><span class="lbl">Gift Needed</span><span class="val">$25,000</span></div>
+      <div class="meta"><span class="lbl">Down Pmt</span><span class="val">Gift from parents</span></div>
     </div>
   </div>
-  <div class="headline-pmt">
-    <div class="headline-yr">Every Month — Fixed 5.375%</div>
-    <div class="headline-num">$3,854<span style="font-size:16px;font-weight:400;">/mo</span></div>
-    <div class="headline-sub">Same payment every month · no buydown · no 2nd mortgage</div>
-  </div>
+
   <div class="pmt-section">
-    <div class="pmt-title">Payment by Year</div>
-    <div class="yr-row"><div class="yr-badge y1b">Yr 1</div><div class="yr-bar o3bar">$3,854<span>5.375% fixed</span></div></div>
-    <div class="yr-row"><div class="yr-badge y2b">Yr 2</div><div class="yr-bar o3bar">$3,854<span>5.375% fixed</span></div></div>
-    <div class="yr-row"><div class="yr-badge y3b">Yr 3+</div><div class="yr-bar o3bar">$3,854<span>5.375% fixed</span></div></div>
+    <div class="pmt-title">Monthly All-In Payment (PITI only — no 2nd mortgage, ever)</div>
+    <div class="yr-row"><div class="yr-badge y1b">Yr 1</div><div class="yr-bar o3bar">$3,893<span>5.49% fixed</span></div></div>
+    <div class="yr-row"><div class="yr-badge y2b">Yr 2</div><div class="yr-bar o3bar">$3,893<span>5.49% fixed</span></div></div>
+    <div class="yr-row"><div class="yr-badge y3b">Yr 3+</div><div class="yr-bar o3bar">$3,893<span>5.49% fixed</span></div></div>
   </div>
+
   <div class="cc-section">
-    <div class="cc-title">How Funds Are Allocated</div>
+    <div class="cc-title">Closing Cost Breakdown</div>
     <table class="cc-table">
-      <tr><td class="cc-lbl cc-hdr" colspan="2">Gift $25,000</td></tr>
-      <tr><td class="cc-lbl">Down payment (3.5%)</td><td>$19,250</td></tr>
-      <tr><td class="cc-lbl">Toward closing costs</td><td>$5,750</td></tr>
-      <tr><td class="cc-lbl cc-hdr" colspan="2">Seller Concessions $20,000</td></tr>
-      <tr><td class="cc-lbl">Remaining closing costs</td><td>$5,926</td></tr>
-      <tr><td class="cc-lbl">Toward points to 5.375%</td><td>$14,074</td></tr>
-      <tr><td class="cc-lbl cc-hdr" colspan="2">Total Cash Closing Costs</td></tr>
-      <tr><td>Cash CC</td><td>$11,676</td></tr>
+      <tr><td class="cc-lbl cc-section-hdr" colspan="2">Loan Costs</td></div>
+      <tr><td class="cc-lbl">Origination (processing, UW, VOE)</td><td>$2,199</td></tr>
+      <tr><td class="cc-lbl">Appraisal</td><td>$750</td></tr>
+      <tr><td class="cc-lbl">Credit, flood, tax service</td><td>$383</td></tr>
+      <tr><td class="cc-lbl">Lender title insurance</td><td>$575</td></tr>
+      <tr><td class="cc-lbl">Settlement fee</td><td>$875</td></tr>
+      <tr><td class="cc-lbl">Tax certificate</td><td>$30</td></tr>
+      <tr><td class="cc-lbl cc-section-hdr" colspan="2">Other Costs</td></tr>
+      <tr><td class="cc-lbl">Govt fees (recording + transfer)</td><td>$141</td></tr>
+      <tr><td class="cc-lbl">HOI prepaid (12 months @ $280)</td><td>$3,360</td></tr>
+      <tr><td class="cc-lbl">Prepaid interest (2 days @ 5.49%)</td><td>$162</td></tr>
+      <tr><td class="cc-lbl">HOI escrow (2 months)</td><td>$560</td></tr>
+      <tr><td class="cc-lbl">Tax escrow (2 months @ $308.27)</td><td>$617</td></tr>
+      <tr><td class="cc-lbl">Owner's title insurance</td><td>$2,027</td></tr>
+      <tr><td>Total Cash Closing Costs</td><td>$11,679</td></tr>
     </table>
   </div>
+
   <div class="cash-box">
     <div class="cash-title">Cash to Close</div>
-    <div class="cash-row"><span>Down payment</span><span>$19,250</span></div>
-    <div class="cash-row"><span>Closing costs</span><span>$11,676</span></div>
-    <div class="cash-row"><span>Points to 5.375%</span><span>$16,822</span></div>
-    <div class="cash-row"><span>Gift from parents</span><span class="cred">−$25,000</span></div>
-    <div class="cash-row"><span>Seller concessions</span><span class="cred">−$20,000</span></div>
-    <div class="cash-row"><span>Cash to Close</span><span class="costt">$2,748</span></div>
+    <div class="cash-row"><span>Down payment (gift from parents)</span><span>$19,250</span></div>
+    <div class="cash-row"><span>Closing costs</span><span>$11,679</span></div>
+    <div class="cash-row"><span>Seller concessions cover CC</span><span class="cred">−$11,679</span></div>
+    <div class="cash-row"><span>Remaining conc toward points</span><span class="cred">$8,321 applied</span></div>
+    <div class="cash-row"><span>Points to buy to 5.49%</span><span>$14,505</span></div>
+    <div class="cash-row"><span>Points gap (borrower pays)</span><span class="costt">$6,184</span></div>
+    <div class="cash-row"><span>Cash to Close</span><span class="costt">$6,184</span></div>
   </div>
+
   <div class="earnest-box">
     <div class="etitle">🏦 Earnest Money</div>
-    <div class="earnest-row"><span>Deposited</span><span>$7,000</span></div>
-    <div class="earnest-row"><span>Applied to closing</span><span>−$2,748</span></div>
-    <div class="earnest-row refund refund-good"><span>Refund at closing</span><span>$4,252</span></div>
+    <div class="earnest-row"><span>Earnest deposited</span><span>$7,000</span></div>
+    <div class="earnest-row"><span>Applied to closing</span><span>−$6,184</span></div>
+    <div class="earnest-row refund refund-good"><span>Refund at closing</span><span>$816</span></div>
   </div>
 </div>
 
@@ -350,56 +368,56 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,0.06);padding
 <div class="comp-wrap">
   <div class="comp-head">
     <h3>Head-to-Head Comparison</h3>
-    <p>7462 Vance St · $550,000 · $20,000 seller concessions · $7,000 earnest · Closing 6/29/26 · Pricing 06/02/26</p>
+    <p>7462 Vance St · $550,000 · $20,000 seller concessions · Closing 6/29/26 · Pricing 06/02/26</p>
   </div>
   <table class="comp">
     <thead>
       <tr>
-        <th style="width:30%"></th>
+        <th style="width:32%"></th>
         <th class="c1col">Option 1<br><span style="font-weight:400;text-transform:none;font-size:10px;">AH Repayable + 2/1 BD</span></th>
-        <th class="c2col">Option 2<br><span style="font-weight:400;text-transform:none;font-size:10px;">No DPA · Gift · 5.875% + 2/1 BD</span></th>
-        <th class="c3col">Option 3<br><span style="font-weight:400;text-transform:none;font-size:10px;">No DPA · Gift · 5.375% Fixed</span></th>
+        <th class="c2col">Option 2<br><span style="font-weight:400;text-transform:none;font-size:10px;">metroDPA EDGE 6.25% · 4% DPA</span></th>
+        <th class="c3col">Option 3<br><span style="font-weight:400;text-transform:none;font-size:10px;">No DPA · Gift · 5.49%</span></th>
       </tr>
     </thead>
     <tbody>
-      <tr><td class="row-lbl">Note rate</td><td class="c1col">6.875%</td><td class="c2col">5.875%</td><td class="c3col">5.375%</td></tr>
-      <tr><td class="row-lbl">2nd mortgage</td><td class="c1col"><span class="amber">$236/mo · 10 yrs</span></td><td class="c2col"><span class="green">None ✓</span></td><td class="c3col"><span class="green">None ✓</span></td></tr>
-      <tr><td class="row-lbl">Gift from parents</td><td class="c1col"><span class="green">None needed</span></td><td class="c2col"><span class="amber">$25,000</span></td><td class="c3col"><span class="amber">$25,000</span></td></tr>
+      <tr><td class="row-lbl">Note rate</td><td class="c1col">6.875%</td><td class="c2col">6.250%</td><td class="c3col">5.490%</td></tr>
+      <tr><td class="row-lbl">2nd mortgage payment</td><td class="c1col">$236/mo (10 yrs)</td><td class="c2col"><span class="green">$0 deferred ✓</span></td><td class="c3col"><span class="green">None ever ✓</span></td></tr>
+      <tr><td class="row-lbl">Cash closing costs</td><td class="c1col"><span class="green">$12,115</span></td><td class="c2col"><span class="red">$31,767</span></td><td class="c3col"><span class="green">$11,679</span></td></tr>
       <tr class="hl"><td class="row-lbl">Year 1 payment</td>
-        <td class="c1col"><span class="big">$3,924</span><br><span style="font-size:9px;color:var(--muted);">4.875% effective</span></td>
-        <td class="c2col"><span class="big green">$3,370</span><br><span style="font-size:9px;color:var(--teal);">3.875% effective ✓</span></td>
-        <td class="c3col"><span class="big">$3,854</span><br><span style="font-size:9px;color:var(--muted);">5.375% fixed</span></td></tr>
+        <td class="c1col"><span class="big">$3,924</span><br><span style="font-size:9px;color:var(--muted);">4.875% buydown rate</span></td>
+        <td class="c2col"><span class="big">$4,155</span><br><span style="font-size:9px;color:var(--muted);">6.25% fixed</span></td>
+        <td class="c3col"><span class="big green">$3,893</span><br><span style="font-size:9px;color:var(--teal);">5.49% fixed ✓</span></td></tr>
       <tr class="hl"><td class="row-lbl">Year 2 payment</td>
-        <td class="c1col"><span class="big">$4,261</span><br><span style="font-size:9px;color:var(--muted);">5.875% effective</span></td>
-        <td class="c2col"><span class="big green">$3,688</span><br><span style="font-size:9px;color:var(--teal);">4.875% effective ✓</span></td>
-        <td class="c3col"><span class="big">$3,854</span></td></tr>
+        <td class="c1col"><span class="big">$4,261</span><br><span style="font-size:9px;color:var(--muted);">5.875% buydown rate</span></td>
+        <td class="c2col"><span class="big">$4,155</span></td>
+        <td class="c3col"><span class="big green">$3,893</span></td></tr>
       <tr class="hl"><td class="row-lbl">Year 3+ payment</td>
-        <td class="c1col"><span class="big red">$4,614</span></td>
-        <td class="c2col"><span class="big green">$4,025</span></td>
-        <td class="c3col"><span class="big green">$3,854</span></td></tr>
+        <td class="c1col"><span class="big">$4,614</span></td>
+        <td class="c2col"><span class="big">$4,155</span></td>
+        <td class="c3col"><span class="big green">$3,893</span></td></tr>
       <tr><td class="row-lbl">24-month total</td>
-        <td class="c1col"><span class="red">$98,225</span></td>
-        <td class="c2col"><span class="green">$84,698</span></td>
-        <td class="c3col"><span class="amber">$92,507</span></td></tr>
-      <tr><td class="row-lbl">24-mo savings vs Option 1</td>
-        <td class="c1col">—</td>
-        <td class="c2col"><span class="green">$13,527 less ✓</span></td>
-        <td class="c3col"><span class="green">$5,718 less</span></td></tr>
+        <td class="c1col"><span class="amber">$98,225</span></td>
+        <td class="c2col"><span class="red">$99,732</span></td>
+        <td class="c3col"><span class="green">$93,439</span></td></tr>
       <tr><td class="row-lbl">Cash to close</td>
         <td class="c1col"><span class="green">$920</span></td>
-        <td class="c2col"><span class="amber">$4,197</span></td>
-        <td class="c3col"><span class="amber">$2,748</span></td></tr>
-      <tr><td class="row-lbl">Earnest refund</td>
+        <td class="c2col"><span class="amber">$9,415</span></td>
+        <td class="c3col"><span class="amber">$6,184</span></td></tr>
+      <tr><td class="row-lbl">Earnest refund at closing</td>
         <td class="c1col"><span class="green">$6,080 ✓</span></td>
-        <td class="c2col"><span class="amber">$2,803</span></td>
-        <td class="c3col"><span class="green">$4,252</span></td></tr>
-      <tr><td class="row-lbl">DTI (Year 3+)</td>
+        <td class="c2col"><span class="amber">$0 + $2,415 still owed</span></td>
+        <td class="c3col"><span class="green">$816</span></td></tr>
+      <tr><td class="row-lbl">Gift needed from parents</td>
+        <td class="c1col"><span class="green">None</span></td>
+        <td class="c2col"><span class="amber">$2,415 (to close gap)</span></td>
+        <td class="c3col"><span class="amber">$19,250 (dp only)</span></td></tr>
+      <tr><td class="row-lbl">DTI</td>
         <td class="c1col"><span class="red">52.2%</span></td>
-        <td class="c2col"><span class="green">46.6%</span></td>
-        <td class="c3col"><span class="green">45.0%</span></td></tr>
+        <td class="c2col"><span class="amber">47.9%</span></td>
+        <td class="c3col"><span class="green">45.4%</span></td></tr>
       <tr><td class="row-lbl">Refi flexibility</td>
-        <td class="c1col"><span class="red">Limited — DPA inflates LTV</span></td>
-        <td class="c2col"><span class="green">Full — clean single loan ✓</span></td>
+        <td class="c1col"><span class="red">Limited — DPA in LTV</span></td>
+        <td class="c2col"><span class="amber">Moderate — deferred 2nd due</span></td>
         <td class="c3col"><span class="green">Full — clean single loan ✓</span></td></tr>
     </tbody>
   </table>
@@ -408,12 +426,12 @@ footer{background:var(--ink);border-top:1px solid rgba(255,255,255,0.06);padding
 <div class="notes">
   <h3>How These Numbers Are Calculated</h3>
   <div class="notes-grid">
-    <div class="note"><strong>Option 1 — Arrive Home Repayable + 2/1 BD</strong>6.875% generates $5,060 gross lender credit; $1,350 LLPA for 2/1 BD leaves $3,710 net. BD subsidy $12,515 and closing costs funded from seller concessions. DPA covers full down payment. Repayable 2nd @ 8.25%/10yrs = $236/mo. $395 Arrive Home program fee included.</div>
-    <div class="note"><strong>Option 2 — No DPA, Gift $25K, Perm 5.875% + 2/1 BD</strong>Gift covers $19,250 down payment + $5,750 toward CC. Seller concessions fund remaining CC ($5,941) + points to 5.875% ($6,356) + 2/1 BD subsidy ($11,900) = $24,197 needed. Shortfall $4,197 covered by earnest — $2,803 refund. No 2nd mortgage. Year 1 effective rate: 3.875%.</div>
-    <div class="note"><strong>Option 3 — No DPA, Gift $25K, 5.375% Fixed</strong>Gift covers $19,250 down + $5,750 toward CC. Seller conc funds remaining CC ($5,926) + $14,074 toward the $16,822 points cost. Shortfall $2,748 from earnest — $4,252 refund. Fixed payment every month, no buydown period, no 2nd mortgage. Lowest permanent rate.</div>
-    <div class="note"><strong>2/1 Buydown Mechanics</strong>Seller funds a buydown escrow at closing. Year 1 rate is 2% below note rate, Year 2 is 1% below, Year 3+ is the permanent note rate. Option 1 BD cost: $12,515. Option 2 BD cost: $11,900 (lower because the note rate is lower). Option 3 has no buydown — rate is fixed from day one.</div>
-    <div class="note"><strong>Prepaid Interest</strong>Closing 6/29/26, first payment 8/1/26 = 2 days prepaid interest. Option 1 @ 6.875%: $203. Option 2 @ 5.875%: $174. Option 3 @ 5.375%: $159. All scenarios use HOI 12-mo prepaid ($3,360) + 2-mo escrow ($560) and 2-mo tax escrow ($617).</div>
-    <div class="note"><strong>Pricing as of 06/02/26</strong>Option 1: Arrive Home Repayable FHA @ 6.875%. Option 2 &amp; 3: Mr. Cooper FHA Standard Agency 30yr Fixed ≥$400K. Option 2 @ 5.875% costs $6,356 in points. Option 3 @ 5.375% costs $16,822 in points. Rates subject to change at lock. DTI based on $127,742 gross income and $941/mo non-housing debt.</div>
+    <div class="note"><strong>Option 1 — Arrive Home Repayable + 2/1 BD</strong>6.875% generates $5,060 gross lender credit. The 0.25% LLPA for the 2/1 buydown costs $1,350, leaving $3,710 net. BD subsidy $12,515 funded from seller concessions. DPA = $19,250 (3.5% of price) covers full down payment. Repayable 2nd @ 8.25% / 10 yrs = $236/mo. Standard FHA closing cost structure.</div>
+    <div class="note"><strong>Option 2 — metroDPA EDGE (4% DPA)</strong>4% DPA of note amount ($21,602) covers the full down payment ($19,250) plus $2,352 toward closing costs. The 2% EDGE discount point ($10,801) is included in origination. Cash closing costs are $31,767 (standardized) due to metroDPA's 1.5% origination fee, Compliance/Admin fee, and Investor Funding Fee. After $20K seller concessions and earnest money, $2,415 still owed at closing. No monthly 2nd payment — deferred balance due at sale or refi.</div>
+    <div class="note"><strong>Option 3 — No DPA / Gift Down Payment</strong>Standard FHA structure, same low closing costs as Option 1 ($11,679). Parents gift $19,250 for the down payment. Seller concessions cover all closing costs ($11,679) leaving $8,321 toward the $14,505 cost to buy the rate to 5.49%. Borrower pays the $6,184 gap — mostly covered by the $7,000 earnest with $816 refund. No second mortgage — ever.</div>
+    <div class="note"><strong>Prepaid Interest</strong>Closing 6/29/26 with first payment 8/1/26 means only 2 days of prepaid interest (June 29 and 30). Option 1 @ 6.875%: $203. Option 2 @ 6.25%: $185. Option 3 @ 5.49%: $162. All scenarios standardized with HOI 12-month prepaid ($3,360) and 2-month escrow ($560) at closing.</div>
+    <div class="note"><strong>Option 2 CTC</strong>After earnest money ($7,000) is applied, $2,415 is still owed at closing. Switching from 3% to 4% DPA saves over $5,000 in CTC by generating $2,352 more in DPA assistance and eliminating the down payment gap. The metroDPA fee structure still results in significantly higher closing costs than the standard FHA options.</div>
+    <div class="note"><strong>Pricing as of 06/02/26</strong>Option 1: Arrive Home Repayable FHA @ 6.875%. Option 2: metroDPA TMS Government EDGE FHA @ 6.25% with 2% discount point. Option 3: Mr. Cooper FHA Standard Agency 30yr Fixed ≥$400K @ 5.49%. All rates subject to change at time of lock. DTI based on $127,742 gross income and $941/mo non-housing debt.</div>
   </div>
 </div>
 
