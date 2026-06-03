@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Loan Structure Options — 7462 Vance St</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --ink:#0f1923;--ink2:#1e2d3d;
+  --gold:#b8973a;--gold-lt:#f5ead4;--gold-dk:#7a6020;
+  --o1:#1a5276;--o1-lt:#d6eaf8;--o1-md:#2980b9;
+  --o2:#1e6b4a;--o2-lt:#d5f5e3;--o2-md:#27ae60;
+  --o3:#6c3483;--o3-lt:#e8daef;--o3-md:#9b59b6;
+  --cream:#faf8f4;--white:#fff;--border:#e4ddd0;--muted:#7a7060;
+  --teal:#0e7c6a;--coral:#c0442a;
+  --yr1c:#1a5276;--yr2c:#1e6b4a;--yr3c:#5d3a1a;
+}
+body{font-family:'Epilogue',sans-serif;background:var(--cream);color:var(--ink);font-size:14px;line-height:1.6;}
+.header{background:var(--ink);position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(184,151,58,0.04) 40px,rgba(184,151,58,0.04) 80px);}
+.header-inner{position:relative;z-index:1;padding:36px 48px 32px;}
+.header-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;}
+.brand{font-family:'Playfair Display',serif;font-size:17px;color:var(--gold);}
+.brand-sub{font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:.1em;text-transform:uppercase;margin-top:2px;}
+.prep{text-align:right;font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:.07em;text-transform:uppercase;line-height:1.9;}
+.prep strong{display:block;color:rgba(255,255,255,0.8);font-family:'Playfair Display',serif;font-size:14px;font-weight:400;}
+.header h1{font-family:'Playfair Display',serif;font-size:30px;color:white;line-height:1.2;font-weight:600;}
+.header h1 em{color:var(--gold);font-style:italic;}
+.header p{font-size:12px;color:rgba(255,255,255,0.45);margin-top:8px;max-width:600px;line-height:1.8;}
+.header-rule{height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin-top:24px;opacity:.35;}
+.prop-strip{background:var(--ink2);padding:12px 48px;display:flex;gap:22px;align-items:center;border-bottom:2px solid rgba(184,151,58,0.2);flex-wrap:wrap;}
+.prop-item .lbl{font-size:9px;color:rgba(255,255,255,0.4);letter-spacing:.08em;text-transform:uppercase;display:block;}
+.prop-item .val{font-size:12px;font-weight:500;color:rgba(255,255,255,0.85);}
+.prop-div{width:1px;height:28px;background:rgba(255,255,255,0.1);}
+.earnest-strip{background:var(--gold-lt);border-bottom:1px solid #e0cfa0;padding:10px 48px;display:flex;align-items:center;gap:12px;}
+.earnest-strip p{font-size:11px;color:var(--gold-dk);line-height:1.6;}
+.earnest-strip strong{font-weight:600;}
+.main{padding:28px 48px 48px;}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:28px;}
+.card{background:white;border-radius:14px;overflow:hidden;border:1px solid var(--border);box-shadow:0 2px 12px rgba(15,25,35,0.06);}
+.card-top{height:4px;}
+.c1 .card-top{background:linear-gradient(90deg,var(--o1),var(--o1-md));}
+.c2 .card-top{background:linear-gradient(90deg,var(--o2),var(--o2-md));}
+.c3 .card-top{background:linear-gradient(90deg,var(--o3),var(--o3-md));}
+.card-head{padding:16px 18px 12px;border-bottom:1px solid var(--border);}
+.opt-tag{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:3px;display:inline-block;margin-bottom:6px;}
+.c1 .opt-tag{background:var(--o1-lt);color:var(--o1);}
+.c2 .opt-tag{background:var(--o2-lt);color:var(--o2);}
+.c3 .opt-tag{background:var(--o3-lt);color:var(--o3);}
+.card-head h3{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;line-height:1.25;color:var(--ink);}
+.card-head p{font-size:10px;color:var(--muted);margin-top:4px;line-height:1.6;}
+.card-meta{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap;}
+.meta .lbl{font-size:9px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;display:block;}
+.meta .val{font-size:12px;font-weight:600;color:var(--ink);}
+.headline-pmt{padding:14px 18px 10px;border-bottom:1px solid var(--border);text-align:center;background:linear-gradient(135deg,rgba(26,82,118,0.03),transparent);}
+.c2 .headline-pmt{background:linear-gradient(135deg,rgba(30,107,74,0.03),transparent);}
+.c3 .headline-pmt{background:linear-gradient(135deg,rgba(108,52,131,0.03),transparent);}
+.headline-yr{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;}
+.c1 .headline-yr{color:var(--o1);}
+.c2 .headline-yr{color:var(--o2);}
+.c3 .headline-yr{color:var(--o3);}
+.headline-num{font-family:'Playfair Display',serif;font-size:36px;font-weight:600;line-height:1;}
+.c1 .headline-num{color:var(--o1);}
+.c2 .headline-num{color:var(--o2);}
+.c3 .headline-num{color:var(--o3);}
+.headline-sub{font-size:10px;color:var(--muted);margin-top:3px;}
+.pmt-section{padding:12px 18px;}
+.pmt-title{font-size:9px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.yr-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.yr-badge{width:44px;flex-shrink:0;font-size:9px;font-weight:600;padding:3px 4px;border-radius:5px;text-align:center;}
+.y1b{background:#ddeef9;color:var(--yr1c);}
+.y2b{background:#d5f0e4;color:var(--yr2c);}
+.y3b{background:#fdebd0;color:var(--yr3c);}
+.y4b{background:#f5eaff;color:#6c3483;}
+.yr-bar{flex:1;border-radius:5px;padding:5px 10px;font-size:13px;font-weight:700;color:white;display:flex;justify-content:space-between;align-items:center;}
+.yr-bar span{font-size:9px;font-weight:400;opacity:.8;}
+.y1bar{background:linear-gradient(90deg,#1a5276,#2980b9);}
+.y2bar{background:linear-gradient(90deg,#1e6b4a,#27ae60);}
+.y3bar{background:linear-gradient(90deg,#5d3a1a,#a04000);}
+.y4bar{background:linear-gradient(90deg,#2c3e50,#4a6275);}
+.o2bar{background:linear-gradient(90deg,#1e6b4a,#27ae60);}
+.o3bar{background:linear-gradient(90deg,#6c3483,#9b59b6);}
+.cc-section{padding:0 18px 12px;}
+.cc-title{font-size:9px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.cc-table{width:100%;font-size:10px;border-collapse:collapse;}
+.cc-table tr{border-bottom:1px solid rgba(0,0,0,0.04);}
+.cc-table tr:last-child{border-bottom:none;font-weight:700;font-size:11px;border-top:2px solid var(--border);}
+.cc-table td{padding:3px 0;}
+.cc-table td:last-child{text-align:right;font-weight:500;}
+.cc-lbl{color:var(--muted);}
+.cc-hdr{font-size:9px;font-weight:600;color:var(--ink);letter-spacing:.04em;text-transform:uppercase;padding-top:6px;}
+.cash-box{margin:0 18px 12px;border-radius:8px;padding:11px 13px;}
+.c1 .cash-box{background:var(--o1-lt);border:1px solid #aed6f1;}
+.c2 .cash-box{background:var(--o2-lt);border:1px solid #a9dfbf;}
+.c3 .cash-box{background:var(--o3-lt);border:1px solid #d7bde2;}
+.cash-title{font-size:9px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;margin-bottom:8px;}
+.c1 .cash-title{color:var(--o1);}
+.c2 .cash-title{color:var(--o2);}
+.c3 .cash-title{color:var(--o3);}
+.cash-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(0,0,0,0.06);font-size:11px;}
+.cash-row:last-child{border-bottom:none;padding-top:6px;font-weight:700;font-size:12px;}
+.cred{color:var(--teal);}
+.costt{color:var(--coral);}
+.earnest-box{margin:0 18px 18px;background:#fffbf0;border:1px solid #e8d5a0;border-radius:8px;padding:10px 13px;}
+.etitle{font-size:9px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--gold-dk);margin-bottom:6px;}
+.earnest-row{display:flex;justify-content:space-between;font-size:11px;padding:2px 0;}
+.earnest-row.total{font-weight:700;font-size:12px;padding-top:5px;border-top:1px solid #e8d5a0;margin-top:4px;}
+.refund-good{color:var(--teal);}
+.refund-warn{color:var(--coral);}
+
+/* 15K NOTE BOX */
+.gift-note{background:var(--ink2);border-radius:12px;padding:18px 24px;margin-bottom:24px;}
+.gift-note h3{font-family:'Playfair Display',serif;font-size:16px;color:white;font-weight:600;margin-bottom:4px;}
+.gift-note p{font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:14px;line-height:1.7;}
+.gift-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.gift-item{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:12px 14px;}
+.gift-item .opt{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
+.c1-txt{color:#7fb3d3;}
+.c2-txt{color:#7dcea0;}
+.c3-txt{color:#c39bd3;}
+.gift-item .row{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,0.55);padding:2px 0;}
+.gift-item .row.total{font-weight:700;color:white;font-size:12px;border-top:1px solid rgba(255,255,255,0.15);padding-top:5px;margin-top:3px;}
+.gift-item .row.warn{color:#f1948a;}
+.gift-item .row.ok{color:#7dcea0;}
+
+/* COMPARISON TABLE */
+.comp-wrap{background:white;border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(15,25,35,0.06);margin-bottom:24px;}
+.comp-head{background:var(--ink);padding:16px 24px;}
+.comp-head h3{font-family:'Playfair Display',serif;font-size:18px;color:white;font-weight:600;}
+.comp-head p{font-size:11px;color:rgba(255,255,255,0.4);margin-top:3px;}
+table.comp{width:100%;border-collapse:collapse;}
+table.comp th{padding:9px 16px;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;text-align:left;background:var(--cream);border-bottom:1px solid var(--border);}
+table.comp th:not(:first-child){text-align:center;}
+table.comp td{padding:8px 16px;font-size:12px;border-bottom:1px solid var(--border);}
+table.comp td:not(:first-child){text-align:center;}
+table.comp tr:last-child td{border-bottom:none;}
+.row-lbl{color:var(--muted);font-size:11px;}
+.hl{background:rgba(184,151,58,0.05);}
+.hl td{font-weight:600;}
+.c1col{background:rgba(26,82,118,0.04);}
+.c2col{background:rgba(30,107,74,0.04);}
+.c3col{background:rgba(108,52,131,0.04);}
+.big{font-size:15px;font-weight:700;color:var(--ink);}
+.green{color:var(--teal);font-weight:600;}
+.amber{color:#b7770d;font-weight:600;}
+.red{color:var(--coral);font-weight:600;}
+
+.notes{background:var(--ink2);border-radius:12px;padding:18px 24px;margin-bottom:20px;}
+.notes h3{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+.notes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.note{font-size:10px;color:rgba(255,255,255,0.45);line-height:1.7;}
+.note strong{display:block;color:rgba(255,255,255,0.75);font-size:11px;margin-bottom:2px;}
+.disc{background:var(--ink);border-radius:10px;padding:14px 18px;}
+.disc p{font-size:10px;color:rgba(255,255,255,0.3);line-height:1.7;}
+footer{background:var(--ink);border-top:1px solid rgba(255,255,255,0.06);padding:14px 48px;display:flex;justify-content:space-between;align-items:center;}
+.footer-brand{font-family:'Playfair Display',serif;font-size:15px;color:var(--gold);}
+.footer-r{font-size:10px;color:rgba(255,255,255,0.3);text-align:right;line-height:1.7;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-top">
+      <div><div class="brand">Handy Lender</div><div class="brand-sub">Powered by Cornerstone First Mortgage</div></div>
+      <div class="prep">Prepared for<strong>Ryan &amp; Brittany Benegas</strong>June 2, 2026</div>
+    </div>
+    <h1>Three Loan Structure Options<br><em>7462 Vance Street, Arvada</em></h1>
+    <p>All three options assume a $20,000 gift from parents covering the down payment — no DPA second mortgage in any scenario. The difference is how the seller concessions and lender credit are deployed to buy down your rate and payments.</p>
+    <div class="header-rule"></div>
+  </div>
+</div>
+
+<div class="prop-strip">
+  <div class="prop-item"><span class="lbl">Purchase Price</span><span class="val">$550,000</span></div>
+  <div class="prop-div"></div>
+  <div class="prop-item"><span class="lbl">FHA Loan</span><span class="val">$540,038</span></div>
+  <div class="prop-div"></div>
+  <div class="prop-item"><span class="lbl">UFMIP (financed)</span><span class="val">$9,288</span></div>
+  <div class="prop-div"></div>
+  <div class="prop-item"><span class="lbl">Seller Concessions</span><span class="val">$20,000</span></div>
+  <div class="prop-div"></div>
+  <div class="prop-item"><span class="lbl">Gift (all options)</span><span class="val">$20,000</span></div>
+  <div class="prop-div"></div>
+  <div class="prop-item"><span class="lbl">Earnest Deposited</span><span class="val">$7,000</span></div>
+  <div class="prop-div"></div>
+  <div class="prop-item"><span class="lbl">Closing · First Pmt</span><span class="val">6/29/26 · 8/1/26</span></div>
+</div>
+
+<div class="earnest-strip">
+  <span>💡</span>
+  <p>Of the $20,000 gift, <strong>$19,250 covers the down payment</strong> — the remaining $750 flows toward closing costs. Your <strong>$7,000 earnest deposit</strong> counts toward cash to close in all scenarios.</p>
+</div>
+
+<div class="main">
+<div class="cards">
+
+<!-- OPTION 1 -->
+<div class="card c1">
+  <div class="card-top"></div>
+  <div class="card-head">
+    <span class="opt-tag">Option 1</span>
+    <h3>3/1 Buydown @ 6.875%<br>Lowest Year 1 Payment</h3>
+    <p>Rate generates $7,004 lender credit · combined with $20K conc funds 3/1 BD · rate eases up over 3 years · no 2nd mortgage</p>
+    <div class="card-meta">
+      <div class="meta"><span class="lbl">Note Rate</span><span class="val">6.875%</span></div>
+      <div class="meta"><span class="lbl">BD Type</span><span class="val">3/1 Temp Buydown</span></div>
+      <div class="meta"><span class="lbl">2nd Mortgage</span><span class="val" style="color:var(--teal);">None ✓</span></div>
+    </div>
+  </div>
+  <div class="headline-pmt">
+    <div class="headline-yr">Year 1 Effective Rate — 3.875%</div>
+    <div class="headline-num">$3,370<span style="font-size:16px;font-weight:400;">/mo</span></div>
+    <div class="headline-sub">P&I · MIP · taxes · HOI · no 2nd mortgage</div>
+  </div>
+  <div class="pmt-section">
+    <div class="pmt-title">Payment by Year</div>
+    <div class="yr-row"><div class="yr-badge y1b">Yr 1</div><div class="yr-bar y1bar">$3,370<span>3.875% effective</span></div></div>
+    <div class="yr-row"><div class="yr-badge y2b">Yr 2</div><div class="yr-bar y2bar">$3,688<span>4.875% effective</span></div></div>
+    <div class="yr-row"><div class="yr-badge y3b">Yr 3</div><div class="yr-bar y3bar">$4,025<span>5.875% effective</span></div></div>
+    <div class="yr-row"><div class="yr-badge y4b">Yr 4+</div><div class="yr-bar y4bar">$4,378<span>6.875% note rate</span></div></div>
+  </div>
+  <div class="cc-section">
+    <div class="cc-title">How Funds Are Allocated</div>
+    <table class="cc-table">
+      <tr><td class="cc-lbl cc-hdr" colspan="2">Gift $20,000</td></tr>
+      <tr><td class="cc-lbl">Down payment (3.5%)</td><td>$19,250</td></tr>
+      <tr><td class="cc-lbl">Toward closing costs</td><td>$750</td></tr>
+      <tr><td class="cc-lbl cc-hdr" colspan="2">Lender Credit @ 6.875%</td></tr>
+      <tr><td class="cc-lbl">Applied to 3/1 BD account</td><td>$7,004</td></tr>
+      <tr><td class="cc-lbl cc-hdr" colspan="2">Seller Concessions $20,000</td></tr>
+      <tr><td class="cc-lbl">Remaining closing costs</td><td>$10,970</td></tr>
+      <tr><td class="cc-lbl">Toward 3/1 BD account</td><td>$9,030</td></tr>
+      <tr><td class="cc-lbl cc-hdr" colspan="2">3/1 BD Account Total</td></tr>
+      <tr><td class="cc-lbl">Funded (conc + LC)</td><td>$16,034</td></tr>
+      <tr><td class="cc-lbl">BD subsidy needed</td><td>$24,613</td></tr>
+      <tr><td>Shortfall (borrower pays)</td><td>$8,579</td></tr>
+    </table>
+  </div>
+  <div class="cash-box">
+    <div class="cash-title">Cash to Close</div>
+    <div class="cash-row"><span>Down payment</span><span>$19,250</span></div>
+    <div class="cash-row"><span>Gift covers down payment</span><span class="cred">−$19,250</span></div>
+    <div class="cash-row"><span>Closing costs</span><span>$11,720</span></div>
+    <div class="cash-row"><span>3/1 BD account shortfall</span><span>$8,579</span></div>
+    <div class="cash-row"><span>Gift toward CC</span><span class="cred">−$750</span></div>
+    <div class="cash-row"><span>Seller concessions</span><span class="cred">−$20,000</span></div>
+    <div class="cash-row"><span>Lender credit</span><span class="cred">−$7,004</span></div>
+    <div class="cash-row"><span>Cash to Close</span><span class="costt">$8,579</span></div>
+  </div>
+  <div class="earnest-box">
+    <div class="etitle">🏦 Earnest Money</div>
+    <div class="earnest-row"><span>Deposited</span><span>$7,000</span></div>
+    <div class="earnest-row"><span>Applied to closing</span><span>−$7,000</span></div>
+    <div class="earnest-row total refund-warn"><span>Additional cash needed</span><span>$1,579</span></div>
+  </div>
+</div>
+
+<!-- OPTION 2 -->
+<div class="card c2">
+  <div class="card-top"></div>
+  <div class="card-head">
+    <span class="opt-tag">Option 2</span>
+    <h3>2/1 Buydown @ 6.375%<br>Best Balance</h3>
+    <p>Lender credit + conc fully fund 2/1 BD · near-zero cash to close · rate steps up over 2 years · no 2nd mortgage</p>
+    <div class="card-meta">
+      <div class="meta"><span class="lbl">Note Rate</span><span class="val">6.375%</span></div>
+      <div class="meta"><span class="lbl">BD Type</span><span class="val">2/1 Temp Buydown</span></div>
+      <div class="meta"><span class="lbl">2nd Mortgage</span><span class="val" style="color:var(--teal);">None ✓</span></div>
+    </div>
+  </div>
+  <div class="headline-pmt">
+    <div class="headline-yr">Year 1 Effective Rate — 4.375%</div>
+    <div class="headline-num">$3,527<span style="font-size:16px;font-weight:400;">/mo</span></div>
+    <div class="headline-sub">P&I · MIP · taxes · HOI · no 2nd mortgage</div>
+  </div>
+  <div class="pmt-section">
+    <div class="pmt-title">Payment by Year</div>
+    <div class="yr-row"><div class="yr-badge y1b">Yr 1</div><div class="yr-bar y1bar">$3,527<span>4.375% effective</span></div></div>
+    <div class="yr-row"><div class="yr-badge y2b">Yr 2</div><div class="yr-bar y2bar">$3,854<span>5.375% effective</span></div></div>
+    <div class="yr-row"><div class="yr-badge y3b">Yr 3+</div><div class="yr-bar o2bar">$4,200<span>6.375% note rate</span></div></div>
+  </div>
+  <div class="cc-section">
+    <div class="cc-title">How Funds Are Allocated</div>
+    <table class="cc-table">
+      <tr><td class="cc-lbl cc-hdr" colspan="2">Gift $20,000</td></tr>
+      <tr><td class="cc-lbl">Down payment (3.5%)</td><td>$19,250</td></tr>
+      <tr><td class="cc-lbl">Toward closing costs</td><td>$750</td></tr>
+      <tr><td class="cc-lbl cc-hdr" colspan="2">Lender Credit @ 6.375%</td></tr>
+      <tr><td class="cc-lbl">Applied to 2/1 BD account</td><td>$2,252</td></tr>
+      <tr><td class="cc-lbl cc-hdr" colspan="2">Seller Concessions $20,000</td></tr>
+      <tr><td class="cc-lbl">Remaining closing costs</td><td>$10,956</td></tr>
+      <tr><td class="cc-lbl">Toward 2/1 BD account</td><td>$9,044</td></tr>
+      <tr><td class="cc-lbl cc-hdr" colspan="2">2/1 BD Account</td></tr>
+      <tr><td class="cc-lbl">Funded (conc + LC)</td><td>$11,296</td></tr>
+      <tr><td class="cc-lbl">BD subsidy needed</td><td>$12,215</td></tr>
+      <tr><td>Shortfall (borrower pays)</td><td>$919</td></tr>
+    </table>
+  </div>
+  <div class="cash-box">
+    <div class="cash-title">Cash to Close</div>
+    <div class="cash-row"><span>Down payment</span><span>$19,250</span></div>
+    <div class="cash-row"><span>Gift covers down payment</span><span class="cred">−$19,250</span></div>
+    <div class="cash-row"><span>Closing costs</span><span>$11,706</span></div>
+    <div class="cash-row"><span>2/1 BD account shortfall</span><span>$919</span></div>
+    <div class="cash-row"><span>Gift toward CC</span><span class="cred">−$750</span></div>
+    <div class="cash-row"><span>Seller concessions</span><span class="cred">−$20,000</span></div>
+    <div class="cash-row"><span>Lender credit</span><span class="cred">−$2,252</span></div>
+    <div class="cash-row"><span>Cash to Close</span><span class="costt">$919</span></div>
+  </div>
+  <div class="earnest-box">
+    <div class="etitle">🏦 Earnest Money</div>
+    <div class="earnest-row"><span>Deposited</span><span>$7,000</span></div>
+    <div class="earnest-row"><span>Applied to closing</span><span>−$919</span></div>
+    <div class="earnest-row total refund-good"><span>Refund at closing</span><span>$6,081</span></div>
+  </div>
+</div>
+
+<!-- OPTION 3 -->
+<div class="card c3">
+  <div class="card-top"></div>
+  <div class="card-head">
+    <span class="opt-tag">Option 3</span>
+    <h3>Fixed 5.875% — No Buydown<br>Lowest Permanent Rate</h3>
+    <p>Conc pays points for permanent 5.875% rate · same payment every month · no BD period · no 2nd mortgage · full earnest refund</p>
+    <div class="card-meta">
+      <div class="meta"><span class="lbl">Note Rate</span><span class="val">5.875%</span></div>
+      <div class="meta"><span class="lbl">BD Type</span><span class="val" style="color:var(--teal);">None — Fixed ✓</span></div>
+      <div class="meta"><span class="lbl">2nd Mortgage</span><span class="val" style="color:var(--teal);">None ✓</span></div>
+    </div>
+  </div>
+  <div class="headline-pmt">
+    <div class="headline-yr">Every Month — Fixed 5.875%</div>
+    <div class="headline-num">$4,025<span style="font-size:16px;font-weight:400;">/mo</span></div>
+    <div class="headline-sub">Same payment every month — no changes, ever</div>
+  </div>
+  <div class="pmt-section">
+    <div class="pmt-title">Payment by Year</div>
+    <div class="yr-row"><div class="yr-badge y1b">Yr 1</div><div class="yr-bar o3bar">$4,025<span>5.875% fixed</span></div></div>
+    <div class="yr-row"><div class="yr-badge y2b">Yr 2</div><div class="yr-bar o3bar">$4,025<span>5.875% fixed</span></div></div>
+    <div class="yr-row"><div class="yr-badge y3b">Yr 3+</div><div class="yr-bar o3bar">$4,025<span>5.875% fixed</span></div></div>
+  </div>
+  <div class="cc-section">
+    <div class="cc-title">How Funds Are Allocated</div>
+    <table class="cc-table">
+      <tr><td class="cc-lbl cc-hdr" colspan="2">Gift $20,000</td></tr>
+      <tr><td class="cc-lbl">Down payment (3.5%)</td><td>$19,250</td></tr>
+      <tr><td class="cc-lbl">Toward closing costs</td><td>$750</td></tr>
+      <tr><td class="cc-lbl cc-hdr" colspan="2">Seller Concessions $20,000</td></tr>
+      <tr><td class="cc-lbl">Remaining closing costs</td><td>$10,941</td></tr>
+      <tr><td class="cc-lbl">Points to buy rate to 5.875%</td><td>$8,932</td></tr>
+      <tr><td class="cc-lbl">Conc surplus (prepaids)</td><td>$127</td></tr>
+      <tr><td class="cc-lbl cc-hdr" colspan="2">Total Cash Closing Costs</td></tr>
+      <tr><td>Cash CC</td><td>$11,691</td></tr>
+    </table>
+  </div>
+  <div class="cash-box">
+    <div class="cash-title">Cash to Close</div>
+    <div class="cash-row"><span>Down payment</span><span>$19,250</span></div>
+    <div class="cash-row"><span>Gift covers down payment</span><span class="cred">−$19,250</span></div>
+    <div class="cash-row"><span>Closing costs</span><span>$11,691</span></div>
+    <div class="cash-row"><span>Points to 5.875%</span><span>$8,932</span></div>
+    <div class="cash-row"><span>Gift toward CC</span><span class="cred">−$750</span></div>
+    <div class="cash-row"><span>Seller concessions</span><span class="cred">−$20,000</span></div>
+    <div class="cash-row"><span>Cash to Close</span><span class="cred">$0</span></div>
+  </div>
+  <div class="earnest-box">
+    <div class="etitle">🏦 Earnest Money</div>
+    <div class="earnest-row"><span>Deposited</span><span>$7,000</span></div>
+    <div class="earnest-row"><span>Applied to closing</span><span>$0</span></div>
+    <div class="earnest-row total refund-good"><span>Full refund at closing</span><span>$7,000</span></div>
+  </div>
+</div>
+
+</div><!-- end cards -->
+
+<!-- $15K GIFT NOTE -->
+<div class="gift-note">
+  <h3>What if the gift is $15,000 instead of $20,000?</h3>
+  <p>A $15,000 gift doesn't fully cover the $19,250 down payment — leaving a $4,250 gap that adds directly to cash to close in every scenario. Here's the impact across all three options:</p>
+  <div class="gift-grid">
+    <div class="gift-item">
+      <div class="opt c1-txt">Option 1 — 3/1 BD @ 6.875%</div>
+      <div class="row"><span>CTC with $20K gift</span><span>$8,579</span></div>
+      <div class="row"><span>Additional dp gap</span><span>+$4,250</span></div>
+      <div class="row total warn"><span>CTC with $15K gift</span><span>$12,829</span></div>
+      <div class="row warn"><span>Earnest covers</span><span>$7,000</span></div>
+      <div class="row warn"><span>Still need at closing</span><span>$5,829</span></div>
+    </div>
+    <div class="gift-item">
+      <div class="opt c2-txt">Option 2 — 2/1 BD @ 6.375%</div>
+      <div class="row"><span>CTC with $20K gift</span><span>$919</span></div>
+      <div class="row"><span>Additional dp gap</span><span>+$4,250</span></div>
+      <div class="row total"><span>CTC with $15K gift</span><span>$5,169</span></div>
+      <div class="row ok"><span>Earnest covers</span><span>$5,169</span></div>
+      <div class="row ok"><span>Refund at closing</span><span>$1,831</span></div>
+    </div>
+    <div class="gift-item">
+      <div class="opt c3-txt">Option 3 — Fixed 5.875%</div>
+      <div class="row"><span>CTC with $20K gift</span><span>$0</span></div>
+      <div class="row"><span>Additional dp gap</span><span>+$4,250</span></div>
+      <div class="row total"><span>CTC with $15K gift</span><span>$4,250</span></div>
+      <div class="row ok"><span>Earnest covers</span><span>$4,250</span></div>
+      <div class="row ok"><span>Refund at closing</span><span>$2,750</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPARISON TABLE -->
+<div class="comp-wrap">
+  <div class="comp-head">
+    <h3>Head-to-Head Comparison</h3>
+    <p>7462 Vance St · $550,000 · $20,000 seller concessions · $20,000 gift · Closing 6/29/26 · Pricing 06/02/26</p>
+  </div>
+  <table class="comp">
+    <thead>
+      <tr>
+        <th style="width:30%"></th>
+        <th class="c1col">Option 1<br><span style="font-weight:400;text-transform:none;font-size:10px;">3/1 BD @ 6.875%</span></th>
+        <th class="c2col">Option 2<br><span style="font-weight:400;text-transform:none;font-size:10px;">2/1 BD @ 6.375%</span></th>
+        <th class="c3col">Option 3<br><span style="font-weight:400;text-transform:none;font-size:10px;">Fixed 5.875%</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="row-lbl">Note rate</td><td class="c1col">6.875%</td><td class="c2col">6.375%</td><td class="c3col">5.875%</td></tr>
+      <tr><td class="row-lbl">Buydown type</td><td class="c1col">3/1 temp</td><td class="c2col">2/1 temp</td><td class="c3col"><span class="green">None — fixed ✓</span></td></tr>
+      <tr><td class="row-lbl">2nd mortgage</td><td class="c1col"><span class="green">None ✓</span></td><td class="c2col"><span class="green">None ✓</span></td><td class="c3col"><span class="green">None ✓</span></td></tr>
+      <tr class="hl"><td class="row-lbl">Year 1 payment</td>
+        <td class="c1col"><span class="big green">$3,370</span><br><span style="font-size:9px;color:var(--teal);">3.875% effective ✓</span></td>
+        <td class="c2col"><span class="big">$3,527</span><br><span style="font-size:9px;color:var(--muted);">4.375% effective</span></td>
+        <td class="c3col"><span class="big">$4,025</span><br><span style="font-size:9px;color:var(--muted);">5.875% fixed</span></td></tr>
+      <tr class="hl"><td class="row-lbl">Year 2 payment</td>
+        <td class="c1col"><span class="big">$3,688</span><br><span style="font-size:9px;color:var(--muted);">4.875% effective</span></td>
+        <td class="c2col"><span class="big">$3,854</span><br><span style="font-size:9px;color:var(--muted);">5.375% effective</span></td>
+        <td class="c3col"><span class="big">$4,025</span></td></tr>
+      <tr class="hl"><td class="row-lbl">Year 3 payment</td>
+        <td class="c1col"><span class="big">$4,025</span><br><span style="font-size:9px;color:var(--muted);">5.875% effective</span></td>
+        <td class="c2col"><span class="big">$4,200</span><br><span style="font-size:9px;color:var(--muted);">6.375% note rate</span></td>
+        <td class="c3col"><span class="big">$4,025</span></td></tr>
+      <tr class="hl"><td class="row-lbl">Year 4+ payment</td>
+        <td class="c1col"><span class="big red">$4,378</span><br><span style="font-size:9px;color:var(--muted);">6.875% note rate</span></td>
+        <td class="c2col"><span class="big">$4,200</span></td>
+        <td class="c3col"><span class="big green">$4,025</span></td></tr>
+      <tr><td class="row-lbl">24-month total</td>
+        <td class="c1col"><span class="green">$84,698</span></td>
+        <td class="c2col"><span class="amber">$88,574</span></td>
+        <td class="c3col"><span class="red">$96,598</span></td></tr>
+      <tr><td class="row-lbl">Cash to close ($20K gift)</td>
+        <td class="c1col"><span class="red">$8,579</span><br><span style="font-size:9px;color:var(--coral);">$1,579 beyond earnest</span></td>
+        <td class="c2col"><span class="green">$919</span><br><span style="font-size:9px;color:var(--teal);">$6,081 earnest refund</span></td>
+        <td class="c3col"><span class="green">$0</span><br><span style="font-size:9px;color:var(--teal);">$7,000 full refund ✓</span></td></tr>
+      <tr><td class="row-lbl">Cash to close ($15K gift)</td>
+        <td class="c1col"><span class="red">$12,829</span><br><span style="font-size:9px;color:var(--coral);">$5,829 beyond earnest</span></td>
+        <td class="c2col"><span class="amber">$5,169</span><br><span style="font-size:9px;color:var(--teal);">covered by earnest ✓</span></td>
+        <td class="c3col"><span class="amber">$4,250</span><br><span style="font-size:9px;color:var(--teal);">covered by earnest ✓</span></td></tr>
+      <tr><td class="row-lbl">DTI (permanent rate)</td>
+        <td class="c1col"><span class="red">50.0%</span></td>
+        <td class="c2col"><span class="amber">48.3%</span></td>
+        <td class="c3col"><span class="green">46.6%</span></td></tr>
+      <tr><td class="row-lbl">Refi flexibility</td>
+        <td class="c1col"><span class="green">Full — clean single loan ✓</span></td>
+        <td class="c2col"><span class="green">Full — clean single loan ✓</span></td>
+        <td class="c3col"><span class="green">Full — clean single loan ✓</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="notes">
+  <h3>How These Numbers Are Calculated</h3>
+  <div class="notes-grid">
+    <div class="note"><strong>Option 1 — 3/1 Buydown @ 6.875%</strong>Note rate 6.875% generates $7,004 lender credit. Combined with $20K seller concessions, $16,034 is available toward the $24,613 3/1 BD subsidy — leaving an $8,579 shortfall the borrower brings. With $7K earnest applied, only $1,579 in additional cash is needed. Payments step up annually: 3.875% → 4.875% → 5.875% → 6.875% from Year 4 onward.</div>
+    <div class="note"><strong>Option 2 — 2/1 Buydown @ 6.375%</strong>Rate 6.375% generates a $2,252 lender credit. Combined with $20K concessions, nearly all of the $12,215 2/1 BD subsidy is covered — only $919 shortfall from the borrower. Earnest covers it with $6,081 refund. Payments step: 4.375% → 5.375% → 6.375% permanently from Year 3. Most favorable cash-to-close of the buydown options.</div>
+    <div class="note"><strong>Option 3 — Fixed 5.875%</strong>Seller concessions cover all closing costs and fund the $8,932 in points to buy the rate permanently to 5.875%. Gift covers down payment. $0 cash to close — full $7,000 earnest refunded. No buydown period, no payment changes. Highest monthly payment of the three but also the most predictable and the lowest permanent rate.</div>
+    <div class="note"><strong>Gift Fund Breakdown</strong>In all three options, $19,250 of the $20,000 gift goes directly to the down payment. The remaining $750 flows toward closing costs. If the gift is $15,000, a $4,250 down payment gap is created, adding that amount to cash to close in each scenario. Options 2 and 3 at $15K are fully covered by the $7,000 earnest deposit.</div>
+    <div class="note"><strong>Closing Date &amp; Prepaid Interest</strong>Closing 6/29/26, first payment 8/1/26 = 2 days prepaid interest. UFMIP ($9,288) is financed into the loan — not in cash to close. All scenarios use standardized HOI 12-month prepaid ($3,360) and 2-month escrow ($560) plus 2-month tax escrow ($617).</div>
+    <div class="note"><strong>Pricing as of 06/02/26</strong>Lender credits and points costs based on current FHA 30yr pricing. Option 1 @ 6.875%: $7,004 lender credit. Option 2 @ 6.375%: $2,252 lender credit. Option 3 @ 5.875%: $8,932 points cost. No DPA program in any scenario — clean single FHA loan. Rates subject to change at time of lock. DTI based on $127,742 gross income and $941/mo non-housing debt.</div>
+  </div>
+</div>
+
+<div class="disc">
+  <p><strong style="color:rgba(255,255,255,0.55);">Important Disclosures.</strong> All figures are estimates based on current pricing as of 06/02/26. Nothing constitutes a loan commitment, pre-approval, or guarantee of financing. Rates and terms subject to change. Actual results will vary. Ryan &amp; Brittany Benegas · Handy Lender · Powered by Cornerstone First Mortgage · NMLS 173855.</p>
+</div>
+</div>
+
+<footer>
+  <div class="footer-brand">Handy Lender</div>
+  <div class="footer-r">Loan Structure Options · 7462 Vance St · Ryan &amp; Brittany Benegas<br>Cornerstone First Mortgage · 866-815-1803 · dreiber@cfmtg.com · Pricing 06/02/26</div>
+</footer>
+</body>
+</html>
