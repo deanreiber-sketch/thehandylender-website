@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 30-Day Agent Sprint — Call Sheet · The Handy Lender™</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500;1,9..144,600&family=Hanken+Grotesk:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#14233D;--ink-soft:#2C3A52;--brass:#C29A4E;--brass-deep:#A2792D;--clay:#BC6240;--clay-deep:#8C4124;
+    --teal:#1F4A41;--teal-deep:#13322B;--paper:#F4EEDF;--page:#FBF7EC;--card:#FCF9F1;--line:rgba(20,35,61,0.16);--line-soft:rgba(20,35,61,0.08);--muted:#6E6655;}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Hanken Grotesk',sans-serif;background:var(--paper);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(20,35,61,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(20,35,61,.05) 1px,transparent 1px);background-size:34px 34px;opacity:.55}
+  .wrap{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:0 28px}
+  h1,h2,h3{font-family:'Fraunces',serif;font-weight:600;line-height:1.12;color:var(--ink)}
+  .mono{font-family:'DM Mono',monospace;font-weight:500;letter-spacing:.1em;text-transform:uppercase;font-size:.72rem;color:var(--brass-deep)}
+  strong{color:var(--ink);font-weight:700}
+
+  /* COVER */
+  .cover{padding:70px 0 30px;position:relative;text-align:center}
+  .reg{position:absolute;width:26px;height:26px;border:1px solid var(--brass);opacity:.55}
+  .reg.tl{top:24px;left:24px;border-right:none;border-bottom:none}.reg.tr{top:24px;right:24px;border-left:none;border-bottom:none}
+  .wordmark{font-family:'Hanken Grotesk',sans-serif;font-weight:800;letter-spacing:.18em;text-transform:uppercase;font-size:.84rem;color:var(--ink);margin-bottom:18px}
+  .wordmark .tm{font-size:.55em;vertical-align:super;color:var(--brass-deep)}
+  .cover h1{font-size:clamp(2.1rem,5.2vw,3.3rem);letter-spacing:-.02em;margin-bottom:.18em}
+  .cover h1 .it{font-style:italic;font-weight:400;color:var(--brass-deep)}
+  .cover .sub{font-family:'Fraunces',serif;font-style:italic;font-size:clamp(1.05rem,2.1vw,1.3rem);color:var(--ink-soft);max-width:640px;margin:0 auto}
+  .stamp{display:inline-block;margin-top:22px;font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);border:1.5px solid var(--teal);border-radius:5px;padding:9px 18px;transform:rotate(-1.5deg);background:rgba(31,74,65,.05)}
+
+  /* PRINCIPLE STRIP */
+  .ethos{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:20px 0;margin-top:8px}
+  .ethos .wrap{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-items:center}
+  .ethos .e{font-family:'Fraunces',serif;font-style:italic;font-size:.95rem;color:var(--muted)}
+  .ethos .sep{width:5px;height:5px;background:var(--brass);transform:rotate(45deg);opacity:.7}
+
+  /* SECTION HEAD */
+  .lead{padding:40px 0 6px}
+  .lead .sec-num{font-family:'DM Mono',monospace;font-size:.74rem;letter-spacing:.1em;color:var(--brass-deep);text-transform:uppercase}
+  .lead h2{font-size:clamp(1.5rem,3vw,2.1rem);margin:10px 0 6px}
+  .lead .dek{font-family:'Fraunces',serif;font-style:italic;font-size:1.06rem;color:var(--muted);max-width:720px}
+
+  /* CARDS */
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:22px 0 8px}
+  @media(max-width:760px){.cards{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:7px;background:var(--card);padding:18px 20px;position:relative;display:flex;flex-direction:column}
+  .card.warm{border-left-color:var(--teal)}
+  .card .top{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+  .card .num{font-family:'DM Mono',monospace;font-size:.78rem;font-weight:500;color:#fff;background:var(--ink);width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 30px;margin-top:2px}
+  .card.warm .num{background:var(--teal)}
+  .card .ttl{flex:1}
+  .card .ttl h3{font-size:1.12rem;line-height:1.15;margin-bottom:3px}
+  .card .asset{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.06em;text-transform:uppercase;color:var(--brass-deep)}
+  .card .seg{margin-left:auto;font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;border-radius:20px;white-space:nowrap;align-self:flex-start}
+  .seg.cold{background:rgba(162,121,45,.12);color:var(--brass-deep);border:1px solid rgba(162,121,45,.3)}
+  .seg.hot{background:rgba(31,74,65,.1);color:var(--teal);border:1px solid rgba(31,74,65,.3)}
+
+  .line{display:flex;gap:9px;margin-bottom:8px;font-size:.92rem;line-height:1.48}
+  .line .tag{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.05em;text-transform:uppercase;flex:0 0 46px;padding-top:3px;color:var(--muted);font-weight:500}
+  .line .tag.yes{color:var(--teal)}
+  .line .tag.no{color:var(--clay-deep)}
+  .line .txt{flex:1;color:var(--ink-soft)}
+  .line .txt em{font-style:italic;color:var(--ink)}
+  .line.openline .txt{color:var(--ink);font-weight:500}
+  .show{margin-top:auto;padding-top:11px;border-top:1px solid var(--line-soft);font-family:'DM Mono',monospace;font-size:.64rem;letter-spacing:.04em;text-transform:uppercase;color:var(--teal);display:flex;align-items:center;gap:7px}
+  .show .dot{width:7px;height:7px;border:1.5px solid var(--teal);transform:rotate(45deg);flex:0 0 auto}
+
+  /* PLAYBOOK */
+  .playbook{padding:18px 0 10px}
+  .pb-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+  @media(max-width:680px){.pb-grid{grid-template-columns:1fr}}
+  .pb{border:1px solid var(--line);border-radius:7px;background:var(--card);padding:18px 20px}
+  .pb h4{font-family:'Fraunces',serif;font-size:1.08rem;margin-bottom:6px;color:var(--ink)}
+  .pb h4 .pill{font-family:'DM Mono',monospace;font-size:.56rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:20px;margin-left:8px;vertical-align:middle}
+  .pb.cold h4 .pill{background:rgba(162,121,45,.12);color:var(--brass-deep)}
+  .pb.hot h4 .pill{background:rgba(31,74,65,.1);color:var(--teal)}
+  .pb p{font-size:.9rem;color:var(--ink-soft);margin-bottom:6px}
+  .pb .nums{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.05em;text-transform:uppercase;color:var(--brass-deep);margin-top:4px}
+
+  .cadence{margin-top:18px;background:rgba(194,154,78,.08);border:1px solid rgba(162,121,45,.4);border-radius:7px;padding:16px 22px;font-size:.95rem;color:var(--ink-soft)}
+  .cadence strong{color:var(--brass-deep)}
+
+  footer{background:var(--ink);color:rgba(255,255,255,.72);padding:38px 0;margin-top:40px;position:relative;z-index:1;text-align:center}
+  footer .wordmark{color:#fff;margin-bottom:10px}
+  footer .law{font-family:'Fraunces',serif;font-style:italic;font-size:1.02rem;color:rgba(255,255,255,.82);max-width:520px;margin:0 auto 12px}
+  footer .meta{font-family:'DM Mono',monospace;font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--brass);margin-top:6px}
+
+  @media print{
+    body{background:#fff}
+    body::before{display:none}
+    .card,.pb{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<header class="cover">
+  <span class="reg tl"></span><span class="reg tr"></span>
+  <div class="wrap">
+    <div class="wordmark">The Handy Lender<span class="tm">&trade;</span></div>
+    <h1>The 30-Day <span class="it">Agent Sprint</span></h1>
+    <p class="sub">Ten reasons to reconnect &mdash; each one opens a real tool, not a pitch. The goal of every call is a meeting, not a close.</p>
+    <div class="stamp">Outreach Call Sheet &middot; 150 Agents &middot; 30 Days</div>
+  </div>
+</header>
+
+<div class="ethos">
+  <div class="wrap">
+    <span class="e">Closing is the midpoint.</span><span class="sep"></span>
+    <span class="e">You re-enter because you&rsquo;re useful.</span><span class="sep"></span>
+    <span class="e">Calm wins here.</span>
+  </div>
+</div>
+
+<section class="lead">
+  <div class="wrap">
+    <span class="sec-num">The Ten Hooks</span>
+    <h2>Pick the hook. Open the tool. Ask for 15 minutes.</h2>
+    <p class="dek">Warm contacts get the direct asks. Quiet-for-a-year contacts get the send-first plays &mdash; you re-enter with a gift, then the call writes itself.</p>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="cards">
+
+    <!-- 1 -->
+    <div class="card warm">
+      <div class="top">
+        <div class="num">01</div>
+        <div class="ttl"><h3>The Investor Portfolio System</h3><div class="asset">Asset · Investor Analyzer</div></div>
+        <span class="seg hot">Warm ask</span>
+      </div>
+      <div class="line openline"><span class="tag">Open</span><span class="txt">&ldquo;Quick question &mdash; do you work with real estate investors at all?&rdquo;</span></div>
+      <div class="line"><span class="tag yes">If yes</span><span class="txt">&ldquo;Then you&rsquo;ll want to see this. I built a tool that scores six strategies against an investor&rsquo;s actual numbers and flags <em>when</em> it makes sense to buy or sell. Makes you the sharpest person in their corner. Worth 15 minutes?&rdquo;</span></div>
+      <div class="line"><span class="tag no">If no</span><span class="txt">&ldquo;Would you want to? It&rsquo;s the easiest repeat business an agent never taps. I&rsquo;ll show you how I&rsquo;d help you start.&rdquo;</span></div>
+      <div class="show"><span class="dot"></span>Show: six-strategy scoring + DSCR vs. conventional</div>
+    </div>
+
+    <!-- 2 -->
+    <div class="card">
+      <div class="top">
+        <div class="num">02</div>
+        <div class="ttl"><h3>&ldquo;What Kind of Buyer Are You?&rdquo; Quiz</h3><div class="asset">Asset · Decision Profiles</div></div>
+        <span class="seg cold">Send-first</span>
+      </div>
+      <div class="line openline"><span class="tag">Open</span><span class="txt">&ldquo;Do you ever get leads who aren&rsquo;t quite sure what they want yet?&rdquo;</span></div>
+      <div class="line"><span class="tag yes">If yes</span><span class="txt">&ldquo;I&rsquo;ve got a 60-second quiz that sorts a buyer into their real profile and hands them a guide built for how they think. Put your name on it, send it to cold leads to warm them up. Happy to show you how agents are using it.&rdquo;</span></div>
+      <div class="show"><span class="dot"></span>Show: the six profiles + the co-brandable result page</div>
+    </div>
+
+    <!-- 3 -->
+    <div class="card">
+      <div class="top">
+        <div class="num">03</div>
+        <div class="ttl"><h3>The Homebuying Blueprint</h3><div class="asset">Asset · 14-Step Buyer Guide</div></div>
+        <span class="seg cold">Send-first</span>
+      </div>
+      <div class="line openline"><span class="tag">Open</span><span class="txt">&ldquo;How are you handling first-time buyers right now &mdash; do you have something you hand them?&rdquo;</span></div>
+      <div class="line"><span class="tag yes">Either way</span><span class="txt">&ldquo;I turned my buying process into a clean, co-branded guide. Hand it to a nervous first-timer and you look incredibly organized before you&rsquo;ve even met. I&rsquo;ll brand it with your name and photo, free. Might be useful for your buyers &mdash; happy to send a copy.&rdquo;</span></div>
+      <div class="show"><span class="dot"></span>Show: the finished guide with their branding mocked in</div>
+    </div>
+
+    <!-- 4 -->
+    <div class="card">
+      <div class="top">
+        <div class="num">04</div>
+        <div class="ttl"><h3>The Real Cost Planner</h3><div class="asset">Asset · Ownership Cost Planner</div></div>
+        <span class="seg hot">Warm ask</span>
+      </div>
+      <div class="line openline"><span class="tag">Open</span><span class="txt">&ldquo;Ever lose a deal because a buyer panicked about what owning actually costs?&rdquo;</span></div>
+      <div class="line"><span class="tag yes">If yes</span><span class="txt">&ldquo;I built a tool that lays out the real monthly picture &mdash; taxes, insurance, utilities, maintenance &mdash; before they spiral. Buyers who see the full number up front don&rsquo;t get cold feet at the table. Could be interesting depending on your client base &mdash; happy to run it on a real one.&rdquo;</span></div>
+      <div class="show"><span class="dot"></span>Show: full monthly breakdown on a live address</div>
+    </div>
+
+    <!-- 5 -->
+    <div class="card warm">
+      <div class="top">
+        <div class="num">05</div>
+        <div class="ttl"><h3>The Refinance Reactivation</h3><div class="asset">Asset · Refinance Planner</div></div>
+        <span class="seg hot">Warm ask</span>
+      </div>
+      <div class="line openline"><span class="tag">Open</span><span class="txt">&ldquo;When&rsquo;s the last time you had a clean reason to reach back out to past clients?&rdquo;</span></div>
+      <div class="line"><span class="tag yes">Pitch</span><span class="txt">&ldquo;I have a planner that answers the only question that matters &mdash; not &lsquo;what&rsquo;s the rate&rsquo; but &lsquo;does this change your life.&rsquo; A no-pressure excuse to re-touch every client you closed. Routes back to you. Coffee this week?&rdquo;</span></div>
+      <div class="show"><span class="dot"></span>Show: break-even timing + the &ldquo;in human terms&rdquo; view</div>
+    </div>
+
+    <!-- 6 -->
+    <div class="card">
+      <div class="top">
+        <div class="num">06</div>
+        <div class="ttl"><h3>The Gift That Keeps Selling</h3><div class="asset">Asset · Home Health Planner</div></div>
+        <span class="seg cold">Send-first</span>
+      </div>
+      <div class="line openline"><span class="tag">Open</span><span class="txt">&ldquo;What do you give clients after closing to stay top of mind?&rdquo;</span></div>
+      <div class="line"><span class="tag yes">Pitch</span><span class="txt">&ldquo;Whatever you&rsquo;re doing, this stacks on top. A seasonal home-health planner &mdash; Colorado-specific, each task shows what skipping it costs. Your name on it keeps you useful for years, which is where referrals come from. Might be worth a look for your past clients.&rdquo;</span></div>
+      <div class="show"><span class="dot"></span>Show: seasonal tasks + cost-of-skipping economics</div>
+    </div>
+
+    <!-- 7 -->
+    <div class="card warm">
+      <div class="top">
+        <div class="num">07</div>
+        <div class="ttl"><h3>The Move-Up Equity Wake-Up</h3><div class="asset">Asset · Equity &amp; Move-Up Calculator</div></div>
+        <span class="seg hot">Warm ask</span>
+      </div>
+      <div class="line openline"><span class="tag">Open</span><span class="txt">&ldquo;Got past buyers sitting on a pile of equity who don&rsquo;t realize it yet?&rdquo;</span></div>
+      <div class="line"><span class="tag yes">If yes</span><span class="txt">&ldquo;I have a tool that shows a homeowner what they&rsquo;ve built and what it could do &mdash; it tends to wake people up to moving up. That&rsquo;s a listing you create instead of chase. Happy to run it on your past clients if it&rsquo;s useful.&rdquo;</span></div>
+      <div class="show"><span class="dot"></span>Show: equity position &rarr; move-up scenario</div>
+    </div>
+
+    <!-- 8 -->
+    <div class="card">
+      <div class="top">
+        <div class="num">08</div>
+        <div class="ttl"><h3>The Off-Market Readiness Angle</h3><div class="asset">Asset · Pre-Approval Process · BB-04</div></div>
+        <span class="seg hot">Warm ask</span>
+      </div>
+      <div class="line openline"><span class="tag">Open</span><span class="txt">&ldquo;How many of your buyers are losing bidding wars right now?&rdquo;</span></div>
+      <div class="line"><span class="tag yes">If yes</span><span class="txt">&ldquo;Half the problem is they&rsquo;re not truly ready when the right house &mdash; sometimes one that never hits the market &mdash; shows up. I do real pre-approvals, not the fast letter that blows up in week eleven. Want to compare notes on getting your buyers to the front of the line?&rdquo;</span></div>
+      <div class="show"><span class="dot"></span>Show: the &ldquo;house that never hit the market&rdquo; story</div>
+    </div>
+
+    <!-- 9 -->
+    <div class="card warm">
+      <div class="top">
+        <div class="num">09</div>
+        <div class="ttl"><h3>The Listing Promotion System</h3><div class="asset">Asset · Agent Flywheel</div></div>
+        <span class="seg hot">Warmest call</span>
+      </div>
+      <div class="line openline"><span class="tag">Open</span><span class="txt">&ldquo;I&rsquo;ve been promoting your listings here and there &mdash; want to make that an actual system instead of random acts?&rdquo;</span></div>
+      <div class="line"><span class="tag yes">Pitch</span><span class="txt">Pure reciprocity &mdash; you&rsquo;re already doing the favor. &ldquo;Let&rsquo;s map how I promote your listings consistently and send each other the right people. 20 minutes?&rdquo;</span></div>
+      <div class="show"><span class="dot"></span>Show: how the flywheel sends agents repeat business</div>
+    </div>
+
+    <!-- 10 -->
+    <div class="card">
+      <div class="top">
+        <div class="num">10</div>
+        <div class="ttl"><h3>The Authority Drop</h3><div class="asset">Asset · Book One</div></div>
+        <span class="seg cold">Send-first</span>
+      </div>
+      <div class="line openline"><span class="tag">Open</span><span class="txt">Send it, don&rsquo;t ask. Mail a signed copy or a single chapter with a note.</span></div>
+      <div class="line"><span class="tag yes">Note</span><span class="txt">&ldquo;Thought of you &mdash; this is the buyer process I put my clients through. No ask, just useful for yours.&rdquo;</span></div>
+      <div class="line"><span class="tag no">Week later</span><span class="txt">&ldquo;Did the chapter land? I&rsquo;d love to grab coffee.&rdquo;</span></div>
+      <div class="show"><span class="dot"></span>Send: signed book or chapter as an open-house leave-behind</div>
+    </div>
+
+  </div>
+</div>
+
+<section class="playbook">
+  <div class="wrap">
+    <div class="lead" style="padding:30px 0 0">
+      <span class="sec-num">Running the 30 Days</span>
+      <h2>Match the hook to the relationship.</h2>
+    </div>
+    <div class="pb-grid">
+      <div class="pb hot">
+        <h4>Talked in the last 30 days <span class="pill">Warm</span></h4>
+        <p>Go direct. These contacts already trust the voice, so lead with the meeting asks where you simply open a tool and ask for time.</p>
+        <div class="nums">Use hooks 01 · 04 · 05 · 07 · 08 · 09</div>
+      </div>
+      <div class="pb cold">
+        <h4>Quiet for a year+ <span class="pill">Cold</span></h4>
+        <p>Re-enter with a gift, not a pitch. Send something useful first, then the follow-up call has a reason to exist that isn&rsquo;t &ldquo;just checking in.&rdquo;</p>
+        <div class="nums">Use hooks 02 · 03 · 06 · 10</div>
+      </div>
+    </div>
+    <div class="cadence">
+      <strong>Cadence:</strong> 5&ndash;7 touches a day clears all 150 inside the month with room to circle back. Log every reply, and let the second touch be the follow-up &mdash; the relationship continues because you&rsquo;re useful, not because you asked twice.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="wordmark">The Handy Lender<span class="tm" style="color:var(--brass)">&trade;</span></div>
+    <p class="law">Users should feel guidance, never machinery. Lead with the tool; let the meeting follow.</p>
+    <div class="meta">30-Day Agent Sprint · Call Sheet v1.0</div>
+  </div>
+</footer>
+
+</body>
+</html>
