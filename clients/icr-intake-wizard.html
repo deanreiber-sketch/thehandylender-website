@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investor Clarity Review™ — Your Portfolio Analysis | Handy Lender</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0F1F2E;--navy2:#142030;--navy3:#1A2D40;--navy4:#1E3347;
+  --teal:#2DD4BF;--teal2:#1A6B62;--teal-bg:rgba(45,212,191,.1);
+  --gold:#F59E0B;--red:#F87171;--green:#4ADE80;--green-bg:rgba(74,222,128,.1);
+  --text:#E2E8F0;--text2:#94A3B8;--text3:#4A5568;
+  --border:#1E3347;--border2:#2A4560;
+  --r:8px;--rl:12px;
+}
+html,body{background:var(--navy);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh}
+
+/* ── INTAKE WRAPPER ── */
+.intake-wrap{max-width:640px;margin:0 auto;padding:2rem 1.25rem 6rem}
+.intake-logo{display:flex;align-items:center;gap:12px;margin-bottom:2.5rem}
+.intake-logo img{height:32px}
+.intake-logo-sep{width:1px;height:24px;background:var(--border2)}
+.intake-logo-text{font-size:13px;font-weight:600;color:var(--text2)}
+
+/* Progress bar */
+.progress-wrap{margin-bottom:2rem}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:8px}
+.progress-track{height:6px;background:var(--navy3);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:var(--teal);border-radius:3px;transition:width .4s ease}
+.step-dots{display:flex;gap:8px;margin-top:10px;justify-content:center}
+.step-dot{width:8px;height:8px;border-radius:50%;background:var(--navy3);transition:.2s}
+.step-dot.done{background:var(--teal)}
+.step-dot.active{background:var(--teal);box-shadow:0 0 0 3px rgba(45,212,191,.3)}
+
+/* Screen */
+.screen{display:none;animation:fadeIn .3s ease}
+.screen.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.screen-header{margin-bottom:1.75rem}
+.screen-title{font-family:'DM Serif Display',serif;font-size:28px;color:var(--text);margin-bottom:8px;line-height:1.2}
+.screen-sub{font-size:14px;color:var(--text2);line-height:1.6}
+
+/* Cards */
+.card{background:var(--navy2);border:1px solid var(--border);border-radius:var(--rl);padding:1.25rem;margin-bottom:1rem}
+.card-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.card-title-accent{color:var(--teal)}
+
+/* Fields */
+.field-group{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.field-group.full{grid-template-columns:1fr}
+.field-group.three{grid-template-columns:1fr 1fr 1fr}
+.field{display:flex;flex-direction:column;gap:5px}
+label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.06em}
+label .hint{font-size:10px;color:var(--text3);text-transform:none;letter-spacing:0;font-weight:400;margin-left:4px}
+input,select{background:var(--navy3);border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:10px 12px;width:100%;transition:.15s}
+input:focus,select:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(45,212,191,.12)}
+input::placeholder{color:var(--text3)}
+select option{background:var(--navy3)}
+.input-prefix{position:relative}
+.input-prefix span{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:13px;pointer-events:none}
+.input-prefix input{padding-left:22px}
+.input-suffix{position:relative}
+.input-suffix span{position:absolute;right:11px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:13px;pointer-events:none}
+.input-suffix input{padding-right:28px}
+
+/* Buttons */
+.btn-primary{background:var(--teal);color:var(--navy);border:none;border-radius:var(--r);padding:13px 28px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;width:100%;transition:.15s}
+.btn-primary:hover{opacity:.9}
+.btn-secondary{background:none;color:var(--text2);border:1px solid var(--border2);border-radius:var(--r);padding:12px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:.15s}
+.btn-secondary:hover{border-color:var(--text2);color:var(--text)}
+.btn-danger{background:none;color:var(--red);border:1px solid rgba(248,113,113,.3);border-radius:6px;padding:6px 12px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-add{background:var(--teal-bg);color:var(--teal);border:1.5px dashed var(--teal2);border-radius:var(--r);padding:12px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;width:100%;margin-top:4px;transition:.15s}
+.btn-add:hover{background:rgba(45,212,191,.15)}
+.nav-row{display:flex;gap:10px;margin-top:1.5rem}
+.nav-row .btn-primary{flex:2}
+.nav-row .btn-secondary{flex:1}
+
+/* Property card */
+.prop-card{background:var(--navy3);border:1px solid var(--border2);border-radius:var(--r);padding:1.1rem;margin-bottom:.75rem;position:relative}
+.prop-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.prop-card-label{font-size:13px;font-weight:600;color:var(--text)}
+.prop-card-type{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600}
+.type-I{background:rgba(45,212,191,.15);color:var(--teal)}
+.type-P{background:rgba(96,165,250,.15);color:#60A5FA}
+.collapsible{overflow:hidden;transition:max-height .3s ease;max-height:0}
+.collapsible.open{max-height:2000px}
+
+/* Toggle */
+.toggle-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.toggle-row label{font-size:13px;color:var(--text2);font-weight:400;text-transform:none;letter-spacing:0;flex:1;cursor:pointer}
+input[type=checkbox]{width:16px;height:16px;accent-color:var(--teal);cursor:pointer;flex-shrink:0}
+
+/* Success screen */
+.ici-display{text-align:center;padding:1.5rem 0}
+.ici-number{font-family:'DM Serif Display',serif;font-size:88px;line-height:1;margin-bottom:4px}
+.ici-label{font-size:13px;color:var(--text2)}
+.link-box{background:var(--navy3);border:1px solid var(--teal2);border-radius:var(--r);padding:12px 14px;font-size:12px;color:var(--teal);word-break:break-all;margin:1rem 0;cursor:pointer;position:relative}
+.link-box:hover{background:rgba(45,212,191,.08)}
+.link-copied{position:absolute;top:50%;right:12px;transform:translateY(-50%);font-size:11px;color:var(--teal);font-weight:600;display:none}
+
+/* Sticky bottom nav */
+.sticky-nav{position:fixed;bottom:0;left:0;right:0;background:var(--navy2);border-top:1px solid var(--border);padding:14px 1.25rem;z-index:50}
+.sticky-nav-inner{max-width:640px;margin:0 auto;display:flex;gap:10px}
+
+/* Welcome screen styles */
+.welcome-hero{text-align:center;padding:2rem 0 1.5rem}
+.welcome-hero .big-score{font-family:'DM Serif Display',serif;font-size:72px;color:var(--teal);line-height:1}
+.welcome-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1.5rem 0}
+.welcome-step{background:var(--navy3);border-radius:var(--r);padding:14px;text-align:center}
+.welcome-step-icon{font-size:24px;margin-bottom:6px}
+.welcome-step-label{font-size:11px;color:var(--text2);line-height:1.4}
+
+/* Error state */
+.field-error{border-color:var(--red)!important}
+.error-msg{font-size:11px;color:var(--red);margin-top:3px;display:none}
+.error-msg.show{display:block}
+
+/* Tooltip */
+.tooltip{position:relative;display:inline-block;cursor:help;color:var(--text3)}
+.tooltip:hover::after{content:attr(data-tip);position:absolute;bottom:120%;left:50%;transform:translateX(-50%);background:var(--navy4,var(--navy));border:1px solid var(--border2);color:var(--text2);font-size:11px;padding:6px 10px;border-radius:6px;white-space:nowrap;z-index:100;width:220px;white-space:normal;pointer-events:none}
+
+@media(max-width:560px){
+  .field-group{grid-template-columns:1fr}
+  .field-group.three{grid-template-columns:1fr 1fr}
+  .welcome-steps{grid-template-columns:1fr}
+  .screen-title{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<div class="intake-wrap">
+  <div class="intake-logo">
+    <img src="https://raw.githubusercontent.com/deanreiber-sketch/thehandylender-website/main/HL_Logo_Horizontal_White.png" alt="Handy Lender">
+    <div class="intake-logo-sep"></div>
+    <div class="intake-logo-text">Investor Clarity Review™</div>
+  </div>
+
+  <div class="progress-wrap" id="progress-wrap" style="display:none">
+    <div class="progress-label">
+      <span id="progress-label-text">Getting started</span>
+      <span id="progress-pct">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="step-dots" id="step-dots"></div>
+  </div>
+
+  <!-- ── SCREEN 0: WELCOME ── -->
+  <div class="screen active" id="screen-0">
+    <div class="welcome-hero">
+      <div style="font-size:40px;margin-bottom:12px">📊</div>
+      <div style="font-family:'DM Serif Display',serif;font-size:32px;color:var(--text);margin-bottom:10px;line-height:1.2">Your Investor Clarity Review™</div>
+      <div style="font-size:15px;color:var(--text2);max-width:480px;margin:0 auto;line-height:1.7">In about 15–20 minutes, you'll have a complete analysis of your real estate portfolio — including your Investor Clarity Index™ score, dead equity detection, retirement readiness, and a personalized action plan.</div>
+    </div>
+    <div class="welcome-steps">
+      <div class="welcome-step"><div class="welcome-step-icon">🏠</div><div class="welcome-step-label">Enter your properties one at a time</div></div>
+      <div class="welcome-step"><div class="welcome-step-icon">💰</div><div class="welcome-step-label">Add your income and financial accounts</div></div>
+      <div class="welcome-step"><div class="welcome-step-icon">📈</div><div class="welcome-step-label">Get your full portfolio analysis</div></div>
+    </div>
+    <div class="card" style="background:rgba(45,212,191,.06);border-color:var(--teal2)">
+      <div style="font-size:13px;color:var(--text2);line-height:1.7">
+        🔒 <b style="color:var(--text)">Your data stays private.</b> Everything you enter is stored locally in your browser and encoded in your personal link. Nothing is sent to a server or stored in a database.<br><br>
+        📞 <b style="color:var(--text)">Your advisor reviews the results with you.</b> This tool generates your analysis — your Handy Lender advisor interprets it and builds your strategy.
+      </div>
+    </div>
+    <button class="btn-primary" onclick="startIntake()">Let's get started →</button>
+  </div>
+
+  <!-- ── SCREEN 1: ABOUT YOU ── -->
+  <div class="screen" id="screen-1">
+    <div class="screen-header">
+      <div class="screen-title">Tell us about yourself</div>
+      <div class="screen-sub">Basic information to personalize your analysis.</div>
+    </div>
+    <div class="card">
+      <div class="field-group full"><div class="field">
+        <label>Your full name</label>
+        <input type="text" id="i-name" placeholder="Marcus & Jennifer Webb" autocomplete="name">
+      </div></div>
+      <div class="field-group">
+        <div class="field">
+          <label>Monthly gross salary <span class="hint">(before taxes)</span></label>
+          <div class="input-prefix"><span>$</span><input type="number" id="i-salary" placeholder="18,500" min="0"></div>
+        </div>
+        <div class="field">
+          <label>Monthly bonus <span class="hint">(avg, if any)</span></label>
+          <div class="input-prefix"><span>$</span><input type="number" id="i-bonus" placeholder="3,500" min="0"></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field">
+          <label>Additional monthly income <span class="hint">(rental, consulting, SS)</span></label>
+          <div class="input-prefix"><span>$</span><input type="number" id="i-addl" placeholder="0" min="0"></div>
+        </div>
+        <div class="field">
+          <label>Target retirement timeline</label>
+          <select id="i-retire">
+            <option value="2">Within 2 years</option>
+            <option value="3">3 years</option>
+            <option value="5" selected>5 years</option>
+            <option value="7">7 years</option>
+            <option value="10">10 years</option>
+            <option value="15">15+ years</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-group full"><div class="field">
+        <label>Monthly income needed in retirement</label>
+        <div class="input-prefix"><span>$</span><input type="number" id="i-retire-income" placeholder="12,000" min="0"></div>
+      </div></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="card-title-accent">◈</span> Other monthly debts <span style="font-size:11px;color:var(--text3);font-weight:400">(car loans, credit cards, personal loans — NOT your mortgages)</span></div>
+      <div id="debts-list"></div>
+      <button class="btn-add" onclick="addDebtRow()">+ Add a debt</button>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 2: PROPERTIES ── -->
+  <div class="screen" id="screen-2">
+    <div class="screen-header">
+      <div class="screen-title">Your properties</div>
+      <div class="screen-sub">Add each property separately. Start with your investment properties, then add your primary residence. Include as much detail as you have — estimates are fine for items you're unsure about.</div>
+    </div>
+    <div id="props-list"></div>
+    <button class="btn-add" onclick="addPropCard()" id="add-prop-btn">+ Add a property</button>
+    <div style="margin-top:12px;font-size:12px;color:var(--text3);text-align:center">You can add up to 10 properties · At least 1 required</div>
+  </div>
+
+  <!-- ── SCREEN 3: ASSETS ── -->
+  <div class="screen" id="screen-3">
+    <div class="screen-header">
+      <div class="screen-title">Financial accounts & assets</div>
+      <div class="screen-sub">These help model your retirement readiness and available liquidity. Estimates are fine.</div>
+    </div>
+    <div id="assets-list"></div>
+    <button class="btn-add" onclick="addAssetRow()">+ Add an account</button>
+    <div style="margin-top:10px;font-size:12px;color:var(--text3)">Common accounts: 401(k), IRA, brokerage, savings, crypto</div>
+  </div>
+
+  <!-- ── SCREEN 4: REVIEW + LAUNCH ── -->
+  <div class="screen" id="screen-4">
+    <div class="screen-header">
+      <div class="screen-title">You're all set!</div>
+      <div class="screen-sub">Here's a summary of what you entered. Click "View My Analysis" to see your full Investor Clarity Review™.</div>
+    </div>
+    <div class="card" id="review-summary"></div>
+    <div class="card" style="background:rgba(45,212,191,.06);border-color:var(--teal2)">
+      <div class="card-title"><span class="card-title-accent">◈</span> Your personal link</div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:8px">Bookmark this link to return to your analysis any time. Share it with your advisor.</div>
+      <div class="link-box" id="data-link" onclick="copyLink()">
+        Generating your link...
+        <span class="link-copied" id="link-copied-msg">✓ Copied!</span>
+      </div>
+      <button class="btn-secondary" onclick="copyLink()" style="width:100%;margin-bottom:8px">📋 Copy link</button>
+    </div>
+    <button class="btn-primary" id="launch-btn" onclick="launchTool()">View My Investor Clarity Review™ →</button>
+  </div>
+</div>
+
+<div class="sticky-nav" id="sticky-nav" style="display:none">
+  <div class="sticky-nav-inner" id="sticky-nav-inner"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// INTAKE STATE
+// ═══════════════════════════════════════════════════════════
+let CURRENT_SCREEN = 0;
+const TOTAL_STEPS = 4; // screens 1-4
+let PROP_COUNT = 0;
+let DEBT_COUNT = 0;
+let ASSET_COUNT = 0;
+
+const SCREENS = [
+  {label:'Welcome',       pct:0},
+  {label:'About You',     pct:25},
+  {label:'Properties',    pct:50},
+  {label:'Accounts',      pct:75},
+  {label:'Your Analysis', pct:100},
+];
+
+function startIntake(){
+  document.getElementById('progress-wrap').style.display='block';
+  document.getElementById('sticky-nav').style.display='block';
+  // Init dots
+  const dotsEl=document.getElementById('step-dots');
+  dotsEl.innerHTML=SCREENS.slice(1).map((_,i)=>`<div class="step-dot${i===0?' active':''}" id="dot-${i+1}"></div>`).join('');
+  // Add default debt row
+  addDebtRow();
+  // Add default asset rows
+  addAssetRow('Fidelity 401(k)','retire',285000,25);
+  addAssetRow('High-yield Savings','bank',42000,0);
+  goToScreen(1);
+}
+
+function goToScreen(n){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(`screen-${n}`).classList.add('active');
+  CURRENT_SCREEN=n;
+  updateProgress();
+  updateNav();
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(n===4) buildReviewScreen();
+}
+
+function updateProgress(){
+  const s=SCREENS[CURRENT_SCREEN];
+  document.getElementById('progress-fill').style.width=s.pct+'%';
+  document.getElementById('progress-label-text').textContent=s.label;
+  document.getElementById('progress-pct').textContent=s.pct+'%';
+  for(let i=1;i<SCREENS.length;i++){
+    const dot=document.getElementById(`dot-${i}`);
+    if(!dot) continue;
+    dot.className='step-dot'+(i<CURRENT_SCREEN?' done':i===CURRENT_SCREEN?' active':'');
+  }
+}
+
+function updateNav(){
+  const nav=document.getElementById('sticky-nav-inner');
+  if(CURRENT_SCREEN===0||CURRENT_SCREEN===4){nav.innerHTML='';return;}
+  let html='';
+  if(CURRENT_SCREEN>1) html+=`<button class="btn-secondary" onclick="goToScreen(${CURRENT_SCREEN-1})">← Back</button>`;
+  if(CURRENT_SCREEN<4) html+=`<button class="btn-primary" onclick="nextScreen()">Continue →</button>`;
+  nav.innerHTML=html;
+}
+
+function nextScreen(){
+  if(!validateScreen(CURRENT_SCREEN)) return;
+  goToScreen(CURRENT_SCREEN+1);
+}
+
+function validateScreen(n){
+  if(n===1){
+    const name=document.getElementById('i-name').value.trim();
+    if(!name){alert('Please enter your name to continue.');document.getElementById('i-name').focus();return false;}
+    const sal=parseFloat(document.getElementById('i-salary').value)||0;
+    if(!sal){alert('Please enter your monthly salary (even an estimate is fine).');document.getElementById('i-salary').focus();return false;}
+    return true;
+  }
+  if(n===2){
+    const cards=document.querySelectorAll('.prop-card');
+    if(cards.length===0){alert('Please add at least one property to continue.');return false;}
+    let hasPrimary=false,valid=true;
+    cards.forEach(card=>{
+      const type=card.querySelector('.prop-type-sel').value;
+      const addr=card.querySelector('.prop-addr').value.trim();
+      const val=parseFloat(card.querySelector('.prop-val').value)||0;
+      if(!addr){alert('Please enter an address for each property.');valid=false;}
+      if(!val){alert('Please enter an estimated value for each property.');valid=false;}
+      if(type==='P') hasPrimary=true;
+    });
+    if(!valid) return false;
+    return true;
+  }
+  return true;
+}
+
+// ═══════════════════════════════════════════════════════════
+// DEBT ROWS
+// ═══════════════════════════════════════════════════════════
+function addDebtRow(name='',pmt=0,bal=0){
+  DEBT_COUNT++;
+  const id=`debt-${DEBT_COUNT}`;
+  const row=document.createElement('div');
+  row.className='field-group three';
+  row.id=id;
+  row.style.alignItems='flex-end';
+  row.innerHTML=`
+    <div class="field">
+      <label>Description</label>
+      <input type="text" class="debt-name" value="${name}" placeholder="Car loan, credit card…">
+    </div>
+    <div class="field">
+      <label>Monthly payment</label>
+      <div class="input-prefix"><span>$</span><input type="number" class="debt-pmt" value="${pmt||''}" placeholder="0" min="0"></div>
+    </div>
+    <div class="field">
+      <label>Balance <span class="hint">(optional)</span></label>
+      <div class="input-prefix"><span>$</span>
+        <input type="number" class="debt-bal" value="${bal||''}" placeholder="0" min="0">
+      </div>
+    </div>`;
+  // Add remove button
+  const removeBtn=document.createElement('button');
+  removeBtn.className='btn-danger';
+  removeBtn.style.cssText='margin-top:20px;flex-shrink:0';
+  removeBtn.textContent='✕';
+  removeBtn.onclick=()=>row.remove();
+  row.appendChild(removeBtn);
+  row.style.display='grid';
+  row.style.gridTemplateColumns='1fr 1fr 1fr auto';
+  row.style.gap='10px';
+  row.style.alignItems='flex-end';
+  document.getElementById('debts-list').appendChild(row);
+}
+
+// ═══════════════════════════════════════════════════════════
+// ASSET ROWS
+// ═══════════════════════════════════════════════════════════
+function addAssetRow(name='',type='invest',bal=0,tax=20){
+  ASSET_COUNT++;
+  const id=`asset-${ASSET_COUNT}`;
+  const row=document.createElement('div');
+  row.className='card';
+  row.id=id;
+  row.style.padding='12px';
+  row.innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:flex-end">
+      <div class="field">
+        <label>Account name</label>
+        <input type="text" class="asset-name" value="${name}" placeholder="Fidelity 401(k), Vanguard IRA…">
+      </div>
+      <div class="field" style="min-width:130px">
+        <label>Type</label>
+        <select class="asset-type">
+          <option value="retire" ${type==='retire'?'selected':''}>Retirement (IRA/401k)</option>
+          <option value="invest" ${type==='invest'?'selected':''}>Brokerage / Invest</option>
+          <option value="bank" ${type==='bank'?'selected':''}>Savings / Checking</option>
+          <option value="crypto" ${type==='crypto'?'selected':''}>Crypto</option>
+          <option value="other" ${type==='other'?'selected':''}>Other</option>
+        </select>
+      </div>
+      <div class="field" style="min-width:120px">
+        <label>Balance</label>
+        <div class="input-prefix"><span>$</span><input type="number" class="asset-bal" value="${bal||''}" placeholder="0" min="0"></div>
+      </div>
+      <button class="btn-danger" onclick="document.getElementById('${id}').remove()" style="margin-bottom:0">✕</button>
+    </div>`;
+  document.getElementById('assets-list').appendChild(row);
+}
+
+// ═══════════════════════════════════════════════════════════
+// PROPERTY CARDS
+// ═══════════════════════════════════════════════════════════
+let propIds=[];
+function addPropCard(data={}){
+  if(document.querySelectorAll('.prop-card').length>=10){
+    alert('Maximum 10 properties supported.');return;
+  }
+  PROP_COUNT++;
+  const pid=`prop-${PROP_COUNT}`;
+  propIds.push(pid);
+  const isInv=data.type!=='P';
+  const card=document.createElement('div');
+  card.className='prop-card';
+  card.id=pid;
+  card.innerHTML=`
+    <div class="prop-card-header">
+      <div>
+        <div class="prop-card-label">Property ${PROP_COUNT}</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">Fill in as many fields as you have — estimates are fine</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select class="prop-type-sel" onchange="toggleInvFields('${pid}',this.value)" style="font-size:12px;padding:5px 8px;background:var(--navy);border:1px solid var(--border2);border-radius:6px;color:var(--text)">
+          <option value="I" ${isInv?'selected':''}>Investment Property</option>
+          <option value="P" ${!isInv?'selected':''}>Primary Residence</option>
+        </select>
+        <button class="btn-danger" onclick="removeProp('${pid}')">✕ Remove</button>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <div class="field" style="grid-column:1/-1">
+        <label>Street address</label>
+        <input type="text" class="prop-addr" value="${data.addr||''}" placeholder="2847 Washington St">
+      </div>
+    </div>
+    <div class="field-group three">
+      <div class="field">
+        <label>City, State</label>
+        <input type="text" class="prop-city" value="${data.city||''}" placeholder="Denver, CO">
+      </div>
+      <div class="field">
+        <label>Est. market value</label>
+        <div class="input-prefix"><span>$</span><input type="number" class="prop-val" value="${data.val||''}" placeholder="685,000" min="0"></div>
+      </div>
+      <div class="field">
+        <label>Mortgage balance</label>
+        <div class="input-prefix"><span>$</span><input type="number" class="prop-bal" value="${data.bal||''}" placeholder="398,000" min="0"></div>
+      </div>
+    </div>
+    <div class="field-group three">
+      <div class="field">
+        <label>Interest rate <span class="hint">(%)</span></label>
+        <div class="input-suffix"><input type="number" class="prop-rate" value="${data.rate?+(data.rate*100).toFixed(3):''}" placeholder="5.875" min="0" max="15" step="0.001"><span>%</span></div>
+      </div>
+      <div class="field">
+        <label>Monthly P&amp;I payment</label>
+        <div class="input-prefix"><span>$</span><input type="number" class="prop-pi" value="${data.pi||''}" placeholder="2,768" min="0"></div>
+      </div>
+      <div class="field">
+        <label>Loan term (years)</label>
+        <select class="prop-term" style="padding:10px 12px">
+          <option value="30" ${!data.term||data.term===30?'selected':''}>30-year</option>
+          <option value="15" ${data.term===15?'selected':''}>15-year</option>
+          <option value="20" ${data.term===20?'selected':''}>20-year</option>
+          <option value="10" ${data.term===10?'selected':''}>10-year</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-group three">
+      <div class="field">
+        <label>Monthly HOI <span class="hint">(insurance)</span></label>
+        <div class="input-prefix"><span>$</span><input type="number" class="prop-hoi" value="${data.hoi||''}" placeholder="185" min="0"></div>
+      </div>
+      <div class="field">
+        <label>Monthly property tax</label>
+        <div class="input-prefix"><span>$</span><input type="number" class="prop-tax" value="${data.tax||''}" placeholder="541" min="0"></div>
+      </div>
+      <div class="field">
+        <label>Monthly HOA <span class="hint">(if any)</span></label>
+        <div class="input-prefix"><span>$</span><input type="number" class="prop-hoa" value="${data.hoa||''}" placeholder="0" min="0"></div>
+      </div>
+    </div>
+
+    <!-- HELOC toggle -->
+    <div class="toggle-row" style="margin-bottom:10px">
+      <input type="checkbox" class="prop-has-heloc" id="heloc-cb-${pid}" onchange="toggleHeloc('${pid}',this.checked)" ${data.helocBal?'checked':''}>
+      <label for="heloc-cb-${pid}">This property has a HELOC (Home Equity Line of Credit)</label>
+    </div>
+    <div class="collapsible ${data.helocBal?'open':''}" id="heloc-fields-${pid}">
+      <div class="field-group three" style="margin-bottom:10px">
+        <div class="field">
+          <label>HELOC balance</label>
+          <div class="input-prefix"><span>$</span><input type="number" class="prop-heloc-bal" value="${data.helocBal||''}" placeholder="95,000" min="0"></div>
+        </div>
+        <div class="field">
+          <label>HELOC rate <span class="hint">(%)</span></label>
+          <div class="input-suffix"><input type="number" class="prop-heloc-rate" value="${data.helocRate?+(data.helocRate*100).toFixed(2):''}" placeholder="9.75" min="0" max="25" step="0.01"><span>%</span></div>
+        </div>
+        <div class="field">
+          <label>Monthly HELOC payment</label>
+          <div class="input-prefix"><span>$</span><input type="number" class="prop-heloc-pmt" value="${data.helocPmt||''}" placeholder="771" min="0"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Investment-only fields -->
+    <div class="inv-fields ${isInv?'':'hidden'}" id="inv-fields-${pid}" style="${isInv?'':'display:none'}">
+      <div class="field-group three">
+        <div class="field">
+          <label>Monthly rent</label>
+          <div class="input-prefix"><span>$</span><input type="number" class="prop-rent" value="${data.rent||''}" placeholder="2,800" min="0" onchange="autoScheduleE('${pid}')"></div>
+        </div>
+        <div class="field">
+          <label>Schedule E income <span class="hint tooltip" data-tip="Used for DTI calculation: 75% of gross rent minus PITIA. We can calculate this for you — just enter your rent above.">ℹ (75% of rent)</span></label>
+          <div class="input-prefix"><span>$</span><input type="number" class="prop-sched-e" value="${data.schedE||''}" placeholder="2,100" min="0"></div>
+        </div>
+        <div class="field">
+          <label>Lease end date</label>
+          <input type="date" class="prop-lease" value="${data.leaseEnd||''}">
+        </div>
+      </div>
+      <div class="toggle-row">
+        <input type="checkbox" class="prop-listed" id="listed-cb-${pid}" ${data.listed?'checked':''}>
+        <label for="listed-cb-${pid}">This property is currently listed for sale</label>
+      </div>
+    </div>
+  `;
+  document.getElementById('props-list').appendChild(card);
+  updatePropCount();
+}
+
+function toggleHeloc(pid, show){
+  const el=document.getElementById(`heloc-fields-${pid}`);
+  el.className='collapsible '+(show?'open':'');
+}
+
+function toggleInvFields(pid, type){
+  const el=document.getElementById(`inv-fields-${pid}`);
+  el.style.display=type==='I'?'block':'none';
+}
+
+function autoScheduleE(pid){
+  const card=document.getElementById(pid);
+  const rentEl=card.querySelector('.prop-rent');
+  const scheEl=card.querySelector('.prop-sched-e');
+  const rent=parseFloat(rentEl.value)||0;
+  if(rent>0&&!scheEl.value) scheEl.value=Math.round(rent*0.75);
+}
+
+function removeProp(pid){
+  document.getElementById(pid).remove();
+  updatePropCount();
+}
+
+function updatePropCount(){
+  const count=document.querySelectorAll('.prop-card').length;
+  document.getElementById('add-prop-btn').style.display=count>=10?'none':'block';
+  // Re-label cards
+  document.querySelectorAll('.prop-card').forEach((c,i)=>{
+    c.querySelector('.prop-card-label').textContent=`Property ${i+1}`;
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// BUILD REVIEW SCREEN + DATA ENCODING
+// ═══════════════════════════════════════════════════════════
+function collectData(){
+  const name=document.getElementById('i-name').value.trim()||'My Portfolio';
+  const salary=parseFloat(document.getElementById('i-salary').value)||0;
+  const bonus=parseFloat(document.getElementById('i-bonus').value)||0;
+  const addl=parseFloat(document.getElementById('i-addl').value)||0;
+  const retireYrs=parseInt(document.getElementById('i-retire').value)||5;
+  const retireIncome=parseFloat(document.getElementById('i-retire-income').value)||12000;
+
+  // Debts
+  const debts=[];
+  document.querySelectorAll('[id^="debt-"]').forEach((row,i)=>{
+    const nm=row.querySelector('.debt-name')?.value.trim()||'';
+    const pt=parseFloat(row.querySelector('.debt-pmt')?.value)||0;
+    const bl=parseFloat(row.querySelector('.debt-bal')?.value)||0;
+    if(nm||pt) debts.push({id:`d${i}`,name:nm||'Debt',pmt:pt,bal:bl});
+  });
+
+  // Properties
+  const props=[];
+  document.querySelectorAll('.prop-card').forEach((card,i)=>{
+    const type=card.querySelector('.prop-type-sel').value;
+    const rate=parseFloat(card.querySelector('.prop-rate').value)||0;
+    const helocRate=parseFloat(card.querySelector('.prop-heloc-rate').value)||0;
+    const rent=parseFloat(card.querySelector('.prop-rent')?.value)||0;
+    const schedE=parseFloat(card.querySelector('.prop-sched-e')?.value)||(rent*0.75);
+    const hasHeloc=card.querySelector('.prop-has-heloc').checked;
+    props.push({
+      id:`p${i}`,
+      addr:card.querySelector('.prop-addr').value.trim()||`Property ${i+1}`,
+      city:card.querySelector('.prop-city').value.trim()||'',
+      type,
+      val:parseFloat(card.querySelector('.prop-val').value)||0,
+      bal:parseFloat(card.querySelector('.prop-bal').value)||0,
+      rate:rate/100,
+      pi:parseFloat(card.querySelector('.prop-pi').value)||0,
+      hoi:parseFloat(card.querySelector('.prop-hoi').value)||0,
+      tax:parseFloat(card.querySelector('.prop-tax').value)||0,
+      hoa:parseFloat(card.querySelector('.prop-hoa').value)||0,
+      mi:0,
+      helocBal:hasHeloc?(parseFloat(card.querySelector('.prop-heloc-bal').value)||0):0,
+      helocRate:hasHeloc?helocRate/100:0,
+      helocPmt:hasHeloc?(parseFloat(card.querySelector('.prop-heloc-pmt').value)||0):0,
+      rent:type==='I'?rent:0,
+      leaseEnd:type==='I'?(card.querySelector('.prop-lease').value||''):'',
+      schedE:type==='I'?schedE:0,
+      sellCost:0.06,
+      listed:card.querySelector('.prop-listed')?.checked||false,
+    });
+  });
+
+  // Assets
+  const assets=[];
+  document.querySelectorAll('[id^="asset-"]').forEach((row,i)=>{
+    const nm=row.querySelector('.asset-name')?.value.trim()||'';
+    const tp=row.querySelector('.asset-type')?.value||'invest';
+    const bl=parseFloat(row.querySelector('.asset-bal')?.value)||0;
+    const tx=tp==='retire'?25:tp==='invest'?20:0;
+    if(nm||bl) assets.push({id:`a${i}`,name:nm||'Account',type:tp,bal:bl,tax:tx});
+  });
+
+  return {name,salary,bonus,addl,retireYrs,retireIncome,debts,props,assets};
+}
+
+function buildReviewScreen(){
+  const data=collectData();
+  const totalProps=data.props.length;
+  const invProps=data.props.filter(p=>p.type==='I').length;
+  const totalRent=data.props.reduce((a,p)=>a+p.rent,0);
+  const totalAssets=data.assets.reduce((a,x)=>a+x.bal,0);
+  const totalDebt=data.debts.reduce((a,d)=>a+d.pmt,0);
+
+  document.getElementById('review-summary').innerHTML=`
+    <div class="card-title"><span class="card-title-accent">◈</span> What we'll analyze</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+      <div style="background:var(--navy3);border-radius:var(--r);padding:12px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Properties</div>
+        <div style="font-size:22px;font-family:'DM Serif Display',serif;color:var(--text)">${totalProps}</div>
+        <div style="font-size:11px;color:var(--text2)">${invProps} investment · ${totalProps-invProps} primary</div>
+      </div>
+      <div style="background:var(--navy3);border-radius:var(--r);padding:12px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Monthly rent income</div>
+        <div style="font-size:22px;font-family:'DM Serif Display',serif;color:var(--green)">$${totalRent.toLocaleString()}</div>
+        <div style="font-size:11px;color:var(--text2)">gross monthly</div>
+      </div>
+      <div style="background:var(--navy3);border-radius:var(--r);padding:12px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Financial assets</div>
+        <div style="font-size:22px;font-family:'DM Serif Display',serif;color:var(--teal)">$${Math.round(totalAssets/1000)}K</div>
+        <div style="font-size:11px;color:var(--text2)">${data.assets.length} account${data.assets.length!==1?'s':''}</div>
+      </div>
+      <div style="background:var(--navy3);border-radius:var(--r);padding:12px">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">Monthly income</div>
+        <div style="font-size:22px;font-family:'DM Serif Display',serif;color:var(--text)">$${(data.salary+data.bonus+data.addl).toLocaleString()}</div>
+        <div style="font-size:11px;color:var(--text2)">salary + bonus + other</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--text2)">Client: <b style="color:var(--text)">${data.name}</b> · Retirement target: <b style="color:var(--text)">${data.retireYrs} years</b></div>
+  `;
+
+  // Build link
+  buildDataLink(data);
+}
+
+function buildDataLink(data){
+  try{
+    const payload=JSON.stringify(data);
+    const encoded=btoa(encodeURIComponent(payload));
+    const url=`${location.origin}${location.pathname.replace('icr-intake.html','icr-client.html')}?d=${encoded}`;
+    const linkEl=document.getElementById('data-link');
+    linkEl.dataset.url=url;
+    // Truncate display
+    linkEl.innerHTML=url.length>80?url.substring(0,80)+'...<span class="link-copied" id="link-copied-msg">✓ Copied!</span>':url+'<span class="link-copied" id="link-copied-msg">✓ Copied!</span>';
+    // Store for launch
+    window._launchData=data;
+  }catch(e){
+    document.getElementById('data-link').textContent='Link unavailable — data may be too large';
+  }
+}
+
+function copyLink(){
+  const url=document.getElementById('data-link').dataset.url;
+  if(!url) return;
+  navigator.clipboard.writeText(url).then(()=>{
+    const msg=document.getElementById('link-copied-msg');
+    if(msg){msg.style.display='block';setTimeout(()=>msg.style.display='none',2000);}
+  }).catch(()=>{
+    prompt('Copy this link:',url);
+  });
+}
+
+function launchTool(){
+  if(!window._launchData){buildReviewScreen();}
+  // Store in sessionStorage for the tool to pick up
+  try{
+    sessionStorage.setItem('icr_intake_data', JSON.stringify(window._launchData));
+    // Redirect to client tool
+    const encoded=btoa(encodeURIComponent(JSON.stringify(window._launchData)));
+    window.location.href=`icr-client.html?d=${encoded}`;
+  }catch(e){
+    alert('Data is too large for URL. Please reduce number of properties or try a different browser.');
+  }
+}
+</script>
+</body>
+</html>
