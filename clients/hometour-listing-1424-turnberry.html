@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HomeTour — 1424 Turnberry Drive</title>
+<style>
+  :root{
+    --paper:#E8E9E4; --surface:#F3F4F0; --ink:#22261F; --muted:#6B7065;
+    --faint:#8E9389; --line:#CFD2C8; --line-soft:#DEE0D8;
+    --green:#4F6B57; --green-deep:#3C5344; --amber:#8C6E27; --amber-bg:#EDE7D6;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#D9DBD3;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;display:flex;justify-content:center}
+  .app{width:100%;max-width:440px;min-height:100vh;background:var(--paper);padding:22px 20px 40px}
+  .serif{font-family:Georgia,"Iowan Old Style",Palatino,ui-serif,serif}
+  .brand{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12.5px;letter-spacing:.04em;margin-bottom:24px}
+  .brand .dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block}
+  .hidden{display:none}
+  .btn{display:inline-block;background:var(--green);color:#fff;text-decoration:none;padding:13px 22px;border-radius:5px;font-size:15px;font-weight:600;border:none;cursor:pointer;font-family:inherit;width:100%;text-align:center}
+  .btn:hover{background:var(--green-deep)}
+  .btn.ghost{background:transparent;color:var(--green-deep);border:1px solid var(--line)}
+  .btn.ghost:hover{background:var(--surface)}
+  .link{background:none;border:none;padding:14px 0 0;margin:0;cursor:pointer;color:var(--green-deep);font-size:13.5px;font-family:inherit;text-decoration:underline;text-underline-offset:3px;display:block}
+
+  /* property card (shared) */
+  .prop h1{font-size:25px;line-height:1.15;margin:0 0 5px;font-weight:600}
+  .prop .place{color:var(--muted);font-size:14px;margin:0 0 14px}
+  .spec{display:flex;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:20px}
+  .spec div{flex:1;padding:9px 0;text-align:center;border-right:1px solid var(--line-soft)}
+  .spec div:last-child{border-right:none}
+  .spec .n{font-size:15px;font-weight:600}
+  .spec .l{font-size:11px;color:var(--faint);margin-top:2px}
+
+  /* landing */
+  .land .lead{font-size:13px;color:var(--muted);margin-bottom:4px}
+  .land .ask{font-size:15px;font-weight:600;margin:22px 0 12px}
+  .land .btns{display:flex;flex-direction:column;gap:10px}
+
+  /* quiz */
+  .dots{display:flex;gap:6px;margin-bottom:22px}
+  .dots span{height:4px;flex:1;background:var(--line);border-radius:2px;transition:background .2s}
+  .dots span.on{background:var(--green)}
+  .qtext{font-size:20px;line-height:1.3;margin:0 0 18px;font-weight:600}
+  .opt{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:14px 16px;margin-bottom:10px;font-family:inherit;font-size:15px;color:var(--ink);cursor:pointer;transition:border-color .12s,background .12s}
+  .opt:hover{border-color:var(--green);background:#fff}
+  .opt.sel{border-color:var(--green);background:#fff;box-shadow:inset 0 0 0 1px var(--green)}
+  .qnav{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+  .qback{background:none;border:none;color:var(--muted);font-family:inherit;font-size:13px;cursor:pointer;padding:8px 0}
+
+  /* reveal */
+  .reveal .k{font-size:12.5px;color:var(--faint);margin-bottom:6px}
+  .reveal .name{font-size:30px;font-weight:600;line-height:1.1;margin-bottom:6px}
+  .reveal .def{font-size:15px;color:var(--green-deep);font-weight:600;margin-bottom:16px}
+  .reveal .body{font-size:15.5px;line-height:1.55;margin-bottom:24px}
+
+  /* scorecard */
+  .profileband{background:var(--surface);border:1px solid var(--line-soft);border-radius:4px;padding:13px 15px;margin-bottom:20px}
+  .profileband .pk{font-size:11.5px;color:var(--faint)}
+  .profileband .pn{font-size:16px;font-weight:600;margin:2px 0 4px}
+  .profileband .pb{font-size:13px;color:var(--muted);line-height:1.45}
+  .upsell{background:var(--surface);border:1px dashed var(--line);border-radius:4px;padding:11px 14px;margin-bottom:20px;font-size:13px;color:var(--muted)}
+  .upsell button{background:none;border:none;color:var(--green-deep);font-family:inherit;font-size:13px;font-weight:600;text-decoration:underline;text-underline-offset:2px;cursor:pointer;padding:0;margin-top:2px}
+  .scalehint{font-size:11.5px;color:var(--faint);margin-bottom:10px}
+  .crit{padding:12px 0;border-bottom:1px solid var(--line-soft)}
+  .crit:last-child{border-bottom:none}
+  .crit .row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+  .crit .clabel{font-size:14.5px}
+  .crit .cval{font-size:12.5px;color:var(--faint);font-variant-numeric:tabular-nums}
+  .marks{display:flex;gap:6px}
+  .mark{flex:1;height:19px;border:1px solid var(--line);border-radius:3px;background:transparent;cursor:pointer;padding:0;transition:background .12s,border-color .12s}
+  .mark[aria-pressed="true"]{background:var(--green);border-color:var(--green)}
+  .crit.low .marks{max-width:62%}
+  .crit.low .mark{height:12px;border-color:var(--line-soft)}
+  .crit.low .mark[aria-pressed="true"]{background:var(--faint);border-color:var(--faint)}
+  .crit.low .cnote{font-size:12px;color:var(--faint);margin-top:7px;font-style:italic}
+  .flagbtn{background:none;border:none;padding:8px 0 0;margin:0;cursor:pointer;color:var(--faint);font-family:inherit;font-size:12px}
+  .flagbtn.on{color:var(--amber);font-weight:600}
+  .flagbox{display:none;margin-top:8px}
+  .flagbox.open{display:block}
+  .flagbox input{width:100%;border:1px solid var(--line);border-radius:3px;padding:8px 10px;font-family:inherit;font-size:13px;background:#fff}
+  .watch{background:var(--amber-bg);border-left:3px solid var(--amber);padding:12px 15px;margin:16px 0 4px;border-radius:0 3px 3px 0}
+  .watch .wt{font-size:13px;font-weight:600;color:var(--ink)}
+  .watch .wattr{font-size:11px;color:var(--amber);margin:1px 0 6px;font-weight:600}
+  .watch p{margin:0;font-size:13px;line-height:1.5;color:#4d4632}
+  .feeling{margin:30px 0 4px}
+  .feeling .fq{font-size:15px;font-weight:600;margin-bottom:3px}
+  .feeling .fsub{font-size:12.5px;color:var(--faint);margin-bottom:14px}
+  .slwrap{display:flex;align-items:center;gap:14px}
+  input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:3px;border-radius:3px;background:var(--line);outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--green);cursor:pointer;border:3px solid var(--paper);box-shadow:0 0 0 1px var(--green)}
+  input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--green);cursor:pointer;border:3px solid var(--paper);box-shadow:0 0 0 1px var(--green)}
+  .fval{font-family:Georgia,ui-serif,serif;font-size:22px;min-width:40px;text-align:right}
+  .read{margin-top:30px;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--surface)}
+  .scores{display:flex}
+  .scores .s{flex:1;padding:18px 14px 16px;text-align:center}
+  .scores .s.fit{border-right:1px solid var(--line)}
+  .scores .num{font-family:Georgia,ui-serif,serif;font-size:44px;line-height:1;font-weight:400}
+  .scores .fit .num{color:var(--green)}
+  .scores .lab{font-size:12px;color:var(--muted);margin-top:7px}
+  .interp{padding:15px 16px;border-top:1px solid var(--line);font-size:13.5px;line-height:1.55}
+  .interp .tag{font-weight:600;color:var(--green-deep);display:block;margin-bottom:3px;font-size:12.5px}
+  .revisit{margin-top:20px;border:1px solid var(--line);border-radius:4px;padding:14px 15px;background:var(--paper);display:none}
+  .revisit.show{display:block}
+  .revisit h3{margin:0 0 10px;font-size:13.5px;font-weight:600}
+  .revisit .ri{font-size:13px;padding:6px 0;border-top:1px solid var(--line-soft)}
+  .revisit .ri:first-of-type{border-top:none}
+  .revisit .ri .rc{font-size:11px;color:var(--faint)}
+  .disp{margin-top:26px}
+  .disp .dq{font-size:15px;font-weight:600;margin-bottom:12px}
+  .chips{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .chip{padding:12px 10px;border:1px solid var(--line);border-radius:4px;background:transparent;font-family:inherit;font-size:14px;color:var(--ink);cursor:pointer;text-align:center;transition:background .12s,border-color .12s,color .12s}
+  .chip[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="brand"><span class="dot"></span>the handy lender · hometour</div>
+
+  <!-- LANDING (listing path) -->
+  <section id="landView" class="land">
+    <div class="lead">Touring homes today?</div>
+    <div class="prop">
+      <h1 class="serif">Could 1424 Turnberry Drive be the right home for you?</h1>
+      <div class="place">Castle Rock, CO 80104 · Sawgrass Townhomes at Plum Creek</div>
+      <div class="spec">
+        <div><div class="n">2</div><div class="l">beds</div></div>
+        <div><div class="n">2.5</div><div class="l">baths</div></div>
+        <div><div class="n">2-car</div><div class="l">garage</div></div>
+        <div><div class="n">$405k</div><div class="l">price</div></div>
+      </div>
+    </div>
+    <div class="ask">Want us to personalize what you should pay attention to?</div>
+    <div class="btns">
+      <button class="btn" id="wantPersonalize">Yes — personalize my tour</button>
+      <button class="btn ghost" id="justShow">No — just show me the home</button>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quizView" class="hidden">
+    <div class="dots" id="dots"></div>
+    <div class="qtext" id="qtext"></div>
+    <div id="opts"></div>
+    <div class="qnav">
+      <button class="qback hidden" id="backBtn">← back</button>
+      <span></span>
+      <button class="link" id="seeProfile" style="padding-top:0;display:none">See your profile →</button>
+    </div>
+  </section>
+
+  <!-- REVEAL -->
+  <section id="revealView" class="reveal hidden">
+    <div class="k">Your buyer profile</div>
+    <div class="name serif" id="revName"></div>
+    <div class="def" id="revDef"></div>
+    <div class="body" id="revBody"></div>
+    <button class="btn" id="toScorecard">See your HomeTour for this home →</button>
+    <button class="link" id="retake">Retake the quiz</button>
+  </section>
+
+  <!-- SCORECARD -->
+  <section id="scoreView" class="hidden">
+    <div class="prop">
+      <h1 class="serif">1424 Turnberry Drive</h1>
+      <div class="place">Castle Rock, CO 80104 · Sawgrass Townhomes at Plum Creek</div>
+      <div class="spec">
+        <div><div class="n">2</div><div class="l">beds</div></div>
+        <div><div class="n">2.5</div><div class="l">baths</div></div>
+        <div><div class="n">2-car</div><div class="l">garage</div></div>
+        <div><div class="n">$405k</div><div class="l">price</div></div>
+      </div>
+    </div>
+    <div class="profileband" id="profileband">
+      <div class="pk">Tuned for your profile</div>
+      <div class="pn serif" id="sbName"></div>
+      <div class="pb" id="sbBody"></div>
+    </div>
+    <div class="upsell" id="upsell" style="display:none">
+      Not personalized yet — want the scorecard tuned to what matters to <em>you</em>?
+      <button id="upsellBtn">Take the 2-minute quiz</button>
+    </div>
+    <div class="scalehint">Rate each 1–5 · 1 = weak, 5 = strong. Tap a criterion to flag it for later.</div>
+    <div id="crits"></div>
+    <div class="watch"><div class="wt">Worth a closer look</div><div class="wattr">From Dean's construction &amp; financing perspective</div><p id="watchP"></p></div>
+
+    <section class="feeling">
+      <div class="fq">Now set the scorecard aside.</div>
+      <div class="fsub">How do you actually feel about this home?</div>
+      <div class="slwrap"><input type="range" id="feeling" min="1" max="10" step="1" value="6"><span class="fval serif" id="feelingVal">6</span></div>
+    </section>
+
+    <section class="read" aria-live="polite">
+      <div class="scores">
+        <div class="s fit"><div class="num serif" id="fitNum">—</div><div class="lab">Fit for your priorities</div></div>
+        <div class="s"><div class="num serif" id="feelNum">6</div><div class="lab">How you feel</div></div>
+      </div>
+      <div class="interp" id="interp"></div>
+    </section>
+
+    <section class="revisit" id="revisit"><h3>Questions &amp; things to revisit</h3><div id="revisitList"></div></section>
+
+    <section class="disp">
+      <div class="dq">How are you leaning?</div>
+      <div class="chips" id="chips">
+        <button class="chip" data-d="love">Love it</button>
+        <button class="chip" data-d="interested">Interested</button>
+        <button class="chip" data-d="maybe">Maybe</button>
+        <button class="chip" data-d="not">Not for me</button>
+      </div>
+    </section>
+    <button class="link" id="retake2">Start over</button>
+  </section>
+</div>
+
+<script>
+const LBL={location:"Location",layout:"Layout & flow",kitchen:"Kitchen",condition:"Condition",primary_suite:"Primary suite",yard:"Yard / outdoor",neighborhood:"Neighborhood",value:"Value for the price",structural_condition:"Structural condition",major_systems:"Major systems",cosmetic_condition:"Cosmetic condition",improvement_opportunity:"Improvement opportunity",layout_potential:"Layout & potential",monthly_cost:"Monthly cost",rentability:"Rentability / numbers"};
+
+const A={
+  neutral:{label:"",def:"",body:"",crit:[["location",3],["layout",3],["kitchen",3],["condition",3],["primary_suite",3],["yard",3],["neighborhood",3],["value",3]],
+    watch:"On any home, ask the age of the roof, HVAC, and water heater, note how water drains away from the foundation, and get clear on what the HOA covers — those shape your real cost of ownership."},
+  emotional:{label:"The Emotional Buyer",def:"You lead with feeling — and know it fast.",body:"You lead with feeling, and that's a strength. We've tuned your HomeTour to honor it — and to quietly make sure the facts get a look before you fall all the way in.",crit:[["kitchen",5],["primary_suite",5],["layout",4],["neighborhood",4],["condition",4],["value",4],["location",3],["yard",3]],watch:"Fall for it — then check the list. Give Condition and Value an honest score, and set your walk-away number before you decide."},
+  overwhelmed:{label:"The Overwhelmed Buyer",def:"You do your homework — sometimes so much it's hard to land.",body:"You do your homework, sometimes so thoroughly it's hard to land. We've simplified your HomeTour to the few things that actually decide it — so the search starts to feel like a path.",crit:[["value",5],["layout",5],["location",4],["condition",4]],watch:"You don't need a perfect answer, just a clear one. If a home clears your top few, that's enough to move forward."},
+  optimizer:{label:"The Optimizer",def:"You want the best — the right home at the right terms.",body:"You want the best — the right home at the right terms. We've tuned your HomeTour to help you tell real optimization from chasing a perfect that doesn't exist.",crit:[["value",5],["condition",4],["layout",4],["location",4],["neighborhood",4],["kitchen",3],["primary_suite",3],["yard",3]],watch:"No home scores a 10 on everything. Name your two non-negotiables — chasing perfection on the rest costs you the right house."},
+  renovator:{label:"The Renovator",def:"You see potential where others see projects.",body:"You see potential where other buyers see projects. We've tuned your HomeTour to help you separate a worthwhile opportunity from an expensive problem.",crit:[["layout_potential",5],["structural_condition",5],["improvement_opportunity",5],["major_systems",4],["location",4],["value",4],["neighborhood",3],["cosmetic_condition",1]],watch:"Dated finishes are opportunity; failing systems and structure are risk. Check roof, HVAC, electrical, plumbing, and foundation before you mentally spend the renovation budget."},
+  stretch:{label:"The Stretch Buyer",def:"You're reaching for the home you really want.",body:"You're reaching for the home you really want. We've tuned your HomeTour to keep the dream and the monthly reality in view at the same time.",crit:[["primary_suite",5],["monthly_cost",5],["kitchen",4],["yard",4],["layout",4],["neighborhood",4],["location",4],["value",4]],watch:"Score the monthly payment the way you score the primary suite. Could you live this payment comfortably for three months straight? That's the real test."},
+  wait_for_rates:{label:"The Wait-for-Rates Buyer",def:"You're watching the market closely.",body:"You're watching the market closely. We've tuned your HomeTour to help you judge the home on its own merits — the rate is a separate, shorter decision.",crit:[["location",4],["layout",4],["condition",4],["value",4],["neighborhood",4],["kitchen",3],["primary_suite",3],["yard",3]],watch:"Score the home, not the rate. The right home is a long decision; the rate is a short one — and refinancing later is on us."},
+  investor:{label:"The Investor-Minded Buyer",def:"You run the numbers before the feelings.",body:"You run the numbers before the feelings. We've tuned your HomeTour around value and return — with one nudge to remember livability if you'll live there.",crit:[["value",5],["neighborhood",5],["rentability",5],["condition",4],["location",4],["layout",3],["yard",3],["kitchen",2],["primary_suite",2]],watch:"The numbers matter — and if you'll live here, so does whether you'll want to. Don't let a clean spreadsheet talk you out of a home you'd actually enjoy."},
+  safety_seeker:{label:"The Safety-Seeker",def:"You want certainty and no surprises.",body:"You want certainty and no surprises. We've tuned your HomeTour to help you find security in the facts and the process — not in waiting for zero risk.",crit:[["condition",5],["value",5],["neighborhood",4],["location",4],["layout",3],["kitchen",3],["primary_suite",3],["yard",3]],watch:"A strong home with an honest inspection and the right contingencies is a safe decision. Certainty comes from the process, not from waiting for zero risk."}
+};
+
+const QUIZ=[
+  {q:"When you walk into a home you love, what happens first?",o:[["I just feel it — I know almost right away",{emotional:2}],["I start seeing what I'd change or improve",{renovator:2}],["I start doing the math on it",{investor:2,optimizer:1}],["I notice everything that might be a problem",{safety_seeker:2}],["I feel a bit overwhelmed — so many options",{overwhelmed:2}]]},
+  {q:"A dated, ugly kitchen is mostly…",o:[["A dealbreaker — I want it move-in ready",{emotional:1,safety_seeker:1}],["An opportunity — I can fix that",{renovator:2}],["A price negotiation",{investor:1,optimizer:1}],["Fine, if the payment still works",{stretch:2}]]},
+  {q:"Which sounds most like you right now?",o:[["I'm stretching to get the home I really want",{stretch:2}],["I want the best value for the money",{optimizer:2,investor:1}],["I want to feel safe and not overpay",{safety_seeker:2}],["I'm waiting to see what rates or the market do",{wait_for_rates:2}],["I keep comparing and can't quite decide",{overwhelmed:2}]]},
+  {q:"What matters most in the home itself?",o:[["That it feels like home",{emotional:2}],["Good bones and potential",{renovator:2}],["The numbers work long-term",{investor:2}],["Room to grow and the lifestyle",{stretch:2}],["That it's solid and low-risk",{safety_seeker:2}]]},
+  {q:"What's most likely to keep you from making an offer?",o:[["Waiting on rates or the market",{wait_for_rates:2}],["Second-guessing — I'm not sure",{overwhelmed:2,safety_seeker:1}],["Nothing's been quite perfect",{optimizer:2}],["Affording the one I actually love",{stretch:1,emotional:1}],["Worried about a costly mistake",{safety_seeker:2}]]},
+  {q:"How do you make the final call?",o:[["Gut — when it's right, it's right",{emotional:2}],["I need a clear framework, or a nudge that it's okay",{overwhelmed:2}],["I optimize the details first",{optimizer:2}],["I run the deal and the return",{investor:2}],["I wait for the right moment in the market",{wait_for_rates:2}]]}
+];
+const TIEBREAK=["renovator","stretch","investor","safety_seeker","optimizer","emotional","wait_for_rates","overwhelmed"];
+
+const st={qi:0,answers:[],archetype:"neutral",scores:{},feeling:6,flags:{}};
+const $=id=>document.getElementById(id);
+function show(v){["landView","quizView","revealView","scoreView"].forEach(x=>$(x).classList.add("hidden"));$(v).classList.remove("hidden");window.scrollTo(0,0);}
+
+/* landing */
+$("wantPersonalize").addEventListener("click",()=>{ st.qi=0; st.answers=[]; startQuiz(); });
+$("justShow").addEventListener("click",()=>{ st.archetype="neutral"; buildScorecard(); });
+
+/* quiz */
+function startQuiz(){ show("quizView"); renderQ(); }
+function renderQ(){
+  const item=QUIZ[st.qi];
+  $("dots").innerHTML=QUIZ.map((_,i)=>`<span class="${i<=st.qi?'on':''}"></span>`).join("");
+  $("qtext").textContent=item.q;
+  const chosen=st.answers[st.qi];
+  $("opts").innerHTML=item.o.map((o,i)=>`<button class="opt ${chosen===i?'sel':''}" data-i="${i}">${o[0]}</button>`).join("");
+  document.querySelectorAll("#opts .opt").forEach(b=>b.addEventListener("click",()=>choose(+b.dataset.i)));
+  $("backBtn").classList.toggle("hidden",st.qi===0);
+  const allDone=st.answers.length===QUIZ.length && st.answers.every(x=>x!==undefined);
+  $("seeProfile").style.display=allDone?"block":"none";
+}
+function choose(i){
+  st.answers[st.qi]=i;
+  if(st.qi<QUIZ.length-1){ st.qi++; renderQ(); }
+  else finishQuiz();
+}
+$("backBtn").addEventListener("click",()=>{ if(st.qi>0){ st.qi--; renderQ(); }});
+$("seeProfile").addEventListener("click",finishQuiz);
+function finishQuiz(){
+  const tally={}; Object.keys(A).forEach(k=>{ if(k!=="neutral") tally[k]=0; });
+  st.answers.forEach((ai,qi)=>{ if(ai==null) return; const pts=QUIZ[qi].o[ai][1]; for(const k in pts) tally[k]+=pts[k]; });
+  let best=null,bv=-1; for(const k in tally){ if(tally[k]>bv){bv=tally[k];best=k;} }
+  const top=Object.keys(tally).filter(k=>tally[k]===bv);
+  if(top.length>1){ for(const k of TIEBREAK){ if(top.includes(k)){best=k;break;} } }
+  st.archetype=best;
+  const a=A[best];
+  $("revName").textContent=a.label; $("revDef").textContent=a.def; $("revBody").textContent=a.body;
+  show("revealView");
+}
+$("toScorecard").addEventListener("click",buildScorecard);
+$("retake").addEventListener("click",()=>{ st.qi=0; st.answers=[]; startQuiz(); });
+$("retake2").addEventListener("click",()=>{ st.scores={};st.feeling=6;st.flags={};st.archetype="neutral";st.qi=0;st.answers=[]; show("landView"); });
+$("upsellBtn").addEventListener("click",()=>{ st.qi=0; st.answers=[]; startQuiz(); });
+
+/* scorecard */
+function buildScorecard(){
+  const a=A[st.archetype], neutral=st.archetype==="neutral";
+  $("profileband").style.display=neutral?"none":"block";
+  $("upsell").style.display=neutral?"block":"none";
+  if(!neutral){ $("sbName").textContent=a.label; $("sbBody").textContent=a.body; }
+  $("watchP").textContent=a.watch;
+  st.scores={}; a.crit.forEach(([k])=>st.scores[k]=3); st.flags={};
+  let html="";
+  for(const [key,w] of a.crit){
+    const low=w<=1; let marks="";
+    for(let i=1;i<=5;i++) marks+=`<button class="mark" data-key="${key}" data-v="${i}" aria-pressed="${i<=3}" aria-label="${LBL[key]}: ${i} of 5"></button>`;
+    const note=low?`<div class="cnote">Rate it honestly — it barely counts toward your Fit.</div>`:"";
+    html+=`<div class="crit ${low?'low':''}"><div class="row"><span class="clabel">${LBL[key]}</span><span class="cval" id="cval-${key}">3 / 5</span></div><div class="marks">${marks}</div>${note}<button class="flagbtn" data-key="${key}">⚑ Flag to revisit</button><div class="flagbox" id="flag-${key}"><input type="text" placeholder="What did you notice?" data-key="${key}"></div></div>`;
+  }
+  $("crits").innerHTML=html;
+  document.querySelectorAll("#crits .mark").forEach(m=>m.addEventListener("click",()=>{
+    const k=m.dataset.key,v=+m.dataset.v; st.scores[k]=v;
+    document.querySelectorAll(`.mark[data-key="${k}"]`).forEach(x=>x.setAttribute("aria-pressed",(+x.dataset.v)<=v?"true":"false"));
+    $("cval-"+k).textContent=v+" / 5"; refresh();
+  }));
+  document.querySelectorAll("#crits .flagbtn").forEach(t=>t.addEventListener("click",()=>{
+    const k=t.dataset.key,box=$("flag-"+k),open=box.classList.toggle("open");
+    t.classList.toggle("on",open); t.textContent=open?"⚑ Flagged":"⚑ Flag to revisit";
+    if(!open && !(st.flags[k]&&st.flags[k].trim())) delete st.flags[k]; else if(open && !st.flags[k]) st.flags[k]="";
+    renderRevisit();
+  }));
+  document.querySelectorAll('#crits input[type="text"]').forEach(inp=>inp.addEventListener("input",()=>{ st.flags[inp.dataset.key]=inp.value; renderRevisit(); }));
+  $("feeling").value=6; st.feeling=6; $("feelingVal").textContent="6";
+  document.querySelectorAll("#chips .chip").forEach(c=>c.setAttribute("aria-pressed","false"));
+  refresh(); show("scoreView");
+}
+function fit(){ const a=A[st.archetype]; let n=0,d=0; for(const [k,w] of a.crit){ n+=st.scores[k]*w; d+=5*w; } return Math.round(100*n/d); }
+function interpret(f,feel){
+  const diff=f-feel*10;
+  if(f>=75&&feel>=7) return ["Aligned","Your gut and your priorities agree. When both point the same way, it's usually a real one."];
+  if(diff>=12){
+    if(st.archetype==="renovator") return ["Worth a second look","Your priorities rate this higher than your gut. Classic renovator gap — the finishes turn people off, but the bones pay off. Don't let a dated kitchen talk you out of a house that fits."];
+    return ["Worth a second look","Your priorities rate this higher than your gut does. Something you told us matters is scoring well even if the feeling hasn't caught up — worth another walk-through before you pass."];
+  }
+  if(diff<=-12) return ["Heart running ahead","You're drawn to this one, but some of what you told us matters isn't scoring well. Not a stop sign — just worth naming before the feeling makes the call."];
+  return ["Roughly even","Your gut and your priorities land close together. No strong pull yet — another look might tip it."];
+}
+function refresh(){ const f=fit(),feel=st.feeling; $("fitNum").textContent=f+"%"; $("feelNum").textContent=feel; const [t,b]=interpret(f,feel); $("interp").innerHTML=`<span class="tag">${t}</span>${b}`; renderRevisit(); }
+function renderRevisit(){ const keys=Object.keys(st.flags),box=$("revisit"),list=$("revisitList"); if(!keys.length){box.classList.remove("show");return;} box.classList.add("show"); list.innerHTML=keys.map(k=>{const n=st.flags[k]&&st.flags[k].trim()?st.flags[k]:"Flagged — add a note";return `<div class="ri">${n}<div class="rc">${LBL[k]}</div></div>`;}).join(""); }
+$("feeling").addEventListener("input",e=>{ st.feeling=+e.target.value; $("feelingVal").textContent=e.target.value; refresh(); });
+$("chips").addEventListener("click",e=>{ const b=e.target.closest(".chip"); if(!b)return; const cur=b.getAttribute("aria-pressed")==="true"; document.querySelectorAll("#chips .chip").forEach(c=>c.setAttribute("aria-pressed","false")); if(!cur) b.setAttribute("aria-pressed","true"); });
+</script>
+</body>
+</html>
