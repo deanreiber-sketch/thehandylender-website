@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HomeTour</title>
+<style>
+  :root{--paper:#E8E9E4;--surface:#F3F4F0;--ink:#22261F;--muted:#6B7065;--faint:#8E9389;--line:#CFD2C8;--line-soft:#DEE0D8;--green:#4F6B57;--green-deep:#3C5344;--amber:#8C6E27;--amber-bg:#EDE7D6;--red:#9A4A38;--red-bg:#F0E0DB}
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#D9DBD3;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;display:flex;justify-content:center}
+  .app{width:100%;max-width:440px;min-height:100vh;background:var(--paper);padding:22px 20px 90px}
+  .serif{font-family:Georgia,"Iowan Old Style",Palatino,ui-serif,serif}
+  .brand{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12.5px;letter-spacing:.04em;margin-bottom:22px}
+  .brand .dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block}
+  .hidden{display:none}
+  .btn{display:inline-block;background:var(--green);color:#fff;text-decoration:none;padding:13px 22px;border-radius:5px;font-size:15px;font-weight:600;border:none;cursor:pointer;font-family:inherit;width:100%;text-align:center}
+  .btn:hover{background:var(--green-deep)}
+  .btn.ghost{background:transparent;color:var(--green-deep);border:1px solid var(--line)}
+  .link{background:none;border:none;padding:12px 0 0;margin:0;cursor:pointer;color:var(--green-deep);font-size:13.5px;font-family:inherit;text-decoration:underline;text-underline-offset:3px;display:block}
+  .prop h1{font-size:24px;line-height:1.15;margin:0 0 5px;font-weight:600}
+  .prop .place{color:var(--muted);font-size:14px;margin:0 0 14px}
+  .spec{display:flex;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:20px}
+  .spec div{flex:1;padding:9px 0;text-align:center;border-right:1px solid var(--line-soft)}
+  .spec div:last-child{border-right:none}
+  .spec .n{font-size:15px;font-weight:600}
+  .spec .l{font-size:11px;color:var(--faint);margin-top:2px}
+  .land .lead{font-size:13px;color:var(--muted);margin-bottom:4px}
+  .land h1{font-size:25px}
+  .ask{font-size:15px;font-weight:600;margin:22px 0 12px}
+  .btns{display:flex;flex-direction:column;gap:10px}
+  .dots{display:flex;gap:6px;margin-bottom:22px}
+  .dots span{height:4px;flex:1;background:var(--line);border-radius:2px}
+  .dots span.on{background:var(--green)}
+  .qtext{font-size:20px;line-height:1.3;margin:0 0 18px;font-weight:600}
+  .opt{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:14px 16px;margin-bottom:10px;font-family:inherit;font-size:15px;color:var(--ink);cursor:pointer}
+  .opt:hover{border-color:var(--green);background:#fff}
+  .opt.sel{border-color:var(--green);background:#fff;box-shadow:inset 0 0 0 1px var(--green)}
+  .qnav{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+  .qback{background:none;border:none;color:var(--muted);font-family:inherit;font-size:13px;cursor:pointer;padding:8px 0}
+  .reveal .k{font-size:12.5px;color:var(--faint);margin-bottom:6px}
+  .reveal .name{font-size:30px;font-weight:600;line-height:1.1;margin-bottom:6px}
+  .reveal .def{font-size:15px;color:var(--green-deep);font-weight:600;margin-bottom:16px}
+  .reveal .body{font-size:15.5px;line-height:1.55;margin-bottom:24px}
+  /* priorities */
+  .req h1{font-size:23px;margin:0 0 4px;font-weight:600}
+  .req .rsub{color:var(--muted);font-size:13.5px;line-height:1.5;margin-bottom:20px}
+  .reqrow{padding:12px 0;border-bottom:1px solid var(--line-soft)}
+  .reqrow .rl{font-size:14.5px;display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+  .reqrow .thr{width:74px;border:1px solid var(--line);border-radius:4px;padding:4px 7px;font-family:inherit;font-size:13px}
+  .seg{display:flex;gap:0;border:1px solid var(--line);border-radius:5px;overflow:hidden}
+  .seg button{flex:1;padding:8px 6px;background:#fff;border:none;border-right:1px solid var(--line);font-family:inherit;font-size:12.5px;color:var(--muted);cursor:pointer}
+  .seg button:last-child{border-right:none}
+  .seg button.on[data-m="must"]{background:var(--amber-bg);color:var(--amber);font-weight:600}
+  .seg button.on[data-m="deal"]{background:var(--red-bg);color:var(--red);font-weight:600}
+  .seg button.on[data-m="off"]{background:var(--surface);color:var(--ink);font-weight:600}
+  /* scorecard */
+  .profileband{background:var(--surface);border:1px solid var(--line-soft);border-radius:4px;padding:12px 15px;margin-bottom:16px}
+  .profileband .pk{font-size:11.5px;color:var(--faint)}
+  .profileband .pn{font-size:16px;font-weight:600;margin:2px 0 4px}
+  .profileband .pb{font-size:13px;color:var(--muted);line-height:1.45}
+  .reqstrip{border:1px solid var(--line);border-radius:4px;padding:11px 14px;margin-bottom:18px}
+  .reqstrip .rt{font-size:12px;color:var(--faint);margin-bottom:7px}
+  .reqstrip .item{font-size:13px;padding:4px 0;display:flex;gap:8px;align-items:baseline}
+  .reqstrip .ic{flex:none;width:16px;text-align:center}
+  .reqstrip .met{color:var(--green)}
+  .reqstrip .warn{color:var(--amber)}
+  .reqstrip .deal{color:var(--red);font-weight:600}
+  .reqstrip .unk{color:var(--faint)}
+  .reqstrip .editlink{font-size:12px;margin-top:6px}
+  .upsell{background:var(--surface);border:1px dashed var(--line);border-radius:4px;padding:11px 14px;margin-bottom:16px;font-size:13px;color:var(--muted)}
+  .upsell button{background:none;border:none;color:var(--green-deep);font-family:inherit;font-size:13px;font-weight:600;text-decoration:underline;cursor:pointer;padding:0}
+  .scalehint{font-size:11.5px;color:var(--faint);margin-bottom:10px}
+  .crit{padding:12px 0;border-bottom:1px solid var(--line-soft)}
+  .crit:last-child{border-bottom:none}
+  .crit .row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+  .crit .clabel{font-size:14.5px}
+  .crit .cval{font-size:12.5px;color:var(--faint);font-variant-numeric:tabular-nums}
+  .marks{display:flex;gap:6px}
+  .mark{flex:1;height:19px;border:1px solid var(--line);border-radius:3px;background:transparent;cursor:pointer;padding:0}
+  .mark[aria-pressed="true"]{background:var(--green);border-color:var(--green)}
+  .crit.low .marks{max-width:62%}
+  .crit.low .mark{height:12px;border-color:var(--line-soft)}
+  .crit.low .mark[aria-pressed="true"]{background:var(--faint);border-color:var(--faint)}
+  .crit.low .cnote{font-size:12px;color:var(--faint);margin-top:7px;font-style:italic}
+  .cbtns{display:flex;gap:16px;margin-top:9px;flex-wrap:wrap;align-items:center}
+  .mini{background:none;border:none;padding:0;cursor:pointer;color:var(--green-deep);font-family:inherit;font-size:12px;display:inline-flex;gap:5px;align-items:center}
+  .mini.flag.on{color:var(--amber);font-weight:600}
+  .mini .caret{font-size:9px;transition:transform .15s}
+  .mini[aria-expanded="true"] .caret{transform:rotate(90deg)}
+  .look{display:none;margin-top:9px;padding:11px 13px;background:var(--surface);border:1px solid var(--line-soft);border-radius:3px;font-size:12.5px;line-height:1.5}
+  .look.open{display:block}
+  .flagbox{display:none;margin-top:9px;padding:11px 13px;background:var(--amber-bg);border:1px solid #E0D6B8;border-radius:3px}
+  .flagbox.open{display:block}
+  .flagbox input[type=text]{width:100%;border:1px solid var(--line);border-radius:3px;padding:8px 10px;font-family:inherit;font-size:13px;background:#fff}
+  .photorow{display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap}
+  .photobtn{border:1px dashed var(--amber);color:#6d5518;background:#fff;border-radius:3px;padding:7px 11px;font-family:inherit;font-size:12px;cursor:pointer}
+  .thumb{height:42px;width:42px;object-fit:cover;border-radius:3px;border:1px solid var(--line);display:none}
+  .watch{background:var(--amber-bg);border-left:3px solid var(--amber);padding:12px 15px;margin:16px 0 4px;border-radius:0 3px 3px 0}
+  .watch .wt{font-size:13px;font-weight:600;color:var(--ink)}
+  .watch .wattr{font-size:11px;color:var(--amber);margin:1px 0 6px;font-weight:600}
+  .watch p{margin:0;font-size:13px;line-height:1.5;color:#4d4632}
+  .feeling{margin:28px 0 4px}
+  .feeling .fq{font-size:15px;font-weight:600;margin-bottom:3px}
+  .feeling .fsub{font-size:12.5px;color:var(--faint);margin-bottom:14px}
+  .slwrap{display:flex;align-items:center;gap:14px}
+  input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:3px;border-radius:3px;background:var(--line);outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--green);cursor:pointer;border:3px solid var(--paper);box-shadow:0 0 0 1px var(--green)}
+  input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--green);cursor:pointer;border:3px solid var(--paper);box-shadow:0 0 0 1px var(--green)}
+  .fval{font-family:Georgia,ui-serif,serif;font-size:22px;min-width:40px;text-align:right}
+  .read{margin-top:28px;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--surface)}
+  .scores{display:flex}
+  .scores .s{flex:1;padding:18px 14px 16px;text-align:center}
+  .scores .s.fit{border-right:1px solid var(--line)}
+  .scores .num{font-family:Georgia,ui-serif,serif;font-size:42px;line-height:1}
+  .scores .fit .num{color:var(--green)}
+  .scores .lab{font-size:12px;color:var(--muted);margin-top:7px}
+  .interp{padding:15px 16px;border-top:1px solid var(--line);font-size:13.5px;line-height:1.55}
+  .interp .tag{font-weight:600;color:var(--green-deep);display:block;margin-bottom:3px;font-size:12.5px}
+  .nudge{margin-top:14px;border:1px solid #D9B9AE;background:var(--red-bg);border-radius:4px;padding:13px 15px;display:none}
+  .nudge.show{display:block}
+  .nudge p{margin:0 0 10px;font-size:13.5px;line-height:1.5}
+  .nudge .nb{display:flex;gap:9px}
+  .nudge .nb button{flex:1;padding:9px;border-radius:4px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--red);background:#fff;color:var(--red)}
+  .nudge .nb button.keep{background:var(--red);color:#fff}
+  .revisit{margin-top:20px;border:1px solid var(--line);border-radius:4px;padding:14px 15px;background:var(--paper);display:none}
+  .revisit.show{display:block}
+  .revisit h3{margin:0 0 10px;font-size:13.5px;font-weight:600}
+  .revisit .ri{display:flex;gap:10px;align-items:flex-start;font-size:13px;padding:7px 0;border-top:1px solid var(--line-soft)}
+  .revisit .ri:first-of-type{border-top:none}
+  .revisit .ri img{height:38px;width:38px;object-fit:cover;border-radius:3px;border:1px solid var(--line);flex:none}
+  .revisit .ri .rc{font-size:11px;color:var(--faint)}
+  .disp{margin-top:24px}
+  .disp .dq{font-size:15px;font-weight:600;margin-bottom:12px}
+  .chips{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .chip{padding:12px 10px;border:1px solid var(--line);border-radius:4px;background:transparent;font-family:inherit;font-size:14px;color:var(--ink);cursor:pointer;text-align:center}
+  .chip[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
+  .cmp h1{font-size:24px;margin:0 0 3px;font-weight:600}
+  .cmp .csub{color:var(--muted);font-size:13.5px;margin-bottom:14px}
+  .cmpnote{font-size:12.5px;line-height:1.5;background:var(--surface);border:1px solid var(--line-soft);border-radius:4px;padding:12px 14px;margin:0 0 16px}
+  .cmpnote.warn{background:var(--red-bg);border-color:#D9B9AE;color:#5a2f24}
+  .hcard{border:1px solid var(--line);border-radius:5px;padding:14px 15px;margin-bottom:11px;cursor:pointer;background:#fff;display:flex;gap:14px;align-items:center}
+  .hcard:hover{border-color:var(--green)}
+  .hcard.hasdeal{border-color:#D9B9AE}
+  .hcard .rank{font-family:Georgia,ui-serif,serif;font-size:22px;color:var(--faint);width:20px;text-align:center;flex:none}
+  .hcard .hinfo{flex:1;min-width:0}
+  .hcard .haddr{font-size:15px;font-weight:600}
+  .hcard .hplace{font-size:12px;color:var(--muted);margin-top:1px}
+  .hcard .hbadges{font-size:11.5px;margin-top:4px}
+  .hcard .bd{color:var(--red);font-weight:600}
+  .hcard .bw{color:var(--amber)}
+  .hcard .bf{color:var(--faint)}
+  .hcard .hnums{text-align:right;flex:none}
+  .hcard .hfit{font-family:Georgia,ui-serif,serif;font-size:26px;color:var(--green);line-height:1}
+  .hcard .hfeel{font-size:11.5px;color:var(--muted);margin-top:3px}
+  .addform label{display:block;font-size:12.5px;color:var(--muted);margin:11px 0 5px}
+  .addform input{width:100%;border:1px solid var(--line);border-radius:4px;padding:11px 12px;font-family:inherit;font-size:15px;background:#fff}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .bar{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;pointer-events:none}
+  .barin{width:100%;max-width:440px;background:#fff;border-top:1px solid var(--line);padding:10px 20px;display:flex;gap:10px;pointer-events:auto}
+  .barin button{flex:1;padding:11px;border-radius:5px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;border:1px solid var(--green)}
+  .barin .primary{background:var(--green);color:#fff;border-color:var(--green)}
+  .barin .sec{background:#fff;color:var(--green-deep)}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="brand"><span class="dot"></span>the handy lender · hometour</div>
+
+  <section id="landView" class="land">
+    <div class="lead">Touring homes today?</div>
+    <div class="prop"><h1 class="serif">Could 4328 S Nepal Court be the right home for you?</h1><div class="place">Centennial, CO 80015 · Townhome (2020) · 2-car garage</div><div class="spec"><div><div class="n">2 + flex</div><div class="l">beds</div></div><div><div class="n">3</div><div class="l">baths</div></div><div><div class="n">2,095</div><div class="l">sq ft</div></div><div><div class="n">$399k</div><div class="l">price</div></div></div></div>
+    <div class="ask">Want us to personalize what you should pay attention to?</div>
+    <div class="btns"><button class="btn" id="wantPersonalize">Yes — personalize my tour</button><button class="btn ghost" id="justShow">No — just show me the home</button></div>
+  </section>
+
+  <section id="quizView" class="hidden">
+    <div class="dots" id="dots"></div><div class="qtext" id="qtext"></div><div id="opts"></div>
+    <div class="qnav"><button class="qback hidden" id="backBtn">← back</button><span></span><button class="link" id="seeProfile" style="padding-top:0;display:none">See your profile →</button></div>
+  </section>
+
+  <section id="revealView" class="reveal hidden">
+    <div class="k">Your buyer profile</div><div class="name serif" id="revName"></div><div class="def" id="revDef"></div><div class="body" id="revBody"></div>
+    <button class="btn" id="toReqs">Next: what you need →</button><button class="link" id="retake">Retake the quiz</button>
+  </section>
+
+  <section id="reqView" class="req hidden">
+    <h1 class="serif">What are you actually looking for?</h1>
+    <div class="rsub">Your profile is <em>how</em> you decide. This is <em>what</em> you need. Mark each one — or leave it off. A <b style="color:var(--amber)">must-have</b> warns you if a home's missing it; a <b style="color:var(--red)">dealbreaker</b> rules it out.</div>
+    <div id="reqRows"></div>
+    <div style="margin-top:22px"><button class="btn" id="reqSave">Start scoring homes →</button></div>
+    <button class="link" id="reqSkip">Skip for now</button>
+  </section>
+
+  <section id="scoreView" class="hidden">
+    <div class="prop"><h1 class="serif" id="scAddr"></h1><div class="place" id="scPlace"></div><div class="spec" id="scSpec"></div></div>
+    <div class="profileband" id="profileband"><div class="pk">Tuned for your profile</div><div class="pn serif" id="sbName"></div><div class="pb" id="sbBody"></div></div>
+    <div class="upsell" id="upsell" style="display:none">Not personalized yet — want the scorecard tuned to <em>you</em>? <button id="upsellBtn">Take the 2-minute quiz</button></div>
+    <div class="reqstrip" id="reqstrip" style="display:none"><div class="rt">Your must-haves &amp; dealbreakers for this home</div><div id="reqItems"></div><button class="link editlink" id="editReqs">Edit priorities</button></div>
+    <div class="scalehint">Rate each 1–5 · 1 = weak, 5 = strong. Tap "what to look for" if you're unsure, and flag anything worth a second look.</div>
+    <div id="crits"></div>
+    <div class="watch"><div class="wt">Worth a closer look</div><div class="wattr">From Dean's construction &amp; financing perspective</div><p id="watchP"></p></div>
+    <section class="feeling"><div class="fq">Now set the scorecard aside.</div><div class="fsub">How do you actually feel about this home?</div><div class="slwrap"><input type="range" id="feeling" min="1" max="10" step="1" value="6"><span class="fval serif" id="feelingVal">6</span></div></section>
+    <section class="read" aria-live="polite"><div class="scores"><div class="s fit"><div class="num serif" id="fitNum">—</div><div class="lab">Fit for your priorities</div></div><div class="s"><div class="num serif" id="feelNum">6</div><div class="lab">How you feel</div></div></div><div class="interp" id="interp"></div></section>
+    <div class="nudge" id="nudge"><p id="nudgeP"></p><div class="nb"><button class="keep" id="nudgeKeep">Keep it a dealbreaker</button><button id="nudgeRelax">Relax to a must-have</button></div></div>
+    <section class="revisit" id="revisit"><h3>Questions &amp; things to revisit</h3><div id="revisitList"></div></section>
+    <section class="disp"><div class="dq">How are you leaning?</div><div class="chips" id="chips"><button class="chip" data-d="love">Love it</button><button class="chip" data-d="interested">Interested</button><button class="chip" data-d="maybe">Maybe</button><button class="chip" data-d="not">Not for me</button></div></section>
+  </section>
+
+  <section id="cmpView" class="hidden cmp">
+    <h1 class="serif">Your HomeTour</h1><div class="csub" id="cmpSub"></div>
+    <div class="cmpnote" id="cmpNote"></div>
+    <div id="hlist"></div>
+    <button class="btn ghost" id="addHomeBtn" style="margin-top:6px">+ Add a home you're touring</button>
+    <button class="link" id="editReqs2">Edit your priorities</button>
+    <button class="link" id="startOver">Start over</button>
+  </section>
+
+  <section id="addView" class="hidden addform">
+    <h1 class="serif" style="font-size:23px;margin:0 0 4px">Add a home</h1>
+    <div class="csub" style="color:var(--muted);font-size:13.5px;margin-bottom:6px">A few basics let us check it against your must-haves. You'll score it next.</div>
+    <label>Address</label><input type="text" id="naAddr" placeholder="123 Example St">
+    <label>Neighborhood / area (optional)</label><input type="text" id="naPlace" placeholder="Castle Rock">
+    <div class="grid2"><div><label>Beds</label><input type="number" id="naBeds" placeholder="3"></div><div><label>Price ($k)</label><input type="number" id="naPrice" placeholder="450"></div></div>
+    <div class="grid2"><div><label>HOA ($/mo)</label><input type="number" id="naHoa" placeholder="0"></div><div><label>Garage (cars)</label><input type="number" id="naGarage" placeholder="2"></div></div>
+    <div style="margin-top:20px"><button class="btn" id="naSave">Add &amp; score it →</button></div>
+    <button class="link" id="naCancel">Cancel</button>
+  </section>
+
+  <div class="bar hidden" id="bar"><div class="barin"><button class="sec" id="barCompare">My HomeTour (<span id="barCount">0</span>)</button><button class="primary" id="barAdd">+ Add a home</button></div></div>
+</div>
+
+<script>
+const LBL={location:"Location",layout:"Layout & flow",kitchen:"Kitchen",condition:"Condition",primary_suite:"Primary suite",yard:"Yard / outdoor",neighborhood:"Neighborhood",value:"Value for the price",structural_condition:"Structural condition",major_systems:"Major systems",cosmetic_condition:"Cosmetic condition",improvement_opportunity:"Improvement opportunity",layout_potential:"Layout & potential",monthly_cost:"Monthly cost",rentability:"Rentability / numbers"};
+const LOOK={location:"Commute, noise, and which way the home faces for light.",layout:"Does the flow work for your life? Note any wall you'd want to open and ask whether it's load-bearing.",layout_potential:"Could a wall open up or a room be added? Check basement head-height and room to expand.",kitchen:"Cabinets, counters, appliance age, and whether the layout works for how you cook.",condition:"Under sinks, around windows, and along baseboards — water, soft spots, or fresh paint hiding a repair.",structural_condition:"Stair-step cracks in brick, sloping or bouncy floors, doors that stick. Photograph anything off for your inspector.",major_systems:"Ask the age of the roof, furnace, AC, and water heater. Note water stains. Photograph the electrical panel if you can.",cosmetic_condition:"Paint, flooring, fixtures, cabinet fronts — cheap to change, photographs badly.",improvement_opportunity:"Cheap wins vs. permit-and-trades work. The best projects scare other buyers but are mostly surface.",primary_suite:"Closet space, bathroom size, and whether it feels like a retreat.",yard:"Drainage away from the house, privacy, and how much upkeep you're signing up for.",neighborhood:"Are neighbors maintaining and updating? A rising street lifts your home with it.",value:"Price against comparable sales, given the condition and the work it needs.",monthly_cost:"The real monthly number — payment, taxes, insurance, and HOA together.",rentability:"Comparable rents, HOA rental rules, and demand — if you'd ever rent it."};
+const A={
+  neutral:{label:"",def:"",body:"",crit:[["location",3],["layout",3],["kitchen",3],["condition",3],["primary_suite",3],["yard",3],["neighborhood",3],["value",3]],watch:"On any home, ask the age of the roof, HVAC, and water heater, note how water drains away from the foundation, and get clear on what the HOA covers."},
+  emotional:{label:"The Emotional Buyer",def:"You lead with feeling — and know it fast.",body:"You lead with feeling, and that's a strength. We've tuned your HomeTour to honor it — and to quietly make sure the facts get a look before you fall all the way in.",crit:[["kitchen",5],["primary_suite",5],["layout",4],["neighborhood",4],["condition",4],["value",4],["location",3],["yard",3]],watch:"Fall for it — then check the list. Give Condition and Value an honest score, and set your walk-away number before you decide."},
+  overwhelmed:{label:"The Overwhelmed Buyer",def:"You do your homework — sometimes so much it's hard to land.",body:"You do your homework, sometimes so thoroughly it's hard to land. We've simplified your HomeTour to the few things that actually decide it.",crit:[["value",5],["layout",5],["location",4],["condition",4]],watch:"You don't need a perfect answer, just a clear one. If a home clears your top few, that's enough to move forward."},
+  optimizer:{label:"The Optimizer",def:"You want the best — the right home at the right terms.",body:"You want the best — the right home at the right terms. We've tuned your HomeTour to help you tell real optimization from chasing a perfect that doesn't exist.",crit:[["value",5],["condition",4],["layout",4],["location",4],["neighborhood",4],["kitchen",3],["primary_suite",3],["yard",3]],watch:"No home scores a 10 on everything. Name your two non-negotiables — chasing perfection on the rest costs you the right house."},
+  renovator:{label:"The Renovator",def:"You see potential where others see projects.",body:"You see potential where other buyers see projects. We've tuned your HomeTour to help you separate a worthwhile opportunity from an expensive problem.",crit:[["layout_potential",5],["structural_condition",5],["improvement_opportunity",5],["major_systems",4],["location",4],["value",4],["neighborhood",3],["cosmetic_condition",1]],watch:"Dated finishes are opportunity; failing systems and structure are risk. Check roof, HVAC, electrical, plumbing, and foundation before you mentally spend the renovation budget."},
+  stretch:{label:"The Stretch Buyer",def:"You're reaching for the home you really want.",body:"You're reaching for the home you really want. We've tuned your HomeTour to keep the dream and the monthly reality in view at the same time.",crit:[["primary_suite",5],["monthly_cost",5],["kitchen",4],["yard",4],["layout",4],["neighborhood",4],["location",4],["value",4]],watch:"Score the monthly payment the way you score the primary suite. Could you live this payment comfortably for three months straight? That's the real test."},
+  wait_for_rates:{label:"The Wait-for-Rates Buyer",def:"You're watching the market closely.",body:"You're watching the market closely. We've tuned your HomeTour to help you judge the home on its own merits — the rate is a separate, shorter decision.",crit:[["location",4],["layout",4],["condition",4],["value",4],["neighborhood",4],["kitchen",3],["primary_suite",3],["yard",3]],watch:"Score the home, not the rate. The right home is a long decision; the rate is a short one — and refinancing later is on us."},
+  investor:{label:"The Investor-Minded Buyer",def:"You run the numbers before the feelings.",body:"You run the numbers before the feelings. We've tuned your HomeTour around value and return — with one nudge to remember livability if you'll live there.",crit:[["value",5],["neighborhood",5],["rentability",5],["condition",4],["location",4],["layout",3],["yard",3],["kitchen",2],["primary_suite",2]],watch:"The numbers matter — and if you'll live here, so does whether you'll want to. Don't let a clean spreadsheet talk you out of a home you'd actually enjoy."},
+  safety_seeker:{label:"The Safety-Seeker",def:"You want certainty and no surprises.",body:"You want certainty and no surprises. We've tuned your HomeTour to help you find security in the facts and the process — not in waiting for zero risk.",crit:[["condition",5],["value",5],["neighborhood",4],["location",4],["layout",3],["kitchen",3],["primary_suite",3],["yard",3]],watch:"A strong home with an honest inspection and the right contingencies is a safe decision. Certainty comes from the process, not from waiting for zero risk."}
+};
+const QUIZ=[
+  {q:"When you walk into a home you love, what happens first?",o:[["I just feel it — I know almost right away",{emotional:2}],["I start seeing what I'd change or improve",{renovator:2}],["I start doing the math on it",{investor:2,optimizer:1}],["I notice everything that might be a problem",{safety_seeker:2}],["I feel a bit overwhelmed — so many options",{overwhelmed:2}]]},
+  {q:"A dated, ugly kitchen is mostly…",o:[["A dealbreaker — I want it move-in ready",{emotional:1,safety_seeker:1}],["An opportunity — I can fix that",{renovator:2}],["A price negotiation",{investor:1,optimizer:1}],["Fine, if the payment still works",{stretch:2}]]},
+  {q:"Which sounds most like you right now?",o:[["I'm stretching to get the home I really want",{stretch:2}],["I want the best value for the money",{optimizer:2,investor:1}],["I want to feel safe and not overpay",{safety_seeker:2}],["I'm waiting to see what rates or the market do",{wait_for_rates:2}],["I keep comparing and can't quite decide",{overwhelmed:2}]]},
+  {q:"What matters most in the home itself?",o:[["That it feels like home",{emotional:2}],["Good bones and potential",{renovator:2}],["The numbers work long-term",{investor:2}],["Room to grow and the lifestyle",{stretch:2}],["That it's solid and low-risk",{safety_seeker:2}]]},
+  {q:"What's most likely to keep you from making an offer?",o:[["Waiting on rates or the market",{wait_for_rates:2}],["Second-guessing — I'm not sure",{overwhelmed:2,safety_seeker:1}],["Nothing's been quite perfect",{optimizer:2}],["Affording the one I actually love",{stretch:1,emotional:1}],["Worried about a costly mistake",{safety_seeker:2}]]},
+  {q:"How do you make the final call?",o:[["Gut — when it's right, it's right",{emotional:2}],["I need a clear framework, or a nudge that it's okay",{overwhelmed:2}],["I optimize the details first",{optimizer:2}],["I run the deal and the return",{investor:2}],["I wait for the right moment in the market",{wait_for_rates:2}]]}
+];
+const TIEBREAK=["renovator","stretch","investor","safety_seeker","optimizer","emotional","wait_for_rates","overwhelmed"];
+
+/* requirements */
+const REQS=[
+  {id:"beds3",label:"At least 3 bedrooms",test:a=>a.beds==null?null:a.beds>=3},
+  {id:"garage2",label:"2+ car garage",test:a=>a.garage==null?null:a.garage>=2},
+  {id:"yard",label:"Real yard / outdoor space",test:a=>a.yard==null?null:a.yard>=3},
+  {id:"movein",label:"Move-in ready (no major renovation)",test:a=>a.moveInReady==null?null:a.moveInReady===true},
+  {id:"single",label:"Single-level (no stairs)",test:a=>a.singleLevel==null?null:a.singleLevel===true},
+  {id:"hoa",label:"HOA under",thr:300,unit:"$/mo",test:(a,t)=>a.hoa==null?null:a.hoa<=t},
+  {id:"price",label:"Price under",thr:450,unit:"$k",test:(a,t)=>a.price==null?null:a.price<=t}
+];
+function reqDef(id){return REQS.find(r=>r.id===id);}
+
+const SEED=[
+  {id:"nepal",addr:"4328 S Nepal Court",place:"Centennial · Townhome (2020)",spec:"2 bd + flex · 3 ba · $399k",feeling:6,attr:{beds:2,garage:2,yard:2,singleLevel:false,moveInReady:true,hoa:175,price:399},s:{location:4,layout:4,kitchen:4,condition:5,primary_suite:4,yard:2,neighborhood:4,value:4,structural_condition:5,major_systems:5,cosmetic_condition:4,improvement_opportunity:2,layout_potential:3,monthly_cost:4,rentability:4}},
+  {id:"turnberry",addr:"1424 Turnberry Drive",place:"Castle Rock · Sawgrass Townhomes",spec:"2 bd · 2.5 ba · $405k",feeling:6,attr:{beds:2,garage:2,yard:2,singleLevel:false,moveInReady:true,hoa:175,price:405},s:{location:4,layout:4,kitchen:3,condition:4,primary_suite:4,yard:2,neighborhood:4,value:4,structural_condition:4,major_systems:4,cosmetic_condition:3,improvement_opportunity:2,layout_potential:3,monthly_cost:4,rentability:3}}
+];
+
+const st={qi:0,answers:[],archetype:"neutral",reqs:{},homes:[],current:null};
+function initHomes(){st.homes=SEED.map(h=>({...h,s:{...h.s},attr:{...h.attr},flags:{},disposition:null}));st.current="nepal";}
+initHomes();
+
+const $=id=>document.getElementById(id);
+function show(v){["landView","quizView","revealView","reqView","scoreView","cmpView","addView"].forEach(x=>$(x).classList.add("hidden"));$(v).classList.remove("hidden");$("bar").classList.toggle("hidden",!(v==="scoreView"));if(v==="scoreView")$("barCount").textContent=st.homes.length;window.scrollTo(0,0);}
+function home(id){return st.homes.find(h=>h.id===id);}
+
+$("wantPersonalize").onclick=()=>{st.qi=0;st.answers=[];startQuiz();};
+$("justShow").onclick=()=>{st.archetype="neutral";openReqs("nepal");};
+
+function startQuiz(){show("quizView");renderQ();}
+function renderQ(){const it=QUIZ[st.qi];$("dots").innerHTML=QUIZ.map((_,i)=>`<span class="${i<=st.qi?'on':''}"></span>`).join("");$("qtext").textContent=it.q;const ch=st.answers[st.qi];$("opts").innerHTML=it.o.map((o,i)=>`<button class="opt ${ch===i?'sel':''}" data-i="${i}">${o[0]}</button>`).join("");document.querySelectorAll("#opts .opt").forEach(b=>b.onclick=()=>choose(+b.dataset.i));$("backBtn").classList.toggle("hidden",st.qi===0);const done=st.answers.length===QUIZ.length&&st.answers.every(x=>x!==undefined);$("seeProfile").style.display=done?"block":"none";}
+function choose(i){st.answers[st.qi]=i;if(st.qi<QUIZ.length-1){st.qi++;renderQ();}else finishQuiz();}
+$("backBtn").onclick=()=>{if(st.qi>0){st.qi--;renderQ();}};
+$("seeProfile").onclick=finishQuiz;
+function finishQuiz(){const t={};Object.keys(A).forEach(k=>{if(k!=="neutral")t[k]=0;});st.answers.forEach((ai,qi)=>{if(ai==null)return;const p=QUIZ[qi].o[ai][1];for(const k in p)t[k]+=p[k];});let best=null,bv=-1;for(const k in t){if(t[k]>bv){bv=t[k];best=k;}}const top=Object.keys(t).filter(k=>t[k]===bv);if(top.length>1){for(const k of TIEBREAK){if(top.includes(k)){best=k;break;}}}st.archetype=best;const a=A[best];$("revName").textContent=a.label;$("revDef").textContent=a.def;$("revBody").textContent=a.body;show("revealView");}
+$("toReqs").onclick=()=>openReqs("nepal");
+$("retake").onclick=()=>{st.qi=0;st.answers=[];startQuiz();};
+$("upsellBtn").onclick=()=>{st.qi=0;st.answers=[];startQuiz();};
+$("startOver").onclick=()=>{st.archetype="neutral";st.qi=0;st.answers=[];st.reqs={};initHomes();show("landView");};
+
+/* priorities */
+let reqReturn="nepal";
+function openReqs(ret){reqReturn=ret||st.current;renderReqRows();show("reqView");}
+function renderReqRows(){
+  $("reqRows").innerHTML=REQS.map(r=>{
+    const cur=st.reqs[r.id]||{mode:"off"};
+    const thr=r.thr!==undefined?`<input class="thr" type="number" id="thr-${r.id}" value="${cur.thr!==undefined?cur.thr:r.thr}"> ${r.unit}`:"";
+    return `<div class="reqrow"><div class="rl">${r.label} ${thr}</div><div class="seg" data-id="${r.id}">
+      <button data-m="off" class="${cur.mode==='off'?'on':''}">Off</button>
+      <button data-m="must" class="${cur.mode==='must'?'on':''}">Must-have</button>
+      <button data-m="deal" class="${cur.mode==='deal'?'on':''}">Dealbreaker</button></div></div>`;
+  }).join("");
+  document.querySelectorAll("#reqRows .seg").forEach(seg=>seg.querySelectorAll("button").forEach(b=>b.onclick=()=>{
+    const id=seg.dataset.id,m=b.dataset.m;seg.querySelectorAll("button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
+    if(m==="off"){delete st.reqs[id];}else{const t=$("thr-"+id);st.reqs[id]={mode:m,thr:t?+t.value:undefined};}
+  }));
+}
+$("reqSave").onclick=()=>{ // capture thresholds
+  REQS.forEach(r=>{if(st.reqs[r.id]){const t=$("thr-"+r.id);if(t)st.reqs[r.id].thr=+t.value;}});
+  openScore(reqReturn);
+};
+$("reqSkip").onclick=()=>openScore(reqReturn);
+$("editReqs").onclick=()=>openReqs(st.current);
+$("editReqs2").onclick=()=>openReqs("nepal");
+
+/* evaluation */
+function evalHome(h){const warns=[],deals=[],unknown=[],met=[];for(const id in st.reqs){const cfg=st.reqs[id],r=reqDef(id);const res=r.test(h.attr||{},cfg.thr);const lab=r.thr!==undefined?`${r.label} ${cfg.thr} ${r.unit}`:r.label;if(res===null)unknown.push({id,lab});else if(res===true)met.push({id,lab});else{if(cfg.mode==="deal")deals.push({id,lab});else warns.push({id,lab});}}return{warns,deals,unknown,met};}
+
+/* scorecard */
+function openScore(id){
+  st.current=id;const h=home(id),a=A[st.archetype],neutral=st.archetype==="neutral";
+  $("scAddr").textContent=h.addr;$("scPlace").textContent=h.place;
+  $("scSpec").innerHTML=(h.spec||"").split("·").map(x=>x.trim()).filter(Boolean).map(x=>`<div><div class="n">${x}</div><div class="l"></div></div>`).join("");
+  $("profileband").style.display=neutral?"none":"block";$("upsell").style.display=neutral?"block":"none";
+  if(!neutral){$("sbName").textContent=a.label;$("sbBody").textContent=a.body;}
+  $("watchP").textContent=a.watch;
+  renderReqStrip(h);
+  let html="";
+  for(const [key,w] of a.crit){
+    const val=h.s[key]!==undefined?h.s[key]:3;h.s[key]=val;const low=w<=1;let marks="";
+    for(let i=1;i<=5;i++)marks+=`<button class="mark" data-key="${key}" data-v="${i}" aria-pressed="${i<=val}"></button>`;
+    const note=low?`<div class="cnote">Rate it honestly — it barely counts toward your Fit.</div>`:"";const fl=h.flags[key];
+    html+=`<div class="crit ${low?'low':''}"><div class="row"><span class="clabel">${LBL[key]}</span><span class="cval" id="cval-${key}">${val} / 5</span></div><div class="marks">${marks}</div>${note}<div class="cbtns"><button class="mini look" data-key="${key}" aria-expanded="false"><span class="caret">▸</span>What to look for</button><button class="mini flag ${fl?'on':''}" data-key="${key}" aria-expanded="false">⚑ ${fl?'Flagged':'Flag to revisit'}</button></div><div class="look" id="look-${key}">${LOOK[key]||""}</div><div class="flagbox" id="flag-${key}"><input type="text" placeholder="What did you notice?" data-key="${key}" value="${fl&&fl.note?fl.note.replace(/"/g,'&quot;'):''}"><div class="photorow"><button class="photobtn" data-key="${key}">Add a photo</button><input type="file" accept="image/*" capture="environment" style="display:none" id="file-${key}" data-key="${key}"><img class="thumb" id="thumb-${key}" ${fl&&fl.photo?`src="${fl.photo}" style="display:inline-block"`:''} alt=""></div></div></div>`;
+  }
+  $("crits").innerHTML=html;
+  document.querySelectorAll("#crits .mark").forEach(m=>m.onclick=()=>{const k=m.dataset.key,v=+m.dataset.v;h.s[k]=v;document.querySelectorAll(`.mark[data-key="${k}"]`).forEach(x=>x.setAttribute("aria-pressed",(+x.dataset.v)<=v?"true":"false"));$("cval-"+k).textContent=v+" / 5";refresh();});
+  document.querySelectorAll("#crits .mini.look").forEach(t=>t.onclick=()=>{const b=$("look-"+t.dataset.key);t.setAttribute("aria-expanded",b.classList.toggle("open")?"true":"false");});
+  document.querySelectorAll("#crits .mini.flag").forEach(t=>t.onclick=()=>{const k=t.dataset.key,b=$("flag-"+k),open=b.classList.toggle("open");t.setAttribute("aria-expanded",open?"true":"false");if(open&&!h.flags[k])h.flags[k]={note:"",photo:null};else if(!open&&h.flags[k]&&!(h.flags[k].note&&h.flags[k].note.trim())&&!h.flags[k].photo)delete h.flags[k];t.classList.toggle("on",!!h.flags[k]);t.innerHTML=h.flags[k]?"⚑ Flagged":"⚑ Flag to revisit";renderRevisit();});
+  document.querySelectorAll('#crits input[type="text"]').forEach(inp=>inp.oninput=()=>{const k=inp.dataset.key;if(!h.flags[k])h.flags[k]={note:"",photo:null};h.flags[k].note=inp.value;renderRevisit();});
+  document.querySelectorAll(".photobtn").forEach(b=>b.onclick=()=>$("file-"+b.dataset.key).click());
+  document.querySelectorAll('input[type="file"]').forEach(f=>f.onchange=()=>{const k=f.dataset.key,file=f.files[0];if(!file)return;const r=new FileReader();r.onload=e=>{if(!h.flags[k])h.flags[k]={note:"",photo:null};h.flags[k].photo=e.target.result;const th=$("thumb-"+k);th.src=e.target.result;th.style.display="inline-block";renderRevisit();};r.readAsDataURL(file);});
+  $("feeling").value=h.feeling;$("feelingVal").textContent=h.feeling;
+  document.querySelectorAll("#chips .chip").forEach(c=>c.setAttribute("aria-pressed",c.dataset.d===h.disposition?"true":"false"));
+  refresh();show("scoreView");
+}
+function renderReqStrip(h){
+  const keys=Object.keys(st.reqs);if(!keys.length){$("reqstrip").style.display="none";return;}
+  $("reqstrip").style.display="block";const ev=evalHome(h);
+  const rows=[];
+  ev.deals.forEach(x=>rows.push(`<div class="item"><span class="ic deal">⛔</span><span class="deal">Dealbreaker: ${x.lab}</span></div>`));
+  ev.warns.forEach(x=>rows.push(`<div class="item"><span class="ic warn">⚠</span><span class="warn">Missing a must-have: ${x.lab}</span></div>`));
+  ev.met.forEach(x=>rows.push(`<div class="item"><span class="ic met">✓</span><span>${x.lab}</span></div>`));
+  ev.unknown.forEach(x=>rows.push(`<div class="item"><span class="ic unk">?</span><span class="unk">${x.lab} — can't tell yet</span></div>`));
+  $("reqItems").innerHTML=rows.join("");
+}
+function fitOf(h){const a=A[st.archetype];let n=0,d=0;for(const [k,w] of a.crit){const v=h.s[k]!==undefined?h.s[k]:3;n+=v*w;d+=5*w;}return Math.round(100*n/d);}
+function interpret(f,feel){const diff=f-feel*10;if(f>=75&&feel>=7)return["Aligned","Your gut and your priorities agree. When both point the same way, it's usually a real one."];if(diff>=12){if(st.archetype==="renovator")return["Worth a second look","Your priorities rate this higher than your gut. Classic renovator gap — the finishes turn people off, but the bones pay off."];return["Worth a second look","Your priorities rate this higher than your gut does. Worth another walk-through before you pass."];}if(diff<=-12)return["Heart running ahead","You're drawn to this one, but some of what you told us matters isn't scoring well. Worth naming before the feeling makes the call."];return["Roughly even","Your gut and your priorities land close together. Another look might tip it."];}
+function refresh(){const h=home(st.current),f=fitOf(h),feel=h.feeling;$("fitNum").textContent=f+"%";$("feelNum").textContent=feel;const[t,b]=interpret(f,feel);$("interp").innerHTML=`<span class="tag">${t}</span>${b}`;renderRevisit();renderNudge(h,f);}
+function renderNudge(h,f){const ev=evalHome(h),n=$("nudge");if(ev.deals.length&&h.feeling>=8){const d=ev.deals[0];n.classList.add("show");$("nudgeP").innerHTML=`You're feeling this one (<b>${h.feeling}/10</b>) — but it fits ${f}% of your priorities and trips a dealbreaker you set: <b>${d.lab}</b>. Is that still a dealbreaker?`;$("nudgeKeep").onclick=()=>{n.classList.remove("show");};$("nudgeRelax").onclick=()=>{if(st.reqs[d.id])st.reqs[d.id].mode="must";n.classList.remove("show");renderReqStrip(h);refresh();};}else n.classList.remove("show");}
+function renderRevisit(){const h=home(st.current),keys=Object.keys(h.flags),box=$("revisit"),list=$("revisitList");if(!keys.length){box.classList.remove("show");return;}box.classList.add("show");list.innerHTML=keys.map(k=>{const fl=h.flags[k];const nt=fl.note&&fl.note.trim()?fl.note:"Flagged — add a note";const img=fl.photo?`<img src="${fl.photo}" alt="">`:"";return `<div class="ri">${img}<div><div>${nt}</div><div class="rc">${LBL[k]}</div></div></div>`;}).join("");}
+$("feeling").oninput=e=>{home(st.current).feeling=+e.target.value;$("feelingVal").textContent=e.target.value;refresh();};
+$("chips").onclick=e=>{const b=e.target.closest(".chip");if(!b)return;const h=home(st.current),cur=h.disposition===b.dataset.d;h.disposition=cur?null:b.dataset.d;document.querySelectorAll("#chips .chip").forEach(c=>c.setAttribute("aria-pressed",c.dataset.d===h.disposition?"true":"false"));};
+
+/* compare */
+function openCompare(){
+  const a=A[st.archetype];$("cmpSub").textContent="Best match to the priorities you gave us"+(a.label?" · "+a.label:"");
+  const rows=st.homes.map(h=>({h,fit:fitOf(h),ev:evalHome(h)})).sort((x,y)=>y.fit-x.fit);
+  const topFit=rows[0], clean=rows.find(r=>r.ev.deals.length===0);
+  let note="Ranked by how well each home fits your priorities. Your gut score sits beside it — and any must-have or dealbreaker you set is called out, because a high percentage doesn't matter if the home breaks a rule you set.";
+  if(topFit&&topFit.ev.deals.length&&clean&&clean.h.id!==topFit.h.id){note=`Your highest match, <b>${topFit.h.addr}</b>, trips a dealbreaker you set. <b>${clean.h.addr}</b> is your best match that clears everything you said is non-negotiable.`;$("cmpNote").className="cmpnote warn";}else{$("cmpNote").className="cmpnote";}
+  $("cmpNote").innerHTML=note;
+  $("hlist").innerHTML=rows.map((r,i)=>{const d=r.h.disposition;const dl={love:"❤️ Love it",interested:"👍 Interested",maybe:"🤔 Maybe",not:"✕ Not for me"}[d]||"";const nf=Object.keys(r.h.flags).length;const badges=[];if(r.ev.deals.length)badges.push(`<span class="bd">⛔ ${r.ev.deals.length} dealbreaker${r.ev.deals.length>1?'s':''}</span>`);if(r.ev.warns.length)badges.push(`<span class="bw">⚠ ${r.ev.warns.length} must-have${r.ev.warns.length>1?'s':''} missing</span>`);if(dl)badges.push(`<span class="bf">${dl}</span>`);if(nf)badges.push(`<span class="bf">${nf} flagged</span>`);return `<div class="hcard ${r.ev.deals.length?'hasdeal':''}" data-id="${r.h.id}"><div class="rank serif">${i+1}</div><div class="hinfo"><div class="haddr">${r.h.addr}</div><div class="hplace">${r.h.place||""}</div><div class="hbadges">${badges.join(" · ")}</div></div><div class="hnums"><div class="hfit">${r.fit}%</div><div class="hfeel">gut ${r.h.feeling}/10</div></div></div>`;}).join("");
+  document.querySelectorAll(".hcard").forEach(c=>c.onclick=()=>openScore(c.dataset.id));
+  show("cmpView");
+}
+$("barCompare").onclick=openCompare;
+function goAdd(){["naAddr","naPlace","naBeds","naPrice","naHoa","naGarage"].forEach(id=>$(id).value="");show("addView");}
+$("bar").querySelector("#barAdd").onclick=goAdd;$("addHomeBtn").onclick=goAdd;
+$("naCancel").onclick=()=>openCompare();
+$("naSave").onclick=()=>{const addr=$("naAddr").value.trim();if(!addr){$("naAddr").focus();return;}const id="h"+Date.now();const base={};Object.keys(LBL).forEach(k=>base[k]=3);const num=v=>v.trim()===""?null:+v;const attr={beds:num($("naBeds").value),price:num($("naPrice").value),hoa:num($("naHoa").value),garage:num($("naGarage").value),yard:null,singleLevel:null,moveInReady:null};const spec=[attr.beds?attr.beds+" bd":"",attr.price?"$"+attr.price+"k":""].filter(Boolean).join(" · ");st.homes.push({id,addr,place:$("naPlace").value.trim(),spec,feeling:6,attr,s:base,flags:{},disposition:null});openScore(id);};
+</script>
+</body>
+</html>
