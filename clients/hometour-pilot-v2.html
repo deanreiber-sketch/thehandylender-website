@@ -1,0 +1,1835 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HomeTour</title>
+<meta name="description" content="A guided open-house scorecard built around what you're actually looking for.">
+<style>
+  :root{
+    --paper:#E8E9E4; --surface:#F3F4F0; --ink:#22261F; --muted:#6B7065;
+    --faint:#8E9389; --line:#CFD2C8; --line-soft:#DEE0D8;
+    --green:#4F6B57; --green-deep:#3C5344;
+    --amber:#8C6E27; --amber-bg:#EDE7D6; --amber-line:#E0D6B8;
+    --red:#9A4A38; --red-bg:#F0E0DB; --red-line:#D9B9AE;
+    --blue:#3E5C6B; --blue-bg:#E2EAEE; --blue-line:#BDD0D9;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#D9DBD3;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;display:flex;justify-content:center}
+  .app{width:100%;max-width:440px;min-height:100vh;background:var(--paper);padding:22px 20px 96px}
+  .serif{font-family:Georgia,"Iowan Old Style",Palatino,ui-serif,serif}
+  .hidden{display:none !important}
+  :focus-visible{outline:2px solid var(--green-deep);outline-offset:2px}
+
+  .brand{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12.5px;letter-spacing:.04em;margin-bottom:18px}
+  .brand .dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;flex:none}
+  .cobrand{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:5px;padding:12px 14px;margin-bottom:20px}
+  .cobrand .col{flex:1;min-width:0}
+  .cobrand .who{font-size:13.5px;font-weight:600;line-height:1.25}
+  .cobrand .role{font-size:11px;color:var(--faint);margin-top:2px;line-height:1.35}
+  .cobrand .sep{width:1px;background:var(--line-soft);align-self:stretch;flex:none}
+
+  .btn{display:block;width:100%;background:var(--green);color:#fff;text-decoration:none;padding:13px 22px;border-radius:5px;font-size:15px;font-weight:600;border:none;cursor:pointer;font-family:inherit;text-align:center}
+  .btn:hover{background:var(--green-deep)}
+  .btn.ghost{background:transparent;color:var(--green-deep);border:1px solid var(--line)}
+  .btn.ghost:hover{background:var(--surface)}
+  .btn.small{padding:10px 14px;font-size:13.5px}
+  .link{background:none;border:none;padding:13px 0 0;margin:0;cursor:pointer;color:var(--green-deep);font-size:13.5px;font-family:inherit;text-decoration:underline;text-underline-offset:3px;display:block;text-align:left}
+
+  .prop h1{font-size:25px;line-height:1.15;margin:0 0 5px;font-weight:600}
+  .prop .place{color:var(--muted);font-size:14px;margin:0 0 14px}
+  .spec{display:flex;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:20px}
+  .spec div{flex:1;padding:9px 4px;text-align:center;border-right:1px solid var(--line-soft);min-width:0}
+  .spec div:last-child{border-right:none}
+  .spec .n{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .spec .l{font-size:11px;color:var(--faint);margin-top:2px}
+
+  .land .lead{font-size:13px;color:var(--muted);margin-bottom:4px}
+  .ask{font-size:15px;font-weight:600;margin:22px 0 6px}
+  .asksub{font-size:13px;color:var(--muted);margin-bottom:14px}
+  .btns{display:flex;flex-direction:column;gap:10px}
+
+  .dots{display:flex;gap:6px;margin-bottom:20px}
+  .dots span{height:4px;flex:1;background:var(--line);border-radius:2px;transition:background .2s}
+  .dots span.on{background:var(--green)}
+  .stepk{font-size:11.5px;color:var(--faint);margin-bottom:6px}
+  .qtext{font-size:20px;line-height:1.3;margin:0 0 18px;font-weight:600}
+  .opt{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:14px 16px;margin-bottom:10px;font-family:inherit;font-size:15px;color:var(--ink);cursor:pointer;transition:border-color .12s,background .12s}
+  .opt:hover{border-color:var(--green);background:#fff}
+  .opt.sel{border-color:var(--green);background:#fff;box-shadow:inset 0 0 0 1px var(--green)}
+  .qnav{display:flex;justify-content:space-between;align-items:center;margin-top:6px;gap:12px}
+  .qback{background:none;border:none;color:var(--muted);font-family:inherit;font-size:13px;cursor:pointer;padding:8px 0}
+
+  .reveal .k{font-size:12.5px;color:var(--faint);margin-bottom:6px}
+  .reveal .name{font-size:30px;font-weight:600;line-height:1.1;margin-bottom:6px}
+  .reveal .def{font-size:15px;color:var(--green-deep);font-weight:600;margin-bottom:16px}
+  .reveal .body{font-size:15.5px;line-height:1.55;margin-bottom:22px}
+
+  /* ---- requirements ---- */
+  .req h1{font-size:23px;margin:0 0 5px;font-weight:600}
+  .req .rsub{color:var(--muted);font-size:13.5px;line-height:1.55;margin-bottom:20px}
+  .reqrow{padding:13px 0;border-bottom:1px solid var(--line-soft)}
+  .reqrow:last-of-type{border-bottom:none}
+  .reqrow .rl{font-size:14.5px;font-weight:600;display:flex;align-items:center;gap:7px;margin-bottom:9px;flex-wrap:wrap}
+  .reqrow .rl .pre{font-weight:400;color:var(--muted);font-size:13px}
+  .reqrow .thr{width:76px;border:1px solid var(--line);border-radius:4px;padding:5px 8px;font-family:inherit;font-size:13.5px;background:#fff}
+  .reqrow .unit{font-weight:400;color:var(--faint);font-size:12.5px}
+  .seg{display:flex;border:1px solid var(--line);border-radius:5px;overflow:hidden}
+  .seg button{flex:1;padding:9px 5px;background:#fff;border:none;border-right:1px solid var(--line);font-family:inherit;font-size:12.5px;color:var(--muted);cursor:pointer;line-height:1.2}
+  .seg button:last-child{border-right:none}
+  .seg button[aria-pressed="true"][data-m="off"]{background:var(--surface);color:var(--ink);font-weight:600}
+  .seg button[aria-pressed="true"][data-m="want"]{background:var(--amber-bg);color:var(--amber);font-weight:600}
+  .seg button[aria-pressed="true"][data-m="deal"]{background:var(--red-bg);color:var(--red);font-weight:600}
+
+  /* ---- requirement strip on scorecard ---- */
+  .reqstrip{border:1px solid var(--line);border-radius:5px;background:#fff;margin-bottom:18px;overflow:hidden}
+  .reqstrip .rh{padding:11px 14px;border-bottom:1px solid var(--line-soft);display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .reqstrip .rt{font-size:13px;font-weight:600}
+  .reqstrip .re{background:none;border:none;font-family:inherit;font-size:12px;color:var(--green-deep);text-decoration:underline;cursor:pointer;padding:0}
+  .item{font-size:13.5px;padding:9px 14px;display:flex;gap:9px;align-items:flex-start;border-bottom:1px solid var(--line-soft)}
+  .item:last-child{border-bottom:none}
+  .item .ic{flex:none;width:16px;text-align:center;font-weight:700;line-height:1.45}
+  .item .ix{flex:1;min-width:0}
+  .item.deal{background:var(--red-bg)} .item.deal .ic{color:var(--red)} .item.deal .ix{color:#7d3f30;font-weight:600}
+  .item.warn{background:var(--amber-bg)} .item.warn .ic{color:var(--amber)} .item.warn .ix{color:#4d4632}
+  .item.met .ic{color:var(--green)}
+  .item.unk .ic{color:var(--faint)} .item.unk .ix{color:var(--muted)}
+  .yn{display:flex;gap:7px;margin-top:7px}
+  .yn button{padding:6px 13px;border:1px solid var(--line);background:#fff;border-radius:4px;font-family:inherit;font-size:12.5px;cursor:pointer;color:var(--ink)}
+  .yn button[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff;font-weight:600}
+  .gatebar{padding:11px 14px;font-size:12.5px;line-height:1.5;border-top:1px solid var(--line-soft)}
+  .gatebar.bad{background:var(--red-bg);border-top-color:var(--red-line);color:#7d3f30}
+  .gatebar.mid{background:var(--amber-bg);border-top-color:var(--amber);color:#4d4632}
+  .gatebar.good{background:#DDEBD8;border-top-color:#BFD6BC;color:#33513c}
+
+  .profileband{background:var(--surface);border:1px solid var(--line-soft);border-radius:4px;padding:12px 15px;margin-bottom:18px}
+  .profileband .pk{font-size:11.5px;color:var(--faint)}
+  .profileband .pn{font-size:16px;font-weight:600;margin:2px 0 4px}
+  .profileband .pb{font-size:13px;color:var(--muted);line-height:1.45}
+  .upsell{background:var(--surface);border:1px dashed var(--line);border-radius:4px;padding:11px 14px;margin-bottom:18px;font-size:13px;color:var(--muted)}
+  .upsell button{background:none;border:none;color:var(--green-deep);font-family:inherit;font-size:13px;font-weight:600;text-decoration:underline;cursor:pointer;padding:0;margin-top:2px}
+  .scalehint{font-size:11.5px;color:var(--faint);margin-bottom:4px}
+
+  .crit{padding:14px 0;border-bottom:1px solid var(--line-soft)}
+  .crit:last-child{border-bottom:none}
+  .crit .row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;gap:10px}
+  .crit .clabel{font-size:14.5px;font-weight:600}
+  .crit .cval{font-size:12.5px;color:var(--faint);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .marks{display:flex;gap:6px}
+  .mark{flex:1;height:26px;border:1px solid var(--line);border-radius:3px;background:transparent;cursor:pointer;padding:0;font:inherit;font-size:11px;color:var(--faint);transition:background .12s,border-color .12s,color .12s}
+  .mark[aria-checked="true"]{background:var(--green);border-color:var(--green);color:#fff;font-weight:600}
+  .crit.low .marks{max-width:64%}
+  .crit.low .mark{height:18px;border-color:var(--line-soft);font-size:10px}
+  .crit.low .mark[aria-checked="true"]{background:var(--faint);border-color:var(--faint)}
+  .crit.low .cnote{font-size:12px;color:var(--faint);margin-top:7px;font-style:italic}
+
+  .cbtns{display:flex;gap:16px;margin-top:9px;flex-wrap:wrap;align-items:center}
+  .mini{background:none;border:none;padding:0;margin:0;cursor:pointer;font-family:inherit;font-size:12px;display:inline-flex;gap:5px;align-items:center;color:var(--green-deep);text-decoration:underline;text-underline-offset:2px}
+  .mini.flag{color:var(--faint);text-decoration:none}
+  .mini.flag.on{color:var(--amber);font-weight:600}
+  .mini .caret{font-size:9px;transition:transform .15s;text-decoration:none}
+  .mini[aria-expanded="true"] .caret{transform:rotate(90deg)}
+
+  .look{display:none;margin-top:10px;background:#fff;border:1px solid var(--line);border-left:3px solid var(--green);border-radius:0 3px 3px 0;padding:12px 14px}
+  .look.open{display:block}
+  .look .lh{font-size:11px;font-weight:600;color:var(--green-deep);letter-spacing:.03em;text-transform:uppercase;margin-bottom:7px}
+  .look ul{margin:0;padding-left:17px}
+  .look li{font-size:13px;line-height:1.5;margin-bottom:7px}
+  .look li:last-child{margin-bottom:0}
+  .askrow{margin-top:10px;padding-top:9px;border-top:1px solid var(--line-soft);font-size:12.5px;line-height:1.5}
+  .askrow + .askrow{border-top:none;padding-top:5px;margin-top:5px}
+  .askrow .who{font-weight:600;font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;display:block;margin-bottom:2px}
+  .askrow.listing .who{color:var(--blue)}
+  .askrow.buyer .who{color:var(--green-deep)}
+  .askrow.lender .who{color:var(--amber)}
+  .askrow .qq{color:var(--muted);font-style:italic}
+
+  .flagbox{display:none;margin-top:9px;padding:11px 13px;background:var(--amber-bg);border:1px solid var(--amber-line);border-radius:3px}
+  .flagbox.open{display:block}
+  .flagbox input[type=text]{width:100%;border:1px solid var(--line);border-radius:3px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:#fff}
+  .photorow{display:flex;align-items:center;gap:10px;margin-top:9px;flex-wrap:wrap}
+  .photobtn{border:1px dashed var(--amber);color:#6d5518;background:#fff;border-radius:3px;padding:7px 11px;font-family:inherit;font-size:12px;cursor:pointer}
+  .thumb{height:44px;width:44px;object-fit:cover;border-radius:3px;border:1px solid var(--line);display:none}
+  .rmphoto{background:none;border:none;color:#6d5518;font-family:inherit;font-size:11.5px;cursor:pointer;text-decoration:underline;padding:0;display:none}
+  .pnote{font-size:11.5px;color:#6d5518;margin-top:6px;line-height:1.45;display:none}
+  .pnote.show{display:block}
+
+  .watch{background:var(--amber-bg);border-left:3px solid var(--amber);padding:12px 15px;margin:18px 0 4px;border-radius:0 3px 3px 0}
+  .watch .wt{font-size:13px;font-weight:600;color:var(--ink)}
+  .watch .wattr{font-size:11px;color:var(--amber);margin:1px 0 6px;font-weight:600}
+  .watch p{margin:0;font-size:13px;line-height:1.5;color:#4d4632}
+
+  .feeling{margin:30px 0 4px}
+  .feeling .fq{font-size:15px;font-weight:600;margin-bottom:3px}
+  .feeling .fsub{font-size:12.5px;color:var(--faint);margin-bottom:14px}
+  .slwrap{display:flex;align-items:center;gap:14px}
+  input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:3px;border-radius:3px;background:var(--line);outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:var(--green);cursor:pointer;border:3px solid var(--paper);box-shadow:0 0 0 1px var(--green)}
+  input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--green);cursor:pointer;border:3px solid var(--paper);box-shadow:0 0 0 1px var(--green)}
+  .fval{font-family:Georgia,ui-serif,serif;font-size:22px;min-width:40px;text-align:right}
+
+  .read{margin-top:30px;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--surface)}
+  .scores{display:flex}
+  .scores .s{flex:1;padding:18px 14px 16px;text-align:center}
+  .scores .s.fit{border-right:1px solid var(--line)}
+  .scores .num{font-family:Georgia,ui-serif,serif;font-size:44px;line-height:1}
+  .scores .fit .num{color:var(--green)}
+  .scores .lab{font-size:12px;color:var(--muted);margin-top:7px}
+  .interp{padding:15px 16px;border-top:1px solid var(--line);font-size:13.5px;line-height:1.55}
+  .interp .tag{font-weight:600;color:var(--green-deep);display:block;margin-bottom:3px;font-size:12.5px}
+
+  .nudge{margin-top:16px;border:1px solid var(--red-line);background:var(--red-bg);border-radius:5px;padding:13px 15px;display:none}
+  .nudge.show{display:block}
+  .nudge .nh{font-size:11.5px;font-weight:600;color:var(--red);letter-spacing:.03em;text-transform:uppercase;margin-bottom:6px}
+  .nudge p{margin:0 0 11px;font-size:13.5px;line-height:1.5;color:#5a2f24}
+  .nudge .nb{display:flex;gap:9px;flex-wrap:wrap}
+  .nudge .nb button{flex:1;min-width:130px;padding:9px;border-radius:4px;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;border:1px solid var(--red);background:#fff;color:var(--red)}
+  .nudge .nb button.keep{background:var(--red);color:#fff}
+
+  .revisit{margin-top:20px;border:1px solid var(--line);border-radius:4px;padding:14px 15px;background:#fff;display:none}
+  .revisit.show{display:block}
+  .revisit h3{margin:0 0 10px;font-size:13.5px;font-weight:600}
+  .ri{display:flex;gap:10px;align-items:flex-start;font-size:13px;padding:8px 0;border-top:1px solid var(--line-soft)}
+  .ri:first-of-type{border-top:none}
+  .ri img{height:40px;width:40px;object-fit:cover;border-radius:3px;border:1px solid var(--line);flex:none}
+  .ri .rc{font-size:11px;color:var(--faint);margin-top:1px}
+
+  .disp{margin-top:26px}
+  .disp .dq{font-size:15px;font-weight:600;margin-bottom:12px}
+  .chips{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .chip{padding:12px 10px;border:1px solid var(--line);border-radius:4px;background:transparent;font-family:inherit;font-size:14px;color:var(--ink);cursor:pointer;text-align:center;transition:background .12s,border-color .12s,color .12s}
+  .chip[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff}
+  .openq{margin-top:14px;background:var(--surface);border:1px solid var(--line-soft);border-radius:4px;padding:13px 15px;display:none}
+  .openq.show{display:block}
+  .openq .nt{font-size:13px;font-weight:600;margin-bottom:3px}
+  .openq p{margin:0 0 10px;font-size:13px;line-height:1.5;color:var(--muted)}
+  .openq input{width:100%;border:1px solid var(--line);border-radius:4px;padding:9px 10px;font-family:inherit;font-size:13.5px;background:#fff}
+
+  .help{margin-top:24px;border:1px solid var(--blue-line);background:var(--blue-bg);border-radius:5px;padding:14px 15px;display:none}
+  .help.show{display:block}
+  .help .hh{font-size:11.5px;font-weight:600;color:var(--blue);letter-spacing:.03em;text-transform:uppercase;margin-bottom:8px}
+  .help .hi{font-size:13.5px;line-height:1.5;padding:9px 0;border-top:1px solid var(--blue-line)}
+  .help .hi:first-of-type{border-top:none;padding-top:0}
+  .help .hi .why{display:block;font-size:11.5px;color:#5a7380;margin-bottom:3px}
+  .help .hcta{margin-top:11px}
+  .help .hcta a{display:inline-block;background:var(--blue);color:#fff;text-decoration:none;padding:9px 14px;border-radius:4px;font-size:13px;font-weight:600;margin:0 8px 8px 0}
+
+  .storewarn{margin-top:14px;border:1px solid var(--amber);background:var(--amber-bg);border-radius:4px;padding:11px 14px;font-size:12.5px;line-height:1.5;color:#4d4632;display:none}
+  .storewarn.show{display:block}
+
+  /* ---- compare ---- */
+  .cmp h1{font-size:24px;margin:0 0 3px;font-weight:600}
+  .cmp .csub{color:var(--muted);font-size:13.5px;margin-bottom:14px}
+  .cmpnote{font-size:12.5px;line-height:1.55;background:var(--surface);border:1px solid var(--line-soft);border-radius:4px;padding:12px 14px;margin:0 0 16px}
+  .cmpnote.warn{background:var(--red-bg);border-color:var(--red-line);color:#5a2f24}
+  .gsep{font-size:11.5px;font-weight:600;color:var(--red);letter-spacing:.03em;text-transform:uppercase;margin:22px 0 10px;padding-top:14px;border-top:1px solid var(--red-line)}
+  .hcard{border:1px solid var(--line);border-radius:5px;padding:14px 15px;margin-bottom:11px;cursor:pointer;background:#fff;display:flex;gap:14px;align-items:center;width:100%;text-align:left;font-family:inherit}
+  .hcard:hover{border-color:var(--green)}
+  .hcard.hasdeal{border-color:var(--red-line);background:var(--red-bg)}
+  .hcard .rank{font-family:Georgia,ui-serif,serif;font-size:22px;color:var(--faint);width:22px;text-align:center;flex:none}
+  .hcard .hinfo{flex:1;min-width:0}
+  .hcard .haddr{font-size:15px;font-weight:600;line-height:1.25}
+  .hcard .hplace{font-size:12px;color:var(--muted);margin-top:1px}
+  .hcard .hbadges{font-size:11.5px;margin-top:5px;line-height:1.5}
+  .hcard .bd{color:var(--red);font-weight:600}
+  .hcard .bw{color:var(--amber)}
+  .hcard .bf{color:var(--faint)}
+  .hcard .hnums{text-align:right;flex:none}
+  .hcard .hfit{font-family:Georgia,ui-serif,serif;font-size:26px;color:var(--green);line-height:1}
+  .hcard .hfeel{font-size:11.5px;color:var(--muted);margin-top:3px}
+  .empty{color:var(--muted);font-size:14px;padding:18px 0}
+
+  .addform label{display:block;font-size:12.5px;color:var(--muted);margin:11px 0 5px}
+  .addform input{width:100%;border:1px solid var(--line);border-radius:4px;padding:11px 12px;font-family:inherit;font-size:15px;background:#fff}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+  /* ---- bottom NAV bar (navigation, not a lender CTA) ---- */
+  .bar{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;pointer-events:none;z-index:40}
+  .barin{width:100%;max-width:440px;background:#fff;border-top:1px solid var(--line);padding:10px 20px;display:flex;gap:10px;pointer-events:auto;box-shadow:0 -2px 10px rgba(34,38,31,.06)}
+  .barin button{flex:1;padding:11px;border-radius:5px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;border:1px solid var(--green)}
+  .barin .primary{background:var(--green);color:#fff;border-color:var(--green)}
+  .barin .sec{background:#fff;color:var(--green-deep)}
+
+  .setup fieldset{border:1px solid var(--line);border-radius:4px;padding:14px;margin:0 0 16px;background:#fff}
+  .setup legend{font-size:11.5px;font-weight:600;color:var(--green-deep);letter-spacing:.03em;text-transform:uppercase;padding:0 6px}
+  .setup label{display:block;font-size:12px;color:var(--muted);margin:0 0 4px}
+  .setup .f{margin-bottom:11px}
+  .setup input{width:100%;border:1px solid var(--line);border-radius:4px;padding:9px 10px;font-family:inherit;font-size:14.5px;background:#fff}
+  .setup .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .outbox{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:12px 14px;margin-top:6px}
+  .outbox .ol{font-size:11.5px;color:var(--faint);margin-bottom:6px}
+  .outbox textarea{width:100%;border:1px solid var(--line);border-radius:4px;padding:9px 10px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;background:#fff;min-height:88px;resize:vertical}
+
+  .fine{font-size:10.5px;color:var(--faint);line-height:1.55;margin-top:32px;padding-top:16px;border-top:1px solid var(--line)}
+  .fine b{color:var(--muted)}
+  .fine p{margin:0 0 8px}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  @media print{
+    body{background:#fff;display:block}
+    .app{max-width:none;background:#fff;padding:0;min-height:0}
+    .bar,.cbtns,.upsell,.link,.chips,.scalehint,.dots,.help .hcta,.nudge .nb,.yn,.reqstrip .re,.storewarn{display:none !important}
+    .look,.flagbox{display:none !important}
+    .crit,.read,.watch,.revisit,.cobrand,.reqstrip,.help,.hcard{break-inside:avoid;page-break-inside:avoid}
+    .mark{height:16px}
+    .mark,.item,.gatebar,.help,.nudge,.hcard{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .mark[aria-checked="true"]{background:#4F6B57 !important;border-color:#4F6B57 !important}
+    .fine{font-size:8.5px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================================================================
+     CONFIG — edit here, or override per-listing by URL param.
+     ?setup=1  builds a listing link without touching this file.
+     ?demo=1   loads three pre-scored homes for demoing to a Realtor.
+     =================================================================== -->
+<script>
+const CONFIG = {
+  lender: {
+    name:"Dean Reiber", tagline:"The Handy Lender", company:"Cornerstone First Mortgage",
+    nmls:"2463805", companyNmls:"173855",
+    phone:"(303) 903-8901", email:"dreiber@cfmtg.com",
+    booking:"", site:"TheHandyLender.com"
+  },
+  agent: {
+    enabled:false, name:"", brokerage:"", phone:"", email:"", license:"",
+    role:"listing"     // "listing" = their own listing · "buyer" = they represent the buyer
+  },
+  listing: {
+    address:"1424 Turnberry Drive",
+    place:"Castle Rock, CO 80104 · Sawgrass Townhomes at Plum Creek",
+    beds:"2", baths:"2.5", garage:"2-car", price:"$405k", hoa:"", yearBuilt:""
+  },
+  disclosure: {
+    feeCoverage:"On loans I originate, I cover the lender and appraisal fees for my clients. Other third-party closing costs — title, taxes, prepaids, government and recording fees — still apply. Ask me for the specifics on your scenario."
+  },
+  photos: {
+    maxEdge:1200,       // longest side after downscale
+    quality:0.76,       // JPEG quality
+    warnAtPct:70        // warn the buyer when estimated storage passes this
+  }
+};
+</script>
+
+<div class="app">
+  <div class="brand"><span class="dot"></span><span id="brandLine"></span></div>
+  <div class="cobrand hidden" id="cobrand"></div>
+
+  <!-- LANDING -->
+  <section id="landView" class="land">
+    <div class="lead">Touring homes today?</div>
+    <div class="prop">
+      <h1 class="serif" id="landTitle"></h1>
+      <div class="place" id="landPlace"></div>
+      <div class="spec" id="landSpec"></div>
+    </div>
+    <div class="ask">Want us to personalize what you should pay attention to?</div>
+    <div class="asksub">A couple of minutes. No email, no sign-up — everything stays on your phone.</div>
+    <div class="btns">
+      <button class="btn" id="wantPersonalize">Yes — personalize my tour</button>
+      <button class="btn ghost" id="justShow">No — just show me the home</button>
+      <button class="btn ghost small hidden" id="resumeBtn">Resume my HomeTour</button>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quizView" class="hidden">
+    <div class="dots" id="dots"></div>
+    <div class="stepk" id="qcount"></div>
+    <div class="qtext" id="qtext"></div>
+    <div id="opts"></div>
+    <div class="qnav">
+      <button class="qback hidden" id="backBtn">← back</button><span></span>
+      <button class="link hidden" id="seeProfile" style="padding-top:0">See your profile →</button>
+    </div>
+  </section>
+
+  <!-- REVEAL -->
+  <section id="revealView" class="reveal hidden">
+    <div class="k">Your buyer profile</div>
+    <div class="name serif" id="revName"></div>
+    <div class="def" id="revDef"></div>
+    <div class="body" id="revBody"></div>
+    <button class="btn" id="toReqs">Next: what you need →</button>
+    <button class="link" id="retake">Retake the quiz</button>
+  </section>
+
+  <!-- REQUIREMENTS -->
+  <section id="reqView" class="req hidden">
+    <h1 class="serif">What are you actually looking for?</h1>
+    <div class="rsub">Your profile is <em>how</em> you decide. This is <em>what</em> you need. Mark each one — or leave it off. An <b style="color:var(--amber)">I want</b> warns you if a home's missing it; a <b style="color:var(--red)">dealbreaker</b> rules it out.</div>
+    <div id="reqRows"></div>
+    <div style="margin-top:22px"><button class="btn" id="reqSave">Start scoring homes →</button></div>
+    <button class="link" id="reqSkip">Skip for now</button>
+  </section>
+
+  <!-- SCORECARD -->
+  <section id="scoreView" class="hidden">
+    <div class="prop">
+      <h1 class="serif" id="scAddr"></h1>
+      <div class="place" id="scPlace"></div>
+      <div class="spec" id="scSpec"></div>
+    </div>
+
+    <div class="reqstrip hidden" id="reqstrip"></div>
+
+    <div class="profileband hidden" id="profileband">
+      <div class="pk">Tuned for your profile</div>
+      <div class="pn serif" id="sbName"></div>
+      <div class="pb" id="sbBody"></div>
+    </div>
+    <div class="upsell hidden" id="upsell">
+      Not personalized yet — want the scorecard tuned to <em>you</em>?
+      <button id="upsellBtn">Take the two-minute setup</button>
+    </div>
+
+    <div class="scalehint">Rate each 1–5 · 1 = weak, 5 = strong. Open <b>What to look for</b> for the builder's-eye version, and flag anything worth a second look.</div>
+    <div id="crits"></div>
+
+    <div class="watch">
+      <div class="wt">Worth a closer look</div>
+      <div class="wattr" id="watchAttr"></div>
+      <p id="watchP"></p>
+    </div>
+
+    <section class="feeling">
+      <div class="fq">Now set the scorecard aside.</div>
+      <div class="fsub">How do you actually feel about this home?</div>
+      <div class="slwrap">
+        <label for="feeling" class="hidden">How you feel about this home, 1 to 10</label>
+        <input type="range" id="feeling" min="1" max="10" step="1" value="6">
+        <span class="fval serif" id="feelingVal">6</span>
+      </div>
+    </section>
+
+    <section class="read" aria-live="polite">
+      <div class="scores">
+        <div class="s fit"><div class="num serif" id="fitNum">—</div><div class="lab">Fit for your priorities</div></div>
+        <div class="s"><div class="num serif" id="feelNum">6</div><div class="lab">How you feel</div></div>
+      </div>
+      <div class="interp" id="interp"></div>
+    </section>
+
+    <div class="nudge" id="nudge">
+      <div class="nh">Worth revisiting</div>
+      <p id="nudgeP"></p>
+      <div class="nb" id="nudgeB"></div>
+    </div>
+
+    <section class="revisit" id="revisit">
+      <h3>Questions &amp; things to revisit</h3>
+      <div id="revisitList"></div>
+    </section>
+
+    <section class="disp">
+      <div class="dq">How are you leaning?</div>
+      <div class="chips" id="chips" role="group" aria-label="How are you leaning?">
+        <button class="chip" data-d="love" aria-pressed="false">Love it</button>
+        <button class="chip" data-d="interested" aria-pressed="false">Interested</button>
+        <button class="chip" data-d="maybe" aria-pressed="false">Maybe</button>
+        <button class="chip" data-d="not" aria-pressed="false">Not for me</button>
+      </div>
+      <div class="openq" id="openq">
+        <div class="nt" id="oqTitle"></div>
+        <p id="oqBody"></p>
+        <label class="hidden" for="oqInput">Your open question</label>
+        <input type="text" id="oqInput" placeholder="Type it here — it saves with this home">
+      </div>
+    </section>
+
+    <div class="help" id="help">
+      <div class="hh" id="helpH"></div>
+      <div id="helpList"></div>
+      <div class="hcta" id="helpCta"></div>
+    </div>
+
+    <div class="storewarn" id="storewarn"></div>
+
+    <button class="link" id="printBtn">Save or print this scorecard</button>
+    <button class="link" id="startOver">Start over</button>
+  </section>
+
+  <!-- COMPARE -->
+  <section id="cmpView" class="cmp hidden">
+    <h1 class="serif">Your HomeTour</h1>
+    <div class="csub" id="cmpSub"></div>
+    <div class="cmpnote" id="cmpNote"></div>
+    <div id="hlist"></div>
+    <div class="nudge" id="cnudge">
+      <div class="nh">Worth revisiting</div>
+      <p id="cnudgeP"></p>
+      <div class="nb" id="cnudgeB"></div>
+    </div>
+    <div class="help" id="chelp">
+      <div class="hh" id="chelpH"></div>
+      <div id="chelpList"></div>
+      <div class="hcta" id="chelpCta"></div>
+    </div>
+    <button class="btn ghost" id="addHomeBtn" style="margin-top:14px">+ Add a home you're touring</button>
+    <button class="link" id="editReqs2">Edit your priorities</button>
+    <button class="link" id="printCmp">Save or print this list</button>
+    <button class="link" id="startOver2">Start over</button>
+  </section>
+
+  <!-- ADD HOME -->
+  <section id="addView" class="addform hidden">
+    <h1 class="serif" style="font-size:23px;margin:0 0 4px">Add a home</h1>
+    <div class="csub" style="color:var(--muted);font-size:13.5px;margin-bottom:6px">A few basics let us check it against what you're looking for. You'll score it next.</div>
+    <label for="naAddr">Address</label><input type="text" id="naAddr" placeholder="123 Example St">
+    <label for="naPlace">Neighborhood / area (optional)</label><input type="text" id="naPlace" placeholder="Castle Rock">
+    <div class="grid2">
+      <div><label for="naBeds">Beds</label><input type="number" id="naBeds" placeholder="3" inputmode="decimal"></div>
+      <div><label for="naBaths">Baths</label><input type="number" id="naBaths" placeholder="2" inputmode="decimal" step="0.5"></div>
+    </div>
+    <div class="grid2">
+      <div><label for="naPrice">Price ($k)</label><input type="number" id="naPrice" placeholder="450" inputmode="numeric"></div>
+      <div><label for="naGarage">Garage (cars)</label><input type="number" id="naGarage" placeholder="2" inputmode="numeric"></div>
+    </div>
+    <label for="naHoa">HOA ($/mo)</label><input type="number" id="naHoa" placeholder="0" inputmode="numeric">
+    <div style="margin-top:20px"><button class="btn" id="naSave">Add &amp; score it →</button></div>
+    <button class="link" id="naCancel">Cancel</button>
+  </section>
+
+  <!-- SETUP -->
+  <section id="setupView" class="setup hidden">
+    <h1 class="serif" style="font-size:22px;margin:0 0 5px">Build a listing link</h1>
+    <div class="csub" style="color:var(--muted);font-size:13.5px;margin-bottom:18px">Fill this in, copy the link, and send it or turn it into a QR code. Nothing is saved to the file — the link carries it all.</div>
+    <fieldset>
+      <legend>The listing</legend>
+      <div class="f"><label for="s_addr">Street address</label><input id="s_addr" placeholder="4328 S Nepal Court"></div>
+      <div class="f"><label for="s_place">City, ZIP · community</label><input id="s_place" placeholder="Aurora, CO 80015"></div>
+      <div class="g2">
+        <div class="f"><label for="s_beds">Beds</label><input id="s_beds" placeholder="3" inputmode="decimal"></div>
+        <div class="f"><label for="s_baths">Baths</label><input id="s_baths" placeholder="2" inputmode="decimal"></div>
+      </div>
+      <div class="g2">
+        <div class="f"><label for="s_garage">Garage</label><input id="s_garage" placeholder="2-car"></div>
+        <div class="f"><label for="s_price">Price</label><input id="s_price" placeholder="$525k"></div>
+      </div>
+      <div class="g2">
+        <div class="f"><label for="s_hoa">HOA $/mo</label><input id="s_hoa" placeholder="0" inputmode="numeric"></div>
+        <div class="f"><label for="s_year">Year built</label><input id="s_year" placeholder="1998" inputmode="numeric"></div>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Co-branding (optional)</legend>
+      <div class="f"><label for="s_agname">Agent / team name</label><input id="s_agname" placeholder="Jen Dittemore"></div>
+      <div class="f"><label for="s_agbrok">Brokerage</label><input id="s_agbrok" placeholder="Brokerage name"></div>
+      <div class="g2">
+        <div class="f"><label for="s_agphone">Phone</label><input id="s_agphone" placeholder="720-555-0199"></div>
+        <div class="f"><label for="s_aglic">License #</label><input id="s_aglic" placeholder="FA.100012345"></div>
+      </div>
+      <div class="f"><label for="s_agemail">Email</label><input id="s_agemail" placeholder="agent@example.com"></div>
+      <div class="f">
+        <label>Their role on this link</label>
+        <div class="seg" id="s_role">
+          <button type="button" data-r="listing" aria-pressed="true">Listing agent<br><span style="font-size:10.5px;opacity:.8">their own listing</span></button>
+          <button type="button" data-r="buyer" aria-pressed="false">Buyer's agent<br><span style="font-size:10.5px;opacity:.8">they rep the buyer</span></button>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Demo mode</legend>
+      <div class="f" style="margin:0">
+        <label>Load three pre-scored homes so you can show the comparison immediately</label>
+        <div class="seg" id="s_demo">
+          <button type="button" data-d="0" aria-pressed="true">Off — real buyer link</button>
+          <button type="button" data-d="1" aria-pressed="false">On — demo link</button>
+        </div>
+      </div>
+    </fieldset>
+    <div class="outbox">
+      <div class="ol">Shareable link</div>
+      <textarea id="s_out" readonly></textarea>
+      <div style="margin-top:9px"><button class="btn small" id="s_copy">Copy link</button></div>
+    </div>
+    <button class="link" id="s_exit">← Leave setup</button>
+  </section>
+
+  <div class="fine" id="fine"></div>
+</div>
+
+<div class="bar hidden" id="bar">
+  <div class="barin">
+    <button class="sec" id="barCompare">My HomeTour (<span id="barCount">0</span>)</button>
+    <button class="primary" id="barAdd">+ Add a home</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* =====================================================================
+   1. Criterion labels
+   ===================================================================== */
+const LBL = {
+  location:"Location", layout:"Layout & flow", kitchen:"Kitchen", condition:"Condition",
+  primary_suite:"Primary suite", yard:"Yard / outdoor", neighborhood:"Neighborhood",
+  value:"Value for the price", structural_condition:"Structural condition",
+  major_systems:"Major systems", cosmetic_condition:"Cosmetic condition",
+  improvement_opportunity:"Improvement opportunity", layout_potential:"Layout & potential",
+  monthly_cost:"Monthly cost", rentability:"Rentability / numbers"
+};
+
+/* =====================================================================
+   2. BUILDER INTEL  —  ⚠ DEAN: REVIEW EVERY LINE
+   Questions route by who should actually answer them:
+     askListing : property facts the listing side knows
+     askBuyer   : decision/advice questions for the buyer's own agent
+     askLender  : construction meaning + payment/financing structure
+   Omit any and that row won't render.
+   ===================================================================== */
+const LOOK = {
+  condition: {
+    look:[
+      "<b>Roof.</b> Granules collecting in the gutters, patched or mismatched shingles, and soft spots underfoot all age a roof faster than the paperwork says. In hail country the claim history matters as much as the age.",
+      "<b>Furnace and AC.</b> There's a data plate on the side of each unit with a manufacture date. Furnaces generally run 15–20 years, AC condensers 12–15. Read it yourself — \"recently serviced\" is not \"recently replaced.\"",
+      "<b>Water heater.</b> The serial number dates it; 8–12 years is typical. Look for rust staining at the base and whether it's sitting in a drain pan.",
+      "<b>Electrical panel.</b> Open the cover door and read the brand name. Federal Pacific Stab-Lok and Zinsco panels have a known failure history and can affect what insurers will write. Count the empty breaker slots too — that's your room to add anything later.",
+      "<b>Under the sinks.</b> Gray plastic supply pipe is likely polybutylene (roughly 1978–1995) and is a real leak and insurability issue. Galvanized steel narrows as it corrodes and shows up as weak pressure.",
+      "<b>Windows.</b> Fogging or haze between the panes is a failed seal. Count how many — it's rarely just one.",
+      "<b>Water away from the house.</b> Stand at each corner. Does the ground slope away from the foundation, or toward it? Are downspouts dumping at the wall or extended out? Cheapest thing here to check, most expensive to ignore."
+    ],
+    askListing:"How old are the roof, furnace, AC, and water heater — and is there a hail or water claim in this home's history?",
+    askLender:"If several systems are near end of life, what does that do to the numbers — and what are the options for handling it in the loan?"
+  },
+  structural_condition: {
+    look:[
+      "<b>Foundation cracks.</b> Thin vertical cracks are usually concrete shrinkage and common. Horizontal cracks, stair-step cracks through block, or anything you could slide a coin into deserve a structural engineer before you're past your inspection deadline.",
+      "<b>This is expansive-soil country.</b> Much of the Front Range sits on clay that swells and shrinks with moisture. That's why drainage and grading matter more here than in most markets.",
+      "<b>The gap at the bottom of basement walls is normal here.</b> Many Colorado basements are built with floating slabs and a deliberate void at the base of the framing so the slab can move. Buyers panic about it. Void filled in, or framing pinned tight to the slab, is the actual problem.",
+      "<b>Doors and drywall tell on the house.</b> Doors that won't latch, cracks radiating from door and window corners, and floors that feel sloped are all movement — worth more attention than the crack itself.",
+      "<b>The wall you want to remove.</b> From the basement, look at which way the floor joists run. A wall running perpendicular to the joists is probably carrying them. That's a beam and possibly a footing, not a weekend.",
+      "<b>Photograph anything that looks off</b> — it's far more useful to your inspector than a description written that evening."
+    ],
+    askListing:"Is there a structural engineer's letter on file, any history of foundation repair, and a working sump pump?",
+    askLender:"Send me your photos. I can tell you whether it reads as normal settlement or the kind of thing that needs an engineer before you go further."
+  },
+  major_systems: {
+    look:[
+      "<b>Scope the sewer line.</b> On anything built before roughly 1985, a sewer scope is one of the highest-return inspections there is. Cast iron corrodes through and Orangeburg (tar-paper pipe) collapses. A line replacement under a finished driveway is a five-figure surprise.",
+      "<b>Panel capacity, not just condition.</b> 100-amp service was fine for a 1970s house. Add a kitchen remodel, a second AC stage, or an EV charger and you may need a service upgrade. Check the main breaker rating on the panel face — and photograph the panel if you can.",
+      "<b>Returns, not just registers.</b> Count whether each bedroom has a return air vent, not only a supply. Retrofitting returns into finished walls is invasive, and it's why some remodels never feel comfortable.",
+      "<b>Main water supply size.</b> A 1/2\" supply limits how many fixtures can run at once. If you're adding a bathroom, this matters.",
+      "<b>Find the shutoffs.</b> If nobody at the open house can locate the gas and water shutoffs, that tells you something about how the home's been maintained."
+    ],
+    askListing:"Has the sewer line ever been scoped or replaced, and what's the main breaker rating on the panel?",
+    askLender:"Want me to walk through what upgrading any of this actually costs, and whether it can be financed into the purchase instead of paid out of pocket?"
+  },
+  improvement_opportunity: {
+    look:[
+      "<b>The best projects are cosmetic-only.</b> Paint, flooring, lighting, hardware, counters — a house that's dated but structurally sound is the one that pays. Dollar for dollar nothing beats it.",
+      "<b>Does the kitchen footprint work as-is?</b> Refacing solid cabinet boxes and swapping counters is a different budget than relocating the sink, the gas line, or a load-bearing wall. Budgets die when plumbing moves.",
+      "<b>Look for a rough-in in the basement slab.</b> A capped pipe stub in an unfinished basement means a future bathroom is already plumbed for. That's real, findable money.",
+      "<b>Add bathrooms near an existing stack.</b> Stacking a new bath above or beside existing plumbing is a fraction of running a new waste line across the house.",
+      "<b>Ask about permits.</b> A finished basement or addition done without permits can complicate the appraisal, the loan, and your own resale — and unpermitted square footage may not count toward value at all."
+    ],
+    askListing:"Which improvements were permitted, and is there any plumbing rough-in already in the basement?",
+    askLender:"If the work is worth doing, renovation financing can roll it into the purchase loan instead of onto a card or a HELOC afterward. That has to be structured before the offer, so it's worth a call early."
+  },
+  layout_potential: {
+    look:[
+      "<b>Check the joists before you plan to open a wall.</b> From the basement, note the joist direction. Walls running across the joists tend to be structural; walls running parallel often aren't. That's the difference between a header and a whole beam-and-post job.",
+      "<b>Basement ceiling height.</b> Under about seven feet and you may not be able to finish it to code — and ductwork and beams eat into the lowest point, which is what actually governs.",
+      "<b>Find the wasted space.</b> Oversized hallways, a too-deep coat closet, a tandem garage bay, a formal dining room nobody would use. Reclaiming existing square footage is far cheaper than adding it.",
+      "<b>Where does the plumbing stack run?</b> A layout change that keeps kitchens and baths near existing stacks stays affordable. One that doesn't, doesn't."
+    ],
+    askListing:"Is there a floor plan available, and are any interior walls known to be load-bearing?",
+    askLender:"Describe the change you're imagining and I'll give you a read on whether it's a cosmetic number or a structural one before you fall for the idea."
+  },
+  cosmetic_condition: {
+    look:[
+      "<b>This is the cheapest category to change — and the one most likely to fool you.</b> Paint colors, carpet, light fixtures, cabinet hardware, a tired backsplash. All of it is a weekend or a line item.",
+      "<b>Score it honestly, then discount it.</b> It's weighted low on purpose. Dated finishes are the reason you can afford a sound house in a good location, and the reason other buyers walked."
+    ]
+  },
+  monthly_cost: {
+    look:[
+      "<b>The payment is five things, not one.</b> Principal and interest, property taxes, homeowners insurance, HOA dues, and mortgage insurance if you're under 20% down. A P&amp;I-only estimate will be well short of what you actually write each month.",
+      "<b>Ask whether this is in a metro district.</b> Many newer Colorado developments sit in metropolitan or special districts that add their own mill levy on top of county taxes. It's a meaningful monthly number and the single most-missed line in a Front Range payment.",
+      "<b>Get the real HOA figure and what it covers.</b> Some cover roof and exterior, some cover nothing you'd guess. Ask about the reserve study too — an underfunded reserve is a special assessment waiting to happen.",
+      "<b>Insurance here is not a rule of thumb.</b> Hail exposure has moved Front Range premiums and deductibles a lot. Get an actual quote on the actual address.",
+      "<b>Then pressure-test it.</b> Could you write this payment comfortably for three months straight, with everything else unchanged? That's the real test, not whether it's approvable."
+    ],
+    askListing:"Is this property in a metro or special district, what are the actual annual taxes, and what do the HOA dues cover?",
+    askLender:"I can put the real all-in number on this specific address in front of you — taxes, insurance, HOA and mortgage insurance included — usually same day."
+  },
+  value: {
+    look:[
+      "<b>Deferred maintenance is a number, not a worry.</b> A roof at year eighteen, a furnace at twenty, an original water heater — that's something you can put in an offer or ask for as a concession.",
+      "<b>Finished square footage isn't always countable.</b> Below-grade and unpermitted space is often valued differently or not at all, which affects the appraisal and therefore the loan.",
+      "<b>Compare inside the subdivision.</b> Price per square foot only means something against recent closings of similar homes nearby — ideally the same neighborhood and floor plan, not a city-wide average."
+    ],
+    askListing:"How long has this been listed, have there been price changes, and are there any known offers?",
+    askBuyer:"What are the recent comparable sales here, and how would you approach the offer on this one?"
+  },
+  rentability: {
+    look:[
+      "<b>Check the HOA's rental rules first.</b> Many townhome and condo associations cap the percentage of rented units, run a waitlist, or set minimum lease terms. Some lenders also limit financing in high-rental-concentration projects. This can end the thesis before the numbers matter.",
+      "<b>Rent comps, not rent guesses.</b> Pull actual leased comparables for the same floor plan and bedroom count, and check how long they sat.",
+      "<b>Licensing and short-term rules vary by municipality</b> and change often. Verify for this specific address.",
+      "<b>The boring physical stuff drives returns.</b> Separate metering, parking ratio, durable flooring, and how many systems are near end of life — that's your first three years of cash flow."
+    ],
+    askListing:"Does the HOA restrict rentals, and what are the current caps or lease minimums?",
+    askLender:"Occupancy type, how many financed properties you hold, and DSCR versus full documentation all move the return as much as the rent does. Worth running before you model it."
+  },
+  neighborhood: {
+    look:[
+      "<b>Look at the street, not just the house.</b> How are neighboring properties maintained? Deferred maintenance on the block affects your appraisal and your resale.",
+      "<b>Come back at a different hour.</b> Traffic, noise, parking, and sun exposure are all different at 7am Tuesday than at a Sunday open house.",
+      "<b>Check what's planned nearby.</b> Vacant parcels, zoning changes, and planned arterials are public record. The view and the quiet may not be permanent."
+    ],
+    askBuyer:"How does this area compare with the other neighborhoods you're considering, and what does it mean for resale?"
+  },
+  layout: {
+    look:[
+      "<b>Walk your actual routine.</b> Groceries from the car to the kitchen. Laundry from the bedroom. Trash to the bin. Awkward paths are the thing people stop noticing at a showing and never stop noticing after moving in.",
+      "<b>Stand where you'd actually spend time.</b> Is there natural light where you'd work or cook in the late afternoon?",
+      "<b>Where will the furniture go?</b> Long walls, window placement, and door swings decide whether a room works."
+    ],
+    askListing:"What's included with the home — appliances, window coverings, anything mounted or built in?"
+  },
+  kitchen: {
+    look:[
+      "<b>Open a cabinet and look at the box, not the door.</b> Solid boxes with dated doors can be refaced. Particleboard swelling at the sink base means replacement.",
+      "<b>Check under the sink for staining.</b> A slow leak leaves a ring and a smell long before it leaves a stain you can see standing up.",
+      "<b>Note gas or electric at the range,</b> and whether there's a real exhaust vent to the outside or a recirculating fan. Adding either later means a gas line or a duct run."
+    ],
+    askListing:"How old are the appliances, and which ones convey with the home?"
+  },
+  yard: {
+    look:[
+      "<b>Grade first, landscaping second.</b> Look at whether the yard slopes away from the house and where water would go in a heavy rain. Pretty landscaping over bad drainage is an expensive combination.",
+      "<b>Fences and trees have owners.</b> Ask which fence lines are yours to maintain, and look at any large tree near the foundation or the sewer line.",
+      "<b>Sprinkler systems age out.</b> Ask whether it's been blown out each fall and whether any zones are known to be down."
+    ],
+    askListing:"Which fence lines belong to this property, and has the sprinkler system been winterized and kept up?"
+  },
+  primary_suite: {},
+  location: {
+    askBuyer:"How does this location fit against the other areas you're looking at — commute, schools, and what it means when you sell?"
+  }
+};
+
+/* =====================================================================
+   3. REQUIREMENTS
+   Merged: original's predicate architecture + customizable thresholds
+   + the extra presets + auto-evaluation from listing data.
+     type "min"/"max"  → numeric threshold, auto-evaluated from attr
+     type "score"      → read from the buyer's own 1-5 rating
+     type "confirm"    → buyer answers yes/no at the home
+   test() returns true | false | null(unknown)
+   ===================================================================== */
+const REQS = [
+  { id:"beds",    label:"Bedrooms",      type:"min", def:3,   unit:"beds",   test:(a,t)=>a.beds==null?null:a.beds>=t },
+  { id:"baths",   label:"Bathrooms",     type:"min", def:2,   unit:"baths",  test:(a,t)=>a.baths==null?null:a.baths>=t },
+  { id:"price",   label:"Price",         type:"max", def:450, unit:"$k",     test:(a,t)=>a.price==null?null:a.price<=t },
+  { id:"garage",  label:"Garage",        type:"min", def:2,   unit:"cars",   test:(a,t)=>a.garage==null?null:a.garage>=t },
+  { id:"hoa",     label:"HOA",           type:"max", def:300, unit:"$/mo",   test:(a,t)=>a.hoa==null?null:a.hoa<=t },
+  { id:"yard",    label:"Real yard / outdoor space",         type:"score", scoreKey:"yard", test:a=>a.yard==null?null:a.yard>=3 },
+  { id:"mainbed", label:"Primary bedroom on the main floor", type:"confirm" },
+  { id:"single",  label:"Single-level / no stairs",           type:"confirm" },
+  { id:"office",  label:"Room for a home office",             type:"confirm" },
+  { id:"movein",  label:"Move-in ready — no major work",      type:"confirm" }
+];
+const reqDef = id => REQS.find(r => r.id === id);
+function reqLabel(r, thr){
+  if (r.type === "min") return `${r.label} — at least ${thr} ${r.unit}`;
+  if (r.type === "max") return `${r.label} — no more than ${r.unit === "$k" ? "$" + thr + "k" : thr + " " + r.unit}`;
+  return r.label;
+}
+
+/* =====================================================================
+   4. Archetypes. No financing pitch here — Dean is earned, not offered.
+   ===================================================================== */
+const A = {
+  neutral:{label:"",def:"",body:"",
+    crit:[["location",3],["layout",3],["kitchen",3],["condition",3],["primary_suite",3],["yard",3],["neighborhood",3],["value",3]],
+    watch:"On any home, ask the age of the roof, HVAC, and water heater, note how water drains away from the foundation, and get clear on what the HOA covers. Those three shape your real cost of ownership more than anything you'll see staged."},
+  emotional:{label:"The Emotional Buyer",def:"You lead with feeling — and know it fast.",
+    body:"You lead with feeling, and that's a strength. We've tuned your HomeTour to honor it — and to quietly make sure the facts get a look before you fall all the way in.",
+    crit:[["kitchen",5],["primary_suite",5],["layout",4],["neighborhood",4],["condition",4],["value",4],["location",3],["yard",3]],
+    watch:"Fall for it — then check the list. Give Condition and Value an honest score, and set your walk-away number before you decide, not after."},
+  overwhelmed:{label:"The Overwhelmed Buyer",def:"You do your homework — sometimes so much it's hard to land.",
+    body:"You do your homework, sometimes so thoroughly it's hard to land. We've simplified your HomeTour to the few things that actually decide it — so the search starts to feel like a path.",
+    crit:[["value",5],["layout",5],["location",4],["condition",4]],
+    watch:"You don't need a perfect answer, just a clear one. If a home clears your dealbreakers and your top few, that's enough to move forward — an inspection contingency can do some of the worrying for you."},
+  optimizer:{label:"The Optimizer",def:"You want the best — the right home at the right terms.",
+    body:"You want the best — the right home at the right terms. We've tuned your HomeTour to help you tell real optimization from chasing a perfect that doesn't exist.",
+    crit:[["value",5],["condition",4],["layout",4],["location",4],["neighborhood",4],["kitchen",3],["primary_suite",3],["yard",3]],
+    watch:"No home scores a 10 on everything. Name your two non-negotiables — chasing perfection on the rest is what costs people the right house."},
+  renovator:{label:"The Renovator",def:"You see potential where others see projects.",
+    body:"You see potential where other buyers see projects. We've tuned your HomeTour to help you separate a worthwhile opportunity from an expensive problem.",
+    crit:[["layout_potential",5],["structural_condition",5],["improvement_opportunity",5],["major_systems",4],["location",4],["value",4],["neighborhood",3],["cosmetic_condition",1]],
+    watch:"Dated finishes are opportunity; failing systems and structure are risk. Get eyes on the roof, furnace, AC, electrical panel, plumbing type, and foundation before you mentally spend the renovation budget — and scope the sewer line on anything older."},
+  stretch:{label:"The Stretch Buyer",def:"You're reaching for the home you really want.",
+    body:"You're reaching for the home you really want. We've tuned your HomeTour to keep the dream and the monthly reality in view at the same time.",
+    crit:[["primary_suite",5],["monthly_cost",5],["kitchen",4],["yard",4],["layout",4],["neighborhood",4],["location",4],["value",4]],
+    watch:"Score the monthly payment the way you score the primary suite. And make sure the number you're scoring is the whole payment — taxes, insurance, HOA, and mortgage insurance included, not just principal and interest."},
+  wait_for_rates:{label:"The Wait-for-Rates Buyer",def:"You're watching the market closely.",
+    body:"You're watching the market closely. We've tuned your HomeTour to help you judge the home on its own merits — the rate is a separate and much shorter decision.",
+    crit:[["location",4],["layout",4],["condition",4],["value",4],["neighborhood",4],["kitchen",3],["primary_suite",3],["yard",3]],
+    watch:"Score the home, not the rate. Finding the right house is the long decision; the rate on it is the shorter one, and it can be revisited later."},
+  investor:{label:"The Investor-Minded Buyer",def:"You run the numbers before the feelings.",
+    body:"You run the numbers before the feelings. We've tuned your HomeTour around value and return — with one nudge to remember livability if you'll be living there.",
+    crit:[["value",5],["neighborhood",5],["rentability",5],["condition",4],["location",4],["layout",3],["yard",3],["kitchen",2],["primary_suite",2]],
+    watch:"The numbers matter — and if you'll live here, so does whether you'll want to. Check the HOA's rental restrictions early; on attached product they can end the thesis before the spreadsheet matters."},
+  safety_seeker:{label:"The Safety-Seeker",def:"You want certainty and no surprises.",
+    body:"You want certainty and no surprises. We've tuned your HomeTour to help you find security in the facts and the process — not in waiting for zero risk.",
+    crit:[["condition",5],["value",5],["neighborhood",4],["location",4],["layout",3],["kitchen",3],["primary_suite",3],["yard",3]],
+    watch:"A sound home with an honest inspection and the right contingencies is a safe decision. Certainty comes from the process and from knowing what you're buying — not from waiting for a risk-free house, which doesn't exist."}
+};
+
+/* =====================================================================
+   5. Quiz
+   ===================================================================== */
+const QUIZ = [
+  {q:"When you walk into a home you love, what happens first?",o:[
+    ["I just feel it — I know almost right away",{emotional:2}],
+    ["I start seeing what I'd change or improve",{renovator:2}],
+    ["I start doing the math on it",{investor:2,optimizer:1}],
+    ["I notice everything that might be a problem",{safety_seeker:2}],
+    ["I feel a bit overwhelmed — so many options",{overwhelmed:2}]]},
+  {q:"A dated, ugly kitchen is mostly…",o:[
+    ["A dealbreaker — I want it move-in ready",{emotional:1,safety_seeker:1}],
+    ["An opportunity — I can fix that",{renovator:2}],
+    ["A price negotiation",{investor:1,optimizer:1}],
+    ["Fine, if the payment still works",{stretch:2}]]},
+  {q:"Which sounds most like you right now?",o:[
+    ["I'm stretching to get the home I really want",{stretch:2}],
+    ["I want the best value for the money",{optimizer:2,investor:1}],
+    ["I want to feel safe and not overpay",{safety_seeker:2}],
+    ["I'm waiting to see what rates or the market do",{wait_for_rates:2}],
+    ["I keep comparing and can't quite decide",{overwhelmed:2}]]},
+  {q:"What matters most in the home itself?",o:[
+    ["That it feels like home",{emotional:2}],
+    ["Good bones and potential",{renovator:2}],
+    ["The numbers work long-term",{investor:2}],
+    ["Room to grow and the lifestyle",{stretch:2}],
+    ["That it's solid and low-risk",{safety_seeker:2}]]},
+  {q:"What's most likely to keep you from making an offer?",o:[
+    ["Waiting on rates or the market",{wait_for_rates:2}],
+    ["Second-guessing — I'm not sure",{overwhelmed:2,safety_seeker:1}],
+    ["Nothing's been quite perfect",{optimizer:2}],
+    ["Affording the one I actually love",{stretch:1,emotional:1}],
+    ["Worried about a costly mistake",{safety_seeker:2}]]},
+  {q:"How do you make the final call?",o:[
+    ["Gut — when it's right, it's right",{emotional:2}],
+    ["I need a clear framework, or a nudge that it's okay",{overwhelmed:2}],
+    ["I optimize the details first",{optimizer:2}],
+    ["I run the deal and the return",{investor:2}],
+    ["I wait for the right moment in the market",{wait_for_rates:2}]]}
+];
+const TIEBREAK = ["renovator","stretch","investor","safety_seeker","optimizer","emotional","wait_for_rates","overwhelmed"];
+
+/* =====================================================================
+   6. Config resolution
+   ===================================================================== */
+const P = new URLSearchParams(location.search);
+const pick = (k,d) => { const v = P.get(k); return (v !== null && v !== "") ? v : d; };
+const L = CONFIG.listing, AGC = CONFIG.agent, LEN = CONFIG.lender;
+
+const listing = {
+  address:pick("a",L.address), place:pick("c",L.place),
+  beds:pick("b",L.beds), baths:pick("ba",L.baths), garage:pick("g",L.garage),
+  price:pick("p",L.price), hoa:pick("hoa",L.hoa), yearBuilt:pick("y",L.yearBuilt)
+};
+const agent = {
+  name:pick("ag",AGC.name), brokerage:pick("agt",AGC.brokerage),
+  phone:pick("agp",AGC.phone), email:pick("age",AGC.email),
+  license:pick("agl",AGC.license),
+  role:(pick("agr",AGC.role) === "buyer") ? "buyer" : "listing"
+};
+agent.enabled = !!(agent.name || AGC.enabled);
+const DEMO = P.get("demo") === "1";
+
+const FIRST = (LEN.name || "your lender").split(" ")[0];
+const telHref = s => "tel:" + String(s).replace(/[^0-9+]/g,"");
+const smsHref = s => "sms:" + String(s).replace(/[^0-9+]/g,"");
+const esc = s => String(s == null ? "" : s)
+  .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+
+/* The routing rule. Property facts → listing side. Decision questions →
+   the buyer's own agent, and we never assume they have one. */
+function askWho(kind){
+  if (kind === "listing")
+    return (agent.enabled && agent.name && agent.role === "listing") ? `Ask ${agent.name}` : "Ask the listing agent";
+  if (kind === "buyer")
+    return (agent.enabled && agent.name && agent.role === "buyer") ? `Ask ${agent.name}` : "If you're working with an agent, talk this through with them";
+  return `Ask ${FIRST}`;
+}
+
+/* =====================================================================
+   7. Parsing
+   ===================================================================== */
+function parseNum(s){ const m = String(s == null ? "" : s).match(/[0-9]+(\.[0-9]+)?/); return m ? parseFloat(m[0]) : null; }
+/* Returns price in THOUSANDS, matching the "$k" requirement unit. */
+function parsePriceK(s){
+  if (s == null || s === "") return null;
+  const t = String(s).toLowerCase().replace(/[^0-9.km]/g,"");
+  const m = t.match(/^([0-9]*\.?[0-9]+)\s*([km]?)$/);
+  if (!m) return null;
+  let v = parseFloat(m[1]);
+  if (isNaN(v)) return null;
+  if (m[2] === "m") v *= 1000;            // 1.2m → 1200k
+  else if (m[2] === "k") { /* already k */ }
+  else if (v >= 10000) v = v / 1000;      // 405000 → 405
+  return v;
+}
+
+/* =====================================================================
+   8. State + persistence
+   Two tiers, deliberately separate:
+     KEY_D — the decision record (homes, scores, requirements, notes,
+             dispositions, flags). This must never be lost to a photo.
+     KEY_P — photos. Expendable under storage pressure.
+   Photos are always held in memory; persisting them is best-effort.
+   ===================================================================== */
+const KEY_D = "hometour.v3.data";
+const KEY_P = "hometour.v3.photos";
+const QUOTA_EST = 5 * 1024 * 1024;   // conservative localStorage assumption
+
+const st = {
+  qi:0, answers:[], archetype:"neutral",
+  reqs:{},            // id -> {mode:"want"|"deal", thr}
+  homes:[], current:null,
+  photos:{},          // "homeId::critKey" -> jpeg data URL
+  photosPersist:true  // false once a save has failed this session
+};
+
+function lsGet(k){ try { const r = localStorage.getItem(k); return r ? JSON.parse(r) : null; } catch(e){ return null; } }
+
+/* Decision record only. Photos live in their own key. */
+function saveData(){
+  try {
+    localStorage.setItem(KEY_D, JSON.stringify({
+      v:3, archetype:st.archetype, answers:st.answers, reqs:st.reqs,
+      current:st.current,
+      homes:st.homes.map(h => ({
+        id:h.id, addr:h.addr, place:h.place, spec:h.spec, attr:h.attr,
+        s:h.s, confirm:h.confirm, disposition:h.disposition,
+        feeling:h.feeling, openq:h.openq,
+        /* flags keep the note; the photo lives in KEY_P */
+        flags:Object.keys(h.flags).reduce((o,k)=>{o[k]={note:h.flags[k].note||""};return o;},{})
+      }))
+    }));
+    return true;
+  } catch(e){ return false; }
+}
+function savePhotos(){
+  try { localStorage.setItem(KEY_P, JSON.stringify(st.photos)); st.photosPersist = true; return true; }
+  catch(e){ st.photosPersist = false; return false; }
+}
+/* Decision record first, always. A photo failure never blocks it. */
+function persist(){
+  const dataOk = saveData();
+  const photoOk = savePhotos();
+  renderStoreWarn(dataOk, photoOk);
+  return { dataOk, photoOk };
+}
+function storageUsed(){
+  let n = 0;
+  try {
+    for (let i = 0; i < localStorage.length; i++){
+      const k = localStorage.key(i);
+      n += k.length + (localStorage.getItem(k) || "").length;
+    }
+  } catch(e){ return 0; }
+  return n * 2;   // UTF-16
+}
+function storagePct(){ return Math.round(100 * storageUsed() / QUOTA_EST); }
+
+function renderStoreWarn(dataOk, photoOk){
+  const box = $("storewarn");
+  if (!box) return;
+  const pct = storagePct();
+  let msg = "";
+  if (!dataOk) {
+    msg = "<b>This device isn't letting HomeTour save.</b> Private browsing usually causes this. Your tour still works for now, but it won't be here if you close the page — print or save this scorecard if you want to keep it.";
+  } else if (photoOk === false) {
+    msg = "<b>Your tour is getting full.</b> Your homes, scores, notes and requirements are safely saved. Photos from here on will stay for this session but may not be there after you close HomeTour. Removing a photo you no longer need frees room.";
+  } else if (pct >= CONFIG.photos.warnAtPct) {
+    msg = `<b>Your tour is getting full</b> (about ${pct}% of what this browser allows). Everything is saved right now. If you keep adding photos, newer ones may not survive closing the page.`;
+  }
+  box.innerHTML = msg;
+  box.classList.toggle("show", !!msg);
+}
+
+/* =====================================================================
+   9. Photos — downscale on capture, then store only the compressed result
+   ===================================================================== */
+function downscale(file, cb){
+  const fr = new FileReader();
+  fr.onerror = () => cb(null);
+  fr.onload = e => {
+    const img = new Image();
+    img.onerror = () => cb(null);
+    img.onload = () => {
+      try {
+        const MAX = CONFIG.photos.maxEdge;
+        let w = img.naturalWidth || img.width, h = img.naturalHeight || img.height;
+        if (!w || !h) return cb(null);
+        if (Math.max(w,h) > MAX){
+          const s = MAX / Math.max(w,h);
+          w = Math.max(1, Math.round(w * s));
+          h = Math.max(1, Math.round(h * s));
+        }
+        const c = document.createElement("canvas");
+        c.width = w; c.height = h;
+        const ctx = c.getContext("2d");
+        ctx.fillStyle = "#fff"; ctx.fillRect(0,0,w,h);
+        ctx.drawImage(img, 0, 0, w, h);
+        cb(c.toDataURL("image/jpeg", CONFIG.photos.quality));
+      } catch(err){ cb(null); }
+    };
+    img.src = e.target.result;
+  };
+  fr.readAsDataURL(file);
+}
+const pKey = (homeId, crit) => homeId + "::" + crit;
+const getPhoto = (homeId, crit) => st.photos[pKey(homeId, crit)] || null;
+function setPhoto(homeId, crit, dataUrl){
+  if (dataUrl) st.photos[pKey(homeId, crit)] = dataUrl;
+  else delete st.photos[pKey(homeId, crit)];
+}
+/* Drop every photo belonging to a home (used by Start over). */
+function dropHomePhotos(homeId){
+  Object.keys(st.photos).forEach(k => { if (k.indexOf(homeId + "::") === 0) delete st.photos[k]; });
+}
+
+/* =====================================================================
+   10. Homes
+   ===================================================================== */
+const $ = id => document.getElementById(id);
+const VIEWS = ["landView","quizView","revealView","reqView","scoreView","cmpView","addView","setupView"];
+function show(v){
+  VIEWS.forEach(x => $(x).classList.add("hidden"));
+  $(v).classList.remove("hidden");
+  const navOn = (v === "scoreView" || v === "cmpView");
+  $("bar").classList.toggle("hidden", !navOn);
+  $("barCount").textContent = st.homes.length;
+  window.scrollTo(0,0);
+}
+const home = id => st.homes.find(h => h.id === id);
+function blankScores(){ const o = {}; Object.keys(LBL).forEach(k => o[k] = 3); return o; }
+
+function listingHome(){
+  const spec = [
+    listing.beds   ? listing.beds + " bd"   : "",
+    listing.baths  ? listing.baths + " ba"  : "",
+    listing.garage ? listing.garage         : "",
+    listing.price  ? listing.price          : ""
+  ].filter(Boolean).join(" · ");
+  return {
+    id:"listing", addr:listing.address, place:listing.place, spec,
+    attr:{
+      beds:parseNum(listing.beds), baths:parseNum(listing.baths),
+      garage:parseNum(listing.garage), price:parsePriceK(listing.price),
+      hoa:parseNum(listing.hoa)
+    },
+    s:blankScores(), flags:{}, confirm:{}, disposition:null, feeling:6, openq:""
+  };
+}
+
+const SEED = [
+  { id:"seed_turnberry", addr:"1424 Turnberry Drive", place:"Castle Rock · Sawgrass Townhomes",
+    spec:"2 bd · 2.5 ba · $405k", feeling:6,
+    attr:{beds:2,baths:2.5,garage:2,price:405,hoa:175},
+    confirm:{mainbed:false,single:false,office:false,movein:true},
+    s:{location:4,layout:4,kitchen:3,condition:4,primary_suite:4,yard:2,neighborhood:4,value:4,structural_condition:4,major_systems:4,cosmetic_condition:3,improvement_opportunity:2,layout_potential:3,monthly_cost:4,rentability:3}},
+  { id:"seed_oldmill", addr:"5142 Old Mill Rd", place:"Castle Rock · fixer with good bones",
+    spec:"3 bd · 2 ba · $375k", feeling:5,
+    attr:{beds:3,baths:2,garage:2,price:375,hoa:0},
+    confirm:{mainbed:true,single:false,office:true,movein:false},
+    s:{location:4,layout:3,kitchen:1,condition:2,primary_suite:3,yard:4,neighborhood:4,value:5,structural_condition:5,major_systems:4,cosmetic_condition:1,improvement_opportunity:5,layout_potential:5,monthly_cost:5,rentability:4}},
+  { id:"seed_vista", addr:"220 Vista Ridge Ct", place:"Castle Rock · turnkey, premium",
+    spec:"4 bd · 3 ba · $499k", feeling:8,
+    attr:{beds:4,baths:3,garage:3,price:499,hoa:250},
+    confirm:{mainbed:false,single:false,office:true,movein:true},
+    s:{location:5,layout:4,kitchen:5,condition:5,primary_suite:5,yard:4,neighborhood:5,value:2,structural_condition:4,major_systems:5,cosmetic_condition:5,improvement_opportunity:1,layout_potential:3,monthly_cost:2,rentability:3}}
+];
+
+function initReqs(){
+  st.reqs = {};   // nothing active until the buyer chooses
+}
+function freshTour(){
+  st.qi = 0; st.answers = []; st.archetype = "neutral";
+  initReqs();
+  st.photos = {};
+  st.homes = DEMO
+    ? SEED.map(h => ({...h, s:{...h.s}, attr:{...h.attr}, confirm:{...(h.confirm||{})}, flags:{}, disposition:null, openq:""}))
+    : [];
+  if (!DEMO || !st.homes.length) st.homes.unshift(listingHome());
+  st.current = st.homes[0].id;
+}
+
+/* Restore, then make sure the link's listing is present. */
+function restore(){
+  const d = lsGet(KEY_D);
+  const p = lsGet(KEY_P);
+  if (p && typeof p === "object") st.photos = p;
+  if (!d || !d.homes) { freshTour(); return false; }
+  st.archetype = d.archetype || "neutral";
+  st.answers   = Array.isArray(d.answers) ? d.answers : [];
+  st.reqs      = d.reqs || {};
+  st.homes     = d.homes.map(h => ({
+    id:h.id, addr:h.addr, place:h.place, spec:h.spec,
+    attr:h.attr || {}, s:Object.assign(blankScores(), h.s || {}),
+    confirm:h.confirm || {},
+    flags:Object.keys(h.flags || {}).reduce((o,k)=>{o[k]={note:(h.flags[k]&&h.flags[k].note)||""};return o;},{}),
+    disposition:h.disposition || null, feeling:h.feeling || 6, openq:h.openq || ""
+  }));
+  if (!st.homes.some(h => h.id === "listing")) st.homes.unshift(listingHome());
+  st.current = (d.current && home(d.current)) ? d.current : st.homes[0].id;
+  return true;
+}
+
+/* =====================================================================
+   11. Chrome
+   ===================================================================== */
+function specHTML(h){
+  const parts = (h.spec || "").split("·").map(x => x.trim()).filter(Boolean);
+  if (!parts.length) return "";
+  return parts.map(x => `<div><div class="n">${esc(x)}</div><div class="l"></div></div>`).join("");
+}
+function renderChrome(){
+  $("brandLine").textContent = "hometour" + (agent.enabled && agent.name ? "" : " · " + (LEN.tagline || "").toLowerCase());
+  if (agent.enabled && agent.name){
+    const lic = agent.license ? ` · ${esc(agent.license)}` : "";
+    const roleLbl = agent.role === "buyer" ? "Your agent" : "Listing agent";
+    $("cobrand").innerHTML =
+      `<div class="col"><div class="who">${esc(agent.name)}</div>
+        <div class="role">${roleLbl}${agent.brokerage ? " · " + esc(agent.brokerage) : ""}${lic}</div></div>
+       <div class="sep"></div>
+       <div class="col"><div class="who">${esc(LEN.name)}</div>
+        <div class="role">${esc(LEN.tagline)} · ${esc(LEN.company)}<br>NMLS #${esc(LEN.nmls)}</div></div>`;
+    $("cobrand").classList.remove("hidden");
+  }
+  $("landTitle").textContent = `Could ${listing.address} be the right home for you?`;
+  $("landPlace").textContent = listing.place;
+  $("landSpec").innerHTML = specHTML(listingHome());
+  $("watchAttr").textContent = `From ${FIRST}'s construction & financing perspective`;
+  document.title = `HomeTour — ${listing.address}`;
+  renderFine();
+}
+function renderFine(){
+  const agLine = (agent.enabled && agent.name)
+    ? `<p>Real estate services by ${esc(agent.name)}${agent.brokerage ? `, ${esc(agent.brokerage)}` : ""}${agent.license ? ` · ${esc(agent.license)}` : ""}. ${esc(agent.name)} and ${esc(LEN.company)} are separate companies. Neither is required as a condition of the other, and you are free to choose your own lender and your own real estate agent.</p>` : "";
+  $("fine").innerHTML =
+    `<p><b>Educational tool only — not a home inspection, and not a loan offer, quote, pre-approval, or commitment to lend.</b></p>
+     <p><b>This is not a substitute for a professional inspection.</b> The prompts here are general guidance to help you ask better questions during a showing. They are not an inspection, an appraisal, or an engineering opinion, and they do not identify every condition or defect. Always obtain your own independent inspections from licensed professionals before purchasing.</p>
+     <p>Scores, requirements, notes, photos and profiles reflect only what you entered and are for your own reference. Property details are supplied by the listing party and are not verified here. Any payment, program, or cost figures discussed are estimates subject to change, program guidelines, underwriting, and credit approval.</p>
+     ${CONFIG.disclosure.feeCoverage ? `<p>${esc(CONFIG.disclosure.feeCoverage)}</p>` : ""}
+     <p>Everything you enter — including your photos — stays on this device. Nothing on this page is uploaded or transmitted to ${esc(LEN.name)}, ${esc(LEN.company)}${agent.enabled && agent.name ? `, ${esc(agent.name)}` : ""}, or anyone else unless you choose to make contact yourself.</p>
+     ${agLine}
+     <p>${esc(LEN.name)} · ${esc(LEN.tagline)} · ${esc(LEN.company)} · NMLS #${esc(LEN.nmls)} · ${esc(LEN.company)} NMLS #${esc(LEN.companyNmls)}${LEN.site ? ` · ${esc(LEN.site)}` : ""}<br>⌂ Equal Housing Opportunity</p>`;
+}
+
+/* =====================================================================
+   12. Quiz
+   ===================================================================== */
+$("wantPersonalize").addEventListener("click", () => { st.qi = 0; st.answers = []; startQuiz(); });
+$("justShow").addEventListener("click", () => { st.archetype = "neutral"; openScore(st.current); });
+$("upsellBtn").addEventListener("click", () => { st.qi = 0; st.answers = []; startQuiz(); });
+$("retake").addEventListener("click", () => { st.qi = 0; st.answers = []; startQuiz(); });
+
+function startQuiz(){ show("quizView"); renderQ(); }
+function renderQ(){
+  const it = QUIZ[st.qi];
+  $("dots").innerHTML = QUIZ.map((_,i) => `<span class="${i <= st.qi ? "on" : ""}"></span>`).join("");
+  $("qcount").textContent = `Question ${st.qi + 1} of ${QUIZ.length}`;
+  $("qtext").textContent = it.q;
+  const ch = st.answers[st.qi];
+  $("opts").innerHTML = it.o.map((o,i) => `<button class="opt ${ch === i ? "sel" : ""}" data-i="${i}">${o[0]}</button>`).join("");
+  $("opts").querySelectorAll(".opt").forEach(b => b.addEventListener("click", () => choose(+b.dataset.i)));
+  $("backBtn").classList.toggle("hidden", st.qi === 0);
+  const done = st.answers.length === QUIZ.length && st.answers.every(x => x !== undefined && x !== null);
+  $("seeProfile").classList.toggle("hidden", !done);
+}
+function choose(i){
+  st.answers[st.qi] = i;
+  if (st.qi < QUIZ.length - 1){ st.qi++; renderQ(); } else { finishQuiz(); }
+}
+$("backBtn").addEventListener("click", () => { if (st.qi > 0){ st.qi--; renderQ(); } });
+$("seeProfile").addEventListener("click", finishQuiz);
+
+/* Tally recomputed from answers — going back can never double-count. */
+function finishQuiz(){
+  const t = {};
+  Object.keys(A).forEach(k => { if (k !== "neutral") t[k] = 0; });
+  st.answers.forEach((ai,qi) => {
+    if (ai == null) return;
+    const p = QUIZ[qi].o[ai][1];
+    for (const k in p) t[k] += p[k];
+  });
+  let best = null, bv = -1;
+  for (const k in t) if (t[k] > bv){ bv = t[k]; best = k; }
+  const top = Object.keys(t).filter(k => t[k] === bv);
+  if (top.length > 1) for (const k of TIEBREAK) if (top.includes(k)){ best = k; break; }
+  st.archetype = best || "neutral";
+  const a = A[st.archetype];
+  $("revName").textContent = a.label;
+  $("revDef").textContent  = a.def;
+  $("revBody").textContent = a.body;
+  saveData();
+  show("revealView");
+}
+
+/* =====================================================================
+   13. Requirements screen
+   ===================================================================== */
+let reqReturn = null;
+$("toReqs").addEventListener("click", () => openReqs(st.current));
+$("editReqs2").addEventListener("click", () => openReqs(st.current));
+function openReqs(ret){ reqReturn = ret || st.current; renderReqRows(); show("reqView"); }
+
+function renderReqRows(){
+  $("reqRows").innerHTML = REQS.map(r => {
+    const cur = st.reqs[r.id] || { mode:"off" };
+    const numeric = (r.type === "min" || r.type === "max");
+    const thrVal = cur.thr !== undefined ? cur.thr : r.def;
+    const pre = r.type === "min" ? "at least" : r.type === "max" ? "no more than" : "";
+    const thr = numeric
+      ? `<span class="pre">${pre}</span><input class="thr" type="number" id="thr-${r.id}" value="${esc(thrVal)}" inputmode="decimal" aria-label="${esc(r.label)} threshold"><span class="unit">${esc(r.unit)}</span>`
+      : "";
+    return `<div class="reqrow">
+      <div class="rl" id="rq-${r.id}">${esc(r.label)} ${thr}</div>
+      <div class="seg" data-id="${r.id}" role="group" aria-labelledby="rq-${r.id}">
+        <button type="button" data-m="off"  aria-pressed="${cur.mode==="off"}">Not important</button>
+        <button type="button" data-m="want" aria-pressed="${cur.mode==="want"}">I want it</button>
+        <button type="button" data-m="deal" aria-pressed="${cur.mode==="deal"}">Dealbreaker</button>
+      </div></div>`;
+  }).join("");
+
+  $("reqRows").querySelectorAll(".seg").forEach(seg => {
+    seg.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+      const id = seg.dataset.id, m = b.dataset.m, r = reqDef(id);
+      seg.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x.dataset.m === m ? "true" : "false"));
+      if (m === "off") delete st.reqs[id];
+      else {
+        const t = $("thr-" + id);
+        st.reqs[id] = { mode:m, thr:t ? +t.value : undefined, acked:(st.reqs[id]||{}).acked };
+      }
+    }));
+  });
+  $("reqRows").querySelectorAll(".thr").forEach(i => i.addEventListener("input", () => {
+    const id = i.id.replace("thr-","");
+    if (st.reqs[id]) st.reqs[id].thr = +i.value;
+  }));
+}
+function captureThresholds(){
+  REQS.forEach(r => { if (st.reqs[r.id]){ const t = $("thr-" + r.id); if (t) st.reqs[r.id].thr = +t.value; } });
+}
+$("reqSave").addEventListener("click", () => { captureThresholds(); saveData(); openScore(reqReturn); });
+$("reqSkip").addEventListener("click", () => openScore(reqReturn));
+
+/* =====================================================================
+   14. Requirement evaluation
+   ===================================================================== */
+function attrFor(h){
+  /* score-type requirements read the buyer's own rating */
+  const a = Object.assign({}, h.attr || {});
+  REQS.forEach(r => { if (r.type === "score") a[r.id] = (h.s && h.s[r.scoreKey] !== undefined) ? h.s[r.scoreKey] : null; });
+  REQS.forEach(r => { if (r.type === "confirm") a[r.id] = (h.confirm && h.confirm[r.id] !== undefined) ? h.confirm[r.id] : null; });
+  return a;
+}
+function evalHome(h){
+  const met = [], warns = [], deals = [], unknown = [];
+  const a = attrFor(h);
+  for (const id in st.reqs){
+    const cfg = st.reqs[id], r = reqDef(id);
+    if (!r) continue;
+    const thr = cfg.thr !== undefined ? cfg.thr : r.def;
+    let res;
+    if (r.type === "confirm") res = (a[id] == null) ? null : a[id] === true;
+    else res = r.test(a, thr);
+    const lab = reqLabel(r, thr);
+    const row = { id, lab, mode:cfg.mode };
+    if (res === null) unknown.push(row);
+    else if (res === true) met.push(row);
+    else if (cfg.mode === "deal") deals.push(row);
+    else warns.push(row);
+  }
+  return { met, warns, deals, unknown };
+}
+
+function renderReqStrip(h){
+  const box = $("reqstrip");
+  if (!Object.keys(st.reqs).length){ box.classList.add("hidden"); box.innerHTML = ""; return; }
+  box.classList.remove("hidden");
+  const ev = evalHome(h);
+  const rows = [];
+  ev.deals.forEach(x => rows.push(`<div class="item deal"><span class="ic">⛔</span><div class="ix">Dealbreaker: ${esc(x.lab)}</div></div>`));
+  ev.warns.forEach(x => rows.push(`<div class="item warn"><span class="ic">⚠</span><div class="ix">Missing something you want: ${esc(x.lab)}</div></div>`));
+  ev.unknown.forEach(x => {
+    const r = reqDef(x.id);
+    const yn = (r && r.type === "confirm")
+      ? `<div class="yn"><button data-yn="${x.id}" data-v="1" aria-pressed="false">Yes, it has it</button><button data-yn="${x.id}" data-v="0" aria-pressed="false">No</button></div>` : "";
+    const note = (r && r.type === "confirm") ? "HomeTour can't know this — does this home have it?" : "Not listed for this home — can't tell yet.";
+    rows.push(`<div class="item unk"><span class="ic">?</span><div class="ix">${esc(x.lab)}<div style="font-size:11.5px;margin-top:1px">${esc(note)}</div>${yn}</div></div>`);
+  });
+  ev.met.forEach(x => rows.push(`<div class="item met"><span class="ic">✓</span><div class="ix">${esc(x.lab)}</div></div>`));
+
+  let bar;
+  if (ev.deals.length)
+    bar = `<div class="gatebar bad"><b>This home misses ${ev.deals.length === 1 ? "a dealbreaker" : ev.deals.length + " dealbreakers"}.</b> It's held out of your main comparison. If that's stopped being a dealbreaker, you can change it — HomeTour will ask.</div>`;
+  else if (ev.warns.length)
+    bar = `<div class="gatebar mid"><b>Clears your dealbreakers.</b> Missing ${ev.warns.length === 1 ? "one thing" : ev.warns.length + " things"} you wanted.</div>`;
+  else
+    bar = `<div class="gatebar good"><b>This home clears everything you asked for.</b></div>`;
+
+  box.innerHTML = `<div class="rh"><span class="rt">What you're looking for</span><button class="re" id="editReqs">Edit</button></div>${rows.join("")}${bar}`;
+  $("editReqs").addEventListener("click", () => openReqs(st.current));
+  box.querySelectorAll("[data-yn]").forEach(b => b.addEventListener("click", () => {
+    h.confirm[b.dataset.yn] = b.dataset.v === "1";
+    persist(); renderReqStrip(h); refresh();
+  }));
+}
+
+/* =====================================================================
+   15. Scorecard
+   ===================================================================== */
+function openScore(id){
+  st.current = id || st.current;
+  const h = home(st.current);
+  if (!h) { show("landView"); return; }
+  const a = A[st.archetype], neutral = st.archetype === "neutral";
+
+  $("scAddr").textContent  = h.addr;
+  $("scPlace").textContent = h.place || "";
+  $("scSpec").innerHTML    = specHTML(h);
+  $("profileband").classList.toggle("hidden", neutral);
+  $("upsell").classList.toggle("hidden", !neutral);
+  if (!neutral){ $("sbName").textContent = a.label; $("sbBody").textContent = a.body; }
+  $("watchP").textContent = a.watch;
+
+  $("crits").innerHTML = a.crit.map(([k,w]) => critHTML(h,k,w)).join("");
+  wireCrits(h);
+  renderReqStrip(h);
+
+  $("feeling").value = h.feeling; $("feelingVal").textContent = h.feeling;
+  $("chips").querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", c.dataset.d === h.disposition ? "true" : "false"));
+  if (h.disposition){ const o = OPENQ[h.disposition]; $("oqTitle").textContent = o.t; $("oqBody").textContent = o.b; $("openq").classList.add("show"); }
+  else $("openq").classList.remove("show");
+  $("oqInput").value = h.openq || "";
+
+  refresh();
+  show("scoreView");
+}
+
+function critHTML(h,key,w){
+  const val = h.s[key] !== undefined ? h.s[key] : 3;
+  h.s[key] = val;
+  const low = w <= 1;
+  const marks = [1,2,3,4,5].map(i =>
+    `<button class="mark" role="radio" data-key="${key}" data-v="${i}"
+       aria-checked="${i===val}" tabindex="${i===val?0:-1}"
+       aria-label="${esc(LBL[key])}: ${i} of 5">${i}</button>`).join("");
+  const note = low ? `<div class="cnote">Rate it honestly — it barely counts toward your Fit.</div>` : "";
+  const d = LOOK[key] || {};
+  const hasLook = !!(d.look && d.look.length);
+  const asks = [
+    d.askListing ? ["listing", d.askListing] : null,
+    d.askBuyer   ? ["buyer",   d.askBuyer]   : null,
+    d.askLender  ? ["lender",  d.askLender]  : null
+  ].filter(Boolean);
+  const hasBox = hasLook || asks.length;
+  const fl = h.flags[key];
+  const photo = getPhoto(h.id, key);
+
+  const box = hasBox ? `<div class="look" id="look-${key}">
+      ${hasLook ? `<div class="lh">What to look for</div><ul>${d.look.map(li => `<li>${li}</li>`).join("")}</ul>` : ""}
+      ${asks.map(([kind,q]) => `<div class="askrow ${kind}"><span class="who">${esc(askWho(kind))}</span><span class="qq">${esc(q)}</span></div>`).join("")}
+    </div>` : "";
+
+  return `<div class="crit ${low ? "low" : ""}">
+    <div class="row"><span class="clabel" id="lab-${key}">${esc(LBL[key])}</span>
+      <span class="cval" id="cval-${key}">${val} / 5</span></div>
+    <div class="marks" role="radiogroup" aria-labelledby="lab-${key}">${marks}</div>
+    ${note}
+    <div class="cbtns">
+      ${hasBox ? `<button class="mini look-t" data-look="${key}" aria-expanded="false"><span class="caret">▸</span>What to look for</button>` : ""}
+      <button class="mini flag ${fl ? "on" : ""}" data-key="${key}">⚑ ${fl ? "Flagged" : "Flag to revisit"}</button>
+    </div>
+    ${box}
+    <div class="flagbox ${fl ? "open" : ""}" id="flag-${key}">
+      <label class="hidden" for="flaginp-${key}">Note about ${esc(LBL[key])}</label>
+      <input type="text" id="flaginp-${key}" placeholder="What did you notice?" data-key="${key}" value="${esc(fl && fl.note ? fl.note : "")}">
+      <div class="photorow">
+        <button class="photobtn" data-pk="${key}">${photo ? "Replace photo" : "Add a photo"}</button>
+        <input type="file" accept="image/*" capture="environment" class="hidden" id="file-${key}" data-key="${key}">
+        <img class="thumb" id="thumb-${key}" ${photo ? `src="${photo}" style="display:inline-block"` : ""} alt="">
+        <button class="rmphoto" id="rm-${key}" data-rm="${key}" ${photo ? 'style="display:inline"' : ""}>Remove photo</button>
+      </div>
+      <div class="pnote" id="pnote-${key}"></div>
+    </div>
+  </div>`;
+}
+
+function setScore(h,key,v){
+  h.s[key] = v;
+  document.querySelectorAll(`.mark[data-key="${key}"]`).forEach(x => {
+    const on = +x.dataset.v === v;
+    x.setAttribute("aria-checked", on ? "true" : "false");
+    x.tabIndex = on ? 0 : -1;
+  });
+  $("cval-" + key).textContent = v + " / 5";
+  /* a score-type requirement may depend on this rating */
+  if (REQS.some(r => r.type === "score" && r.scoreKey === key)) renderReqStrip(h);
+  refresh();
+}
+
+function wireCrits(h){
+  $("crits").querySelectorAll(".mark").forEach(m => {
+    m.addEventListener("click", () => setScore(h, m.dataset.key, +m.dataset.v));
+    m.addEventListener("keydown", e => {
+      const k = m.dataset.key, v = +m.dataset.v;
+      let nv = null;
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") nv = Math.min(5, v+1);
+      else if (e.key === "ArrowLeft" || e.key === "ArrowUp") nv = Math.max(1, v-1);
+      else if (e.key === "Home") nv = 1;
+      else if (e.key === "End") nv = 5;
+      else if (e.key === " " || e.key === "Enter") nv = v;
+      if (nv !== null){
+        e.preventDefault(); setScore(h,k,nv);
+        const n = document.querySelector(`.mark[data-key="${k}"][data-v="${nv}"]`);
+        if (n) n.focus();
+      }
+    });
+  });
+
+  $("crits").querySelectorAll("[data-look]").forEach(b => b.addEventListener("click", () => {
+    const open = $("look-" + b.dataset.look).classList.toggle("open");
+    b.setAttribute("aria-expanded", open ? "true" : "false");
+  }));
+
+  $("crits").querySelectorAll(".mini.flag").forEach(t => t.addEventListener("click", () => {
+    const k = t.dataset.key, bx = $("flag-" + k), open = bx.classList.toggle("open");
+    if (open){ if (!h.flags[k]) h.flags[k] = { note:"" }; $("flaginp-" + k).focus(); }
+    else if (h.flags[k] && !(h.flags[k].note && h.flags[k].note.trim()) && !getPhoto(h.id,k)) delete h.flags[k];
+    t.classList.toggle("on", !!h.flags[k]);
+    t.innerHTML = h.flags[k] ? "⚑ Flagged" : "⚑ Flag to revisit";
+    persist(); renderRevisit(h); renderHelp();
+  }));
+
+  $("crits").querySelectorAll('input[type="text"]').forEach(inp => inp.addEventListener("input", () => {
+    const k = inp.dataset.key;
+    if (!h.flags[k]) h.flags[k] = { note:"" };
+    h.flags[k].note = inp.value;
+    persist(); renderRevisit(h); renderHelp();
+  }));
+
+  /* photo: capture → downscale → store compressed only */
+  $("crits").querySelectorAll(".photobtn").forEach(b =>
+    b.addEventListener("click", () => $("file-" + b.dataset.pk).click()));
+
+  $("crits").querySelectorAll('input[type="file"]').forEach(f => f.addEventListener("change", () => {
+    const k = f.dataset.key, file = f.files && f.files[0];
+    if (!file) return;
+    const pn = $("pnote-" + k);
+    pn.textContent = "Compressing photo…"; pn.classList.add("show");
+    downscale(file, dataUrl => {
+      f.value = "";
+      if (!dataUrl){ pn.textContent = "Couldn't read that image. Try again, or take the photo with your camera app first."; return; }
+      if (!h.flags[k]) h.flags[k] = { note:"" };
+      setPhoto(h.id, k, dataUrl);
+
+      const th = $("thumb-" + k);
+      th.src = dataUrl; th.style.display = "inline-block";
+      $("rm-" + k).style.display = "inline";
+      const pb = $("crits").querySelector(`.photobtn[data-pk="${k}"]`);
+      if (pb) pb.textContent = "Replace photo";
+      const ft = $("crits").querySelector(`.mini.flag[data-key="${k}"]`);
+      if (ft){ ft.classList.add("on"); ft.innerHTML = "⚑ Flagged"; }
+
+      const res = persist();
+      const kb = Math.round(dataUrl.length * 0.75 / 1024);
+      if (res.photoOk === false)
+        pn.textContent = `Photo kept for this session (~${kb} KB), but storage is full so it may not be here after you close HomeTour. Your scores and notes are saved.`;
+      else
+        pn.textContent = `Saved on this device · about ${kb} KB`;
+      renderRevisit(h); renderHelp();
+    });
+  }));
+
+  $("crits").querySelectorAll("[data-rm]").forEach(b => b.addEventListener("click", () => {
+    const k = b.dataset.rm;
+    setPhoto(h.id, k, null);
+    const th = $("thumb-" + k); th.removeAttribute("src"); th.style.display = "none";
+    b.style.display = "none";
+    const pb = $("crits").querySelector(`.photobtn[data-pk="${k}"]`);
+    if (pb) pb.textContent = "Add a photo";
+    $("pnote-" + k).classList.remove("show");
+    if (h.flags[k] && !(h.flags[k].note && h.flags[k].note.trim())){
+      delete h.flags[k];
+      const ft = $("crits").querySelector(`.mini.flag[data-key="${k}"]`);
+      if (ft){ ft.classList.remove("on"); ft.innerHTML = "⚑ Flag to revisit"; }
+      $("flag-" + k).classList.remove("open");
+    }
+    persist(); renderRevisit(h); renderHelp();
+  }));
+}
+
+/* ---- Fit, and the head-vs-heart read ---- */
+function fitOf(h){
+  const a = A[st.archetype];
+  let n = 0, d = 0;
+  for (const [k,w] of a.crit){ const v = h.s[k] !== undefined ? h.s[k] : 3; n += v*w; d += 5*w; }
+  return d ? Math.round(100*n/d) : 0;
+}
+const fitNorm  = f => Math.max(0, Math.min(100, (f-20)/80*100));
+const feelNorm = v => (v-1)/9*100;
+
+function interpret(h,f){
+  const ev = evalHome(h);
+  if (ev.deals.length)
+    return ["Held by a dealbreaker",
+      `Whatever the scores say, this home misses ${ev.deals.length === 1 ? "something" : "things"} you called non-negotiable: ${ev.deals.map(d => d.lab).join("; ")}. That's worth sitting with — either it's genuinely out, or the requirement has changed.`];
+
+  const fn = fitNorm(f), vn = feelNorm(h.feeling), diff = fn - vn;
+  if (fn >= 60 && vn >= 60 && Math.abs(diff) < 25)
+    return ["Aligned","Your gut and your priorities agree, and both are strong. When they point the same way it's usually a real one."];
+  if (fn <= 30 && vn <= 30)
+    return ["Not this one","Both readings are low and they agree with each other. That's genuinely useful — a clear no means you stop thinking about this one and keep your weekend for the next."];
+  if (diff >= 15){
+    if (st.archetype === "renovator")
+      return ["Worth a second look","Your priorities rate this higher than your gut does. That's the classic renovator gap — the finishes turn people off while the bones quietly pay off. Don't let a dated kitchen talk you out of a house that fits."];
+    return ["Worth a second look","Your priorities rate this higher than your gut does. Something you told us matters is scoring well even though the feeling hasn't caught up — worth another walk-through before you pass on it."];
+  }
+  if (diff <= -15)
+    return ["Heart running ahead","You're drawn to this one, but some of what you told us matters isn't scoring well. Not a stop sign — just worth naming out loud before the feeling makes the call for you."];
+  return ["Roughly even","Your gut and your priorities land close to each other. No strong pull yet — a second visit, or one answered question, might tip it either way."];
+}
+
+function refresh(){
+  const h = home(st.current);
+  if (!h) return;
+  const f = fitOf(h);
+  $("fitNum").textContent = f + "%";
+  $("feelNum").textContent = h.feeling;
+  const [t,b] = interpret(h,f);
+  $("interp").innerHTML = `<span class="tag">${esc(t)}</span>${esc(b)}`;
+  renderRevisit(h); renderHelp(); renderNudge("nudge", h, f);
+  persist();
+}
+
+function renderRevisit(h){
+  const box = $("revisit"), items = [];
+  Object.keys(h.flags).forEach(k => {
+    const fl = h.flags[k];
+    const photo = getPhoto(h.id,k);
+    const nt = (fl.note && fl.note.trim()) ? esc(fl.note) : "Flagged — add a note";
+    const img = photo ? `<img src="${photo}" alt="">` : "";
+    items.push(`<div class="ri">${img}<div><div>${nt}</div><div class="rc">${esc(LBL[k])}</div></div></div>`);
+  });
+  if (h.openq && h.openq.trim())
+    items.push(`<div class="ri"><div><div>${esc(h.openq)}</div><div class="rc">Your open question</div></div></div>`);
+  if (!items.length){ box.classList.remove("show"); return; }
+  box.classList.add("show");
+  $("revisitList").innerHTML = items.join("");
+}
+
+$("feeling").addEventListener("input", e => {
+  const h = home(st.current);
+  h.feeling = +e.target.value;
+  $("feelingVal").textContent = e.target.value;
+  refresh();
+});
+
+/* ---- Disposition asks a question. It does not pitch. ---- */
+const OPENQ = {
+  love:      { t:"What would you need to be sure?", b:"Even on a home you love there's usually one thing you'd want answered before you'd write. Name it while you're standing here." },
+  interested:{ t:"What's the one open question?",   b:"Interested usually means one thing is still unresolved. Write it down now — it's much harder to recall tonight." },
+  maybe:     { t:"What's holding it at maybe?",     b:"A maybe is almost always a single unknown doing the work. Name it and the maybe tends to resolve itself." },
+  not:       { t:"What ruled it out?",              b:"Worth capturing — the pattern across several homes tells you more about your search than any one house does." }
+};
+$("chips").addEventListener("click", e => {
+  const b = e.target.closest(".chip");
+  if (!b) return;
+  const h = home(st.current);
+  const wasOn = h.disposition === b.dataset.d;
+  h.disposition = wasOn ? null : b.dataset.d;
+  $("chips").querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", c.dataset.d === h.disposition ? "true" : "false"));
+  if (h.disposition){
+    const o = OPENQ[h.disposition];
+    $("oqTitle").textContent = o.t; $("oqBody").textContent = o.b;
+    $("openq").classList.add("show");
+  } else $("openq").classList.remove("show");
+  refresh();
+});
+$("oqInput").addEventListener("input", e => { home(st.current).openq = e.target.value; refresh(); });
+
+/* =====================================================================
+   16. EARNED HELP — financing appears only when behavior asks for it
+   ===================================================================== */
+function financeTriggers(scope){
+  const t = [], h = home(st.current);
+  if (scope !== "compare" && h){
+    const ev = evalHome(h);
+    const sc = k => h.s[k];
+    const rated = k => A[st.archetype].crit.some(c => c[0] === k);
+
+    if (rated("monthly_cost") && sc("monthly_cost") <= 2)
+      t.push({ why:"You scored Monthly cost 2 or lower.", text:"Want the actual all-in payment on this house — taxes, insurance, HOA and mortgage insurance included? That's usually the number that moves this score." });
+
+    if (ev.deals.concat(ev.warns).some(x => x.id === "price"))
+      t.push({ why:"The asking price is over the limit you set.", text:"Worth knowing what a seller concession or a temporary buydown would do to the monthly number before you rule it out on price alone." });
+
+    if (ev.deals.concat(ev.warns).some(x => x.id === "hoa"))
+      t.push({ why:"HOA dues here are above your limit.", text:"HOA dues count in your qualifying payment, so they affect what you can carry. I can show you the effect precisely." });
+
+    const renoKeys = ["structural_condition","major_systems","improvement_opportunity","layout_potential","condition"];
+    if (renoKeys.some(k => h.flags[k] !== undefined))
+      t.push({ why:"You flagged work that needs doing.", text:"If the work is worth doing, renovation financing can roll it into the purchase loan instead of onto a card afterward. It has to be structured before the offer — want to see whether it changes the equation?" });
+
+    if (rated("major_systems") && sc("major_systems") <= 2)
+      t.push({ why:"You scored Major systems 2 or lower.", text:"Send me what you saw — photos help. I can give you a read on what it likely costs and whether it's something to negotiate, finance, or walk from." });
+  }
+
+  const keen = st.homes.filter(x => x.disposition === "love" || x.disposition === "interested");
+  if (keen.length >= 2)
+    t.push({ why:`You've marked ${keen.length} homes as love it or interested.`, text:`Want to compare the real monthly ownership cost of ${keen.slice(0,3).map(x => x.addr).join(", ")} side by side? Price alone won't tell you which is actually cheaper to own.` });
+
+  return t;
+}
+function ctaHTML(){
+  const bits = [];
+  if (LEN.phone){
+    bits.push(`<a href="${telHref(LEN.phone)}">Call ${esc(FIRST)}</a>`);
+    bits.push(`<a href="${smsHref(LEN.phone)}">Text ${esc(FIRST)}</a>`);
+  }
+  if (LEN.booking) bits.push(`<a href="${esc(LEN.booking)}" target="_blank" rel="noopener">Book a call</a>`);
+  else if (LEN.email) bits.push(`<a href="mailto:${esc(LEN.email)}">Email ${esc(FIRST)}</a>`);
+  return bits.join("");
+}
+function paintHelp(prefix, scope){
+  const t = financeTriggers(scope), box = $(prefix);
+  if (!t.length){ box.classList.remove("show"); return; }
+  box.classList.add("show");
+  $(prefix + "H").textContent = `Where ${FIRST} could help`;
+  $(prefix + "List").innerHTML = t.map(x => `<div class="hi"><span class="why">${esc(x.why)}</span>${esc(x.text)}</div>`).join("");
+  $(prefix + "Cta").innerHTML = ctaHTML();
+}
+const renderHelp = () => paintHelp("help","score");
+
+/* =====================================================================
+   17. "Is that still a dealbreaker?" — the learning nudge
+   Fires immediately when the buyer's own feeling or disposition contradicts
+   a dealbreaker, and on pattern across the whole tour.
+   ===================================================================== */
+function dealbreakerNudges(curHome){
+  const out = [];
+  for (const id in st.reqs){
+    const cfg = st.reqs[id];
+    if (cfg.mode !== "deal" || cfg.acked) continue;
+    const r = reqDef(id);
+    if (!r) continue;
+    const thr = cfg.thr !== undefined ? cfg.thr : r.def;
+    const lab = reqLabel(r, thr);
+
+    if (curHome){
+      const ev = evalHome(curHome);
+      const tripped = ev.deals.some(d => d.id === id);
+      if (tripped && curHome.feeling >= 8){
+        out.push({ id, lab, text:`You're feeling this one (${curHome.feeling}/10) — but it trips a dealbreaker you set: ${lab}. Is that still a dealbreaker?` });
+        continue;
+      }
+      if (tripped && (curHome.disposition === "love" || curHome.disposition === "interested")){
+        out.push({ id, lab, text:`You marked this one "${curHome.disposition === "love" ? "Love it" : "Interested"}" even though it trips a dealbreaker you set: ${lab}. Is that still a dealbreaker?` });
+        continue;
+      }
+    }
+
+    const scored = st.homes.filter(x => Object.keys(x.s || {}).length);
+    if (scored.length >= 3){
+      const missed = scored.filter(x => evalHome(x).deals.some(d => d.id === id));
+      if (missed.length >= Math.ceil(scored.length * 0.75))
+        out.push({ id, lab, text:`${missed.length} of the ${scored.length} homes you've scored miss on ${lab}. Either it's genuinely non-negotiable and the search needs to narrow to homes that have it, or it belongs a notch down.` });
+    }
+  }
+  return out;
+}
+function paintNudge(prefix, h){
+  const n = dealbreakerNudges(h), box = $(prefix);
+  if (!n.length){ box.classList.remove("show"); return; }
+  box.classList.add("show");
+  const it = n[0];
+  $(prefix + "P").textContent = it.text;
+  $(prefix + "B").innerHTML =
+    `<button class="keep" data-nd="keep" data-k="${esc(it.id)}">Keep it a dealbreaker</button>
+     <button data-nd="relax" data-k="${esc(it.id)}">Relax it to "I want"</button>`;
+  $(prefix + "B").querySelectorAll("[data-nd]").forEach(b => b.addEventListener("click", () => {
+    const id = b.dataset.k;
+    if (b.dataset.nd === "relax"){ if (st.reqs[id]) st.reqs[id].mode = "want"; }
+    else { if (st.reqs[id]) st.reqs[id].acked = true; }
+    box.classList.remove("show");
+    saveData();
+    const cur = home(st.current);
+    if (cur && !$("scoreView").classList.contains("hidden")){ renderReqStrip(cur); refresh(); }
+    if (!$("cmpView").classList.contains("hidden")) openCompare();
+  }));
+}
+const renderNudge = (prefix,h) => paintNudge(prefix,h);
+
+/* =====================================================================
+   18. Compare — rank clean matches, hold gated homes below, and name the
+   tradeoff when the mathematically highest-Fit home is gated.
+   ===================================================================== */
+function openCompare(){
+  const a = A[st.archetype];
+  $("cmpSub").textContent = "Ranked against the priorities you gave us" + (a.label ? " · " + a.label : "");
+
+  const rows = st.homes.map(h => ({ h, fit:fitOf(h), ev:evalHome(h) })).sort((x,y) => y.fit - x.fit);
+  const clean = rows.filter(r => !r.ev.deals.length);
+  const gated = rows.filter(r =>  r.ev.deals.length);
+  const topFit = rows[0], bestClean = clean[0];
+
+  let note, cls = "cmpnote";
+  if (!Object.keys(st.reqs).length){
+    note = "Ranked by how well each home fits your priorities, with your gut score beside it. Set what you're looking for and HomeTour will also check each home against it.";
+  } else if (topFit && topFit.ev.deals.length && bestClean){
+    note = `Your highest match, <b>${esc(topFit.h.addr)}</b>, trips a dealbreaker you set. <b>${esc(bestClean.h.addr)}</b> is your best match that clears everything you said is non-negotiable.`;
+    cls = "cmpnote warn";
+  } else if (topFit && topFit.ev.deals.length && !bestClean){
+    note = `Every home here trips at least one dealbreaker. That usually means the search needs to narrow — or one of those rules has quietly stopped being a rule.`;
+    cls = "cmpnote warn";
+  } else {
+    note = "Ranked by how well each home fits your priorities. Your gut score sits beside it, and anything you wanted or ruled out is called out — because a high percentage doesn't matter if the home breaks a rule you set.";
+  }
+  $("cmpNote").className = cls;
+  $("cmpNote").innerHTML = note;
+
+  const card = (r,i) => {
+    const h = r.h;
+    const dl = { love:"Love it", interested:"Interested", maybe:"Maybe", not:"Not for me" }[h.disposition] || "";
+    const nf = Object.keys(h.flags).length;
+    const np = Object.keys(st.photos).filter(k => k.indexOf(h.id + "::") === 0).length;
+    const badges = [];
+    if (r.ev.deals.length)   badges.push(`<span class="bd">⛔ ${r.ev.deals.length} dealbreaker${r.ev.deals.length>1?"s":""}</span>`);
+    if (r.ev.warns.length)   badges.push(`<span class="bw">⚠ ${r.ev.warns.length} missing</span>`);
+    if (r.ev.unknown.length) badges.push(`<span class="bf">${r.ev.unknown.length} unanswered</span>`);
+    if (dl)                  badges.push(`<span class="bf">${esc(dl)}</span>`);
+    if (nf)                  badges.push(`<span class="bf">${nf} flagged</span>`);
+    if (np)                  badges.push(`<span class="bf">${np} photo${np>1?"s":""}</span>`);
+    return `<button class="hcard ${r.ev.deals.length ? "hasdeal" : ""}" data-id="${esc(h.id)}">
+      <span class="rank serif">${i}</span>
+      <span class="hinfo"><span class="haddr">${esc(h.addr)}</span>
+        <span class="hplace">${esc(h.place || "")}</span>
+        <span class="hbadges">${badges.join(" · ")}</span></span>
+      <span class="hnums"><span class="hfit">${r.fit}%</span><span class="hfeel">gut ${h.feeling}/10</span></span>
+    </button>`;
+  };
+
+  const box = $("hlist");
+  if (!rows.length){ box.innerHTML = `<div class="empty">No homes yet. Tap “+ Add a home” to start.</div>`; }
+  else {
+    box.innerHTML =
+      (clean.length ? clean.map((r,i) => card(r,i+1)).join("") : `<div class="empty">No home has cleared all your dealbreakers yet.</div>`) +
+      (gated.length ? `<div class="gsep">Missed a dealbreaker</div>` + gated.map((r,i) => card(r,clean.length+i+1)).join("") : "");
+    box.querySelectorAll(".hcard").forEach(c => c.addEventListener("click", () => openScore(c.dataset.id)));
+  }
+
+  paintNudge("cnudge", null);
+  paintHelp("chelp","compare");
+  renderStoreWarn(true, st.photosPersist);
+  show("cmpView");
+}
+$("barCompare").addEventListener("click", openCompare);
+
+/* ---- add a home ---- */
+function goAdd(){
+  ["naAddr","naPlace","naBeds","naBaths","naPrice","naGarage","naHoa"].forEach(id => $(id).value = "");
+  show("addView");
+}
+$("barAdd").addEventListener("click", goAdd);
+$("addHomeBtn").addEventListener("click", goAdd);
+$("naCancel").addEventListener("click", () => openCompare());
+$("naSave").addEventListener("click", () => {
+  const addr = $("naAddr").value.trim();
+  if (!addr){ $("naAddr").focus(); return; }
+  const num = v => v.trim() === "" ? null : +v;
+  const attr = {
+    beds:num($("naBeds").value), baths:num($("naBaths").value),
+    price:num($("naPrice").value), garage:num($("naGarage").value),
+    hoa:num($("naHoa").value)
+  };
+  const spec = [
+    attr.beds  ? attr.beds + " bd"   : "",
+    attr.baths ? attr.baths + " ba"  : "",
+    attr.price ? "$" + attr.price + "k" : ""
+  ].filter(Boolean).join(" · ");
+  const id = "h" + Date.now();
+  st.homes.push({ id, addr, place:$("naPlace").value.trim(), spec, attr,
+    s:blankScores(), flags:{}, confirm:{}, disposition:null, feeling:6, openq:"" });
+  saveData();
+  openScore(id);
+});
+
+/* ---- print / reset ---- */
+$("printBtn").addEventListener("click", () => window.print());
+$("printCmp").addEventListener("click", () => window.print());
+function startOver(){
+  if (!window.confirm("Start over? This clears every home, score, note and photo saved on this device.")) return;
+  st.homes.slice().forEach(h => dropHomePhotos(h.id));
+  try { localStorage.removeItem(KEY_D); localStorage.removeItem(KEY_P); } catch(e){}
+  freshTour();
+  renderStoreWarn(true,true);
+  show("landView");
+}
+$("startOver").addEventListener("click", startOver);
+$("startOver2").addEventListener("click", startOver);
+$("resumeBtn").addEventListener("click", () => openCompare());
+
+/* =====================================================================
+   19. Setup mode
+   ===================================================================== */
+const SF = [["s_addr","a"],["s_place","c"],["s_beds","b"],["s_baths","ba"],["s_garage","g"],
+            ["s_price","p"],["s_hoa","hoa"],["s_year","y"],["s_agname","ag"],["s_agbrok","agt"],
+            ["s_agphone","agp"],["s_agemail","age"],["s_aglic","agl"]];
+let setupRole = "listing", setupDemo = "0";
+function buildLink(){
+  const u = new URL(location.href.split("?")[0].split("#")[0]);
+  SF.forEach(([id,key]) => { const v = $(id).value.trim(); if (v) u.searchParams.set(key,v); });
+  if ($("s_agname").value.trim()) u.searchParams.set("agr", setupRole);
+  if (setupDemo === "1") u.searchParams.set("demo","1");
+  $("s_out").value = u.toString();
+}
+if (P.get("setup")){
+  SF.forEach(([id]) => $(id).addEventListener("input", buildLink));
+  $("s_role").querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    setupRole = b.dataset.r;
+    $("s_role").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x.dataset.r === setupRole ? "true" : "false"));
+    buildLink();
+  }));
+  $("s_demo").querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    setupDemo = b.dataset.d;
+    $("s_demo").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x.dataset.d === setupDemo ? "true" : "false"));
+    buildLink();
+  }));
+  buildLink();
+  $("s_copy").addEventListener("click", async () => {
+    const b = $("s_copy");
+    try { await navigator.clipboard.writeText($("s_out").value); b.textContent = "Copied"; }
+    catch(e){ $("s_out").select(); b.textContent = "Press Ctrl/Cmd+C"; }
+    setTimeout(() => b.textContent = "Copy link", 2200);
+  });
+  $("s_exit").addEventListener("click", () => { location.href = location.href.split("?")[0]; });
+}
+
+/* =====================================================================
+   20. Boot
+   ===================================================================== */
+const hadSaved = restore();
+renderChrome();
+const scored = st.homes.filter(h => h.disposition || Object.keys(h.flags).length || h.openq);
+$("resumeBtn").classList.toggle("hidden", !(hadSaved && (st.homes.length > 1 || scored.length)));
+renderStoreWarn(true, true);
+show(P.get("setup") ? "setupView" : "landView");
+</script>
+</body>
+</html>
