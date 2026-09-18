@@ -1019,6 +1019,14 @@ function show(v){
 const home = id => st.homes.find(h => h.id === id);
 function blankScores(){ const o = {}; Object.keys(LBL).forEach(k => o[k] = 3); return o; }
 
+/* The link's listing gets an id derived from its address, NOT a fixed
+   "listing" string. With a fixed id, a device that had already used HomeTour
+   would match the saved entry and silently discard the new listing — so a
+   second link (different house, or a co-branded one) opened on the same phone
+   showed the previous property. */
+const LISTING_ID = "L:" + String(listing.address || "unknown")
+  .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
 function listingHome(){
   const spec = [
     listing.beds   ? listing.beds + " bd"   : "",
@@ -1027,7 +1035,7 @@ function listingHome(){
     listing.price  ? listing.price          : ""
   ].filter(Boolean).join(" · ");
   return {
-    id:"listing", addr:listing.address, place:listing.place, spec,
+    id:LISTING_ID, addr:listing.address, place:listing.place, spec,
     attr:{
       beds:parseNum(listing.beds), baths:parseNum(listing.baths),
       garage:parseNum(listing.garage), price:parsePriceK(listing.price),
@@ -1058,15 +1066,19 @@ const SEED = [
 function initReqs(){
   st.reqs = {};   // nothing active until the buyer chooses
 }
+function seedHomes(){
+  return SEED.map(h => ({ ...h, s:{...h.s}, attr:{...h.attr},
+    confirm:{...(h.confirm || {})}, flags:{}, disposition:null, openq:"" }));
+}
+/* Demo mode adds the three pre-scored homes ALONGSIDE the link's listing, so a
+   co-branded demo still leads with the agent's actual property. */
 function freshTour(){
   st.qi = 0; st.answers = []; st.archetype = "neutral";
   initReqs();
   st.photos = {};
-  st.homes = DEMO
-    ? SEED.map(h => ({...h, s:{...h.s}, attr:{...h.attr}, confirm:{...(h.confirm||{})}, flags:{}, disposition:null, openq:""}))
-    : [];
-  if (!DEMO || !st.homes.length) st.homes.unshift(listingHome());
-  st.current = st.homes[0].id;
+  st.homes = [listingHome()];
+  if (DEMO) st.homes = st.homes.concat(seedHomes());
+  st.current = LISTING_ID;
 }
 
 /* Restore, then make sure the link's listing is present. */
@@ -1085,8 +1097,13 @@ function restore(){
     flags:Object.keys(h.flags || {}).reduce((o,k)=>{o[k]={note:(h.flags[k]&&h.flags[k].note)||""};return o;},{}),
     disposition:h.disposition || null, feeling:h.feeling || 6, openq:h.openq || ""
   }));
-  if (!st.homes.some(h => h.id === "listing")) st.homes.unshift(listingHome());
-  st.current = (d.current && home(d.current)) ? d.current : st.homes[0].id;
+  /* Always make sure THIS link's listing is present, and that demo seeds load
+     even on a device with a saved tour. */
+  if (!st.homes.some(h => h.id === LISTING_ID)) st.homes.unshift(listingHome());
+  if (DEMO) seedHomes().forEach(s => { if (!st.homes.some(h => h.id === s.id)) st.homes.push(s); });
+  /* Open on the house the link is for — that's the one the buyer is standing
+     in. Resume goes to the comparison, which shows everything. */
+  st.current = LISTING_ID;
   return true;
 }
 
