@@ -29,6 +29,8 @@
   .cobrand .who{font-size:13.5px;font-weight:600;line-height:1.25}
   .cobrand .role{font-size:11px;color:var(--faint);margin-top:2px;line-height:1.35}
   .cobrand .sep{width:1px;background:var(--line-soft);align-self:stretch;flex:none}
+  .cobrand .cc{margin-top:6px;font-size:11.5px;line-height:1.6}
+  .cobrand .cc a{color:var(--green-deep);text-decoration:underline;text-underline-offset:2px;margin-right:10px;white-space:nowrap}
 
   .btn{display:block;width:100%;background:var(--green);color:#fff;text-decoration:none;padding:13px 22px;border-radius:5px;font-size:15px;font-weight:600;border:none;cursor:pointer;font-family:inherit;text-align:center}
   .btn:hover{background:var(--green-deep)}
@@ -1120,9 +1122,16 @@ function renderChrome(){
   if (agent.enabled && agent.name){
     const lic = agent.license ? ` · ${esc(agent.license)}` : "";
     const roleLbl = agent.role === "buyer" ? "Your agent" : "Listing agent";
+    /* The agent is always one tap away; Dean is earned (Principle 1). That
+       asymmetry is deliberate — the relationship HomeTour reinforces is the
+       buyer's with their agent. */
+    const agLinks = [];
+    if (agent.phone) agLinks.push(`<a href="${telHref(agent.phone)}">${esc(agent.phone)}</a>`);
+    if (agent.email) agLinks.push(`<a href="mailto:${esc(agent.email)}">Email</a>`);
+    const agCC = agLinks.length ? `<div class="cc">${agLinks.join("")}</div>` : "";
     $("cobrand").innerHTML =
       `<div class="col"><div class="who">${esc(agent.name)}</div>
-        <div class="role">${roleLbl}${agent.brokerage ? " · " + esc(agent.brokerage) : ""}${lic}</div></div>
+        <div class="role">${roleLbl}${agent.brokerage ? " · " + esc(agent.brokerage) : ""}${lic}</div>${agCC}</div>
        <div class="sep"></div>
        <div class="col"><div class="who">${esc(LEN.name)}</div>
         <div class="role">${esc(LEN.tagline)} · ${esc(LEN.company)}<br>NMLS #${esc(LEN.nmls)}</div></div>`;
